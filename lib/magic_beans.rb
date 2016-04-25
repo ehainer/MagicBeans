@@ -1,6 +1,7 @@
 require "magic_beans/version"
 require "magic_beans/config"
 require "magic_beans/assets"
+require "magic_beans/upload"
 
 module MagicBeans
 	def self.setup
@@ -19,9 +20,17 @@ module MagicBeans
 		[config.svg_build_environment].flatten.include?(Rails.env) && !assets.find(file).nil?
 	end
 
-	def self.log(tag, message)
+	def has_package?(package)
+		config.packages.map(&:to_s).include?(package.to_s)
+	end
+
+	def self.log(tag, message, error = false)
 		@logger ||= ActiveSupport::TaggedLogging.new(config.logger)
-		puts "[Magic Beans] [#{tag}] #{message}".light_blue
+		if error
+			puts "[Magic Beans] [#{tag}] #{message}".red
+		else
+			puts "[Magic Beans] [#{tag}] #{message}".light_blue
+		end
 		@logger.tagged("Magic Beans") { @logger.tagged(tag) { @logger.info message } }
 	end
 

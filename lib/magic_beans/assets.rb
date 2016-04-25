@@ -1,4 +1,4 @@
-module Cloud
+module MagicBeans
 	class Assets
 
 		def initialize
@@ -8,10 +8,10 @@ module Cloud
 			files(file)[file]
 		end
 
-		def files(type = "*")
+		def files(type = "*", sub_dir = "**")
 			assets = Hash.new
 			Rails.application.config.assets.paths.each do |path|
-				Dir.glob("#{path}/**/#{type}").each { |file| assets[File.basename(file)] = file }
+				Dir.glob("#{path}/#{sub_dir}/#{type}").each { |file| assets[File.basename(file)] = file }
 			end
 			assets
 		end
