@@ -17,7 +17,7 @@ module MagicBeans
 	end
 
 	def self.svgable?(file)
-		[config.svg_build_environment].flatten.include?(Rails.env) && !assets.find(file).nil?
+		[config.svg_build_environment].flatten.map(&:to_s).include?(Rails.env.to_s) && !assets.find(file).nil?
 	end
 
 	def has_package?(package)
@@ -26,10 +26,12 @@ module MagicBeans
 
 	def self.log(tag, message, error = false)
 		@logger ||= ActiveSupport::TaggedLogging.new(config.logger)
-		if error
-			puts "[Magic Beans] [#{tag}] #{message}".red
-		else
-			puts "[Magic Beans] [#{tag}] #{message}".light_blue
+		if config.debug
+			if error
+				puts "[Magic Beans] [#{tag}] #{message}".red
+			else
+				puts "[Magic Beans] [#{tag}] #{message}".light_blue
+			end
 		end
 		@logger.tagged("Magic Beans") { @logger.tagged(tag) { @logger.info message } }
 	end

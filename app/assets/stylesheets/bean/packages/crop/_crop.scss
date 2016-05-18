@@ -1,0 +1,61 @@
+.avatar {
+	.dialog-body {
+		min-height: 628px;
+	}
+	.avatar-upload {
+		position: relative;
+		z-index: 10999;
+	}
+	.zoom-container {
+		@include clearfix;
+		position: relative;
+		.icon-zoom-out {
+			float: left;
+			color: $avatar-zoom-color;
+		}
+		.icon-zoom-in {
+			float: right;
+			color: $avatar-zoom-color;
+		}
+		.slider-container {
+			@include rem(padding, 0 2rem);
+			position: absolute;
+			width: 100%;
+		}
+		.slider {
+			min-height: 22px;
+		}
+	}
+	.cropit-container {
+		width: 500px;
+		height: 500px;
+		position: relative;
+		top: 100px;
+		left: 100px;
+		display: block;
+		.cropit-image-preview {
+			transition: opacity 300ms;
+			cursor: move;
+			width: 300px;
+			height: 300px;
+		}
+		.cropit-image-background {
+			transition: opacity 600ms;
+			cursor: move;
+			opacity: .5;
+		}
+
+		input.cropit-image-zoom-input {
+			position: relative;
+		}
+
+		&.over {
+			.cropit-image-preview {
+				opacity: 0;
+			}
+			.cropit-image-background {
+				opacity: 0.2;
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+@import "bean/variables";
+
+@import "bourbon";
+@import "bean/grid-settings";
+@import "neat";
+
+@import "bean/mixins";
+@import "bean/reset";
+@import "bean/abstract";
+@import "bean/icon";
+@import "bean/dialog";
+@import "bean/toast";
+@import "bean/styleguide";
+
+<% MagicBeans.config.packages.each do |package| %>
+	<% MagicBeans.assets.files("*.scss", "bean/packages/#{package}/**").each do |name, path| %>
+	@import "<%= path %>";
+	<% end %>
+<% end %>

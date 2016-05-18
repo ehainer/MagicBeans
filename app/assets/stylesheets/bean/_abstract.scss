@@ -1,0 +1,18 @@
+.outside-window {
+	position: absolute;
+	left: -9999px;
+	top: -9999px;
+}
+
+.grayscale {
+	filter: gray;
+	filter: grayscale(100%);
+}
+
+.outer-container {
+	@include outer-container;
+}
+
+.clearfix {
+	@include clearfix;
+}
