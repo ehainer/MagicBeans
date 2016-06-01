@@ -2,6 +2,7 @@ require "magic_beans/version"
 require "magic_beans/config"
 require "magic_beans/assets"
 require "magic_beans/upload"
+require "magic_beans/crop"
 
 module MagicBeans
 	def self.setup

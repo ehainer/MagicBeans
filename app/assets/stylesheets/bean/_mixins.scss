@@ -498,18 +498,18 @@
 	}
 }
 
-@mixin icon($icon, $fallback: null, $width: null, $height: null) {
+@mixin icon($icon, $fallback: null, $width: null, $height: null, $color: null) {
+	background-size: 100%;
 	@if $width == null {
 		$width: to-px($base-line-height) - to-px(0.2rem);
 	}
 	@if $height == null {
 		$height: to-px($base-line-height) - to-px(0.2rem);
 	}
-	@include rem(background-size, $width $height);
 	$size: "#{strip-unit($width)}x#{strip-unit($height)}";
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-image: svg-icon($icon, $fallback, $size);
+	background-image: svg-icon($icon, $fallback, $size, $color);
 }
 
 @mixin calendar($type) {
@@ -747,6 +747,96 @@
 			border-right: ($point-size + $border-width + 1) solid transparent;
 			border-top: ($point-size + $border-width + 1) solid $border-color;
 			margin-left: -($border-width);
+		}
+	}
+}
+
+@mixin dialog($type) {
+	$dialog: map-get($dialogs, $type);
+	$important-background: #F0502C;
+	$important-color: #FFFFFF;
+
+	@if map-has-key($dialog, header) {
+		$header: map-get($dialog, header);
+		.dialog-header {
+
+			@each $property, $value in $header {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+
+			.heading {
+				color: find-value-in($header, color, #323A45);
+				font-weight: find-value-in($header, font-weight, bold);
+			}
+			.close {
+				width: find-value-in($header, line-height, $base-line-height);
+				height: find-value-in($header, line-height, $base-line-height);
+			}
+		}
+	}
+
+	@if map-has-key($dialog, body) {
+		$body: map-get($dialog, body);
+		.dialog-body {
+
+			@each $property, $value in $body {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	@if map-has-key($dialog, footer) {
+		$footer: map-get($dialog, footer);
+		.dialog-footer {
+
+			@each $property, $value in $footer {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	@if map-has-key($dialog, error) {
+		$error: map-get($dialog, error);
+		$important-background: find-value-in($error, color, $important-background);
+		.dialog-error {
+
+			@each $property, $value in $error {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	&.dialog-important {
+		.dialog-header {
+			background: $important-background;
+			.heading {
+				font-weight: bold;
+				color: $important-color;
+			}
 		}
 	}
 }

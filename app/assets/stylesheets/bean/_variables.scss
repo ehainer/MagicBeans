@@ -47,6 +47,60 @@ $toast-color: $white;
 $toast-undo-color: teal;
 
 
+// DIALOGS
+$dialogs: (
+	primary: (
+		header: (
+			background: $blood-orange,
+			color: $white,
+			padding: 0.5rem,
+			font-size: 0.9rem,
+			line-height: 0.9rem,
+			font-weight: bold,
+			text-transform: uppercase,
+			border-top-left-radius: 5px,
+			border-top-right-radius: 5px
+		),
+		body: (
+			background: $white,
+			padding: 1rem,
+			border-bottom-left-radius: 5px,
+			border-bottom-right-radius: 5px
+		),
+		footer: (
+			background: #E8E8E8
+		),
+		error: (
+			font-size: 0.9rem,
+			color: #F0502C,
+			font-weight: bold,
+			text-align: center
+		)
+	),
+	secondary: (
+		header: (
+			background: $sky-blue,
+			color: $white,
+			padding: 1rem,
+		),
+		body: (
+			background: $white,
+			padding: 1rem
+		),
+		footer: (
+			background: #E8E8E8
+		),
+		error: (
+			font-size: 0.9rem,
+			color: #F0502C,
+			font-weight: bold,
+			text-align: center,
+			padding-bottom: 1rem
+		)
+	)
+);
+
+
 // INPUTS
 $inputs: (
 	primary: (
@@ -64,7 +118,7 @@ $inputs: (
 			border: 1px solid #62CFF0
 		),
 		choice: (
-			background-color: $blood-orange,
+			background-color: $sky-blue,
 			color: $white
 		)
 	),

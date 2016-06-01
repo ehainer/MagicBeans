@@ -43,8 +43,7 @@ ol, ul {
 blockquote, q {
 	quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
+blockquote:before, blockquote:after, q:before, q:after {
 	content: '';
 	content: none;
 }
@@ -54,6 +53,10 @@ table {
 }
 html {
 	height: 100%;
+}
+button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
 }
 
 input[type="color"],
@@ -223,6 +226,61 @@ input[type="radio"], input[type="checkbox"] {
 	@each $type, $tooltip in $tooltips {
 		&.tooltip-#{$type} {
 			@include tooltip($type);
+		}
+	}
+}
+
+.dialog {
+	display: none;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	width: 500px;
+	z-index: 2000;
+	margin-left: -250px;
+	text-transform: none;
+
+	.dialog-header {
+		@include rem(padding, 1rem);
+		background: #234051;
+		color: #FFFFFF;
+		.heading {
+			display: inline-block;
+		}
+		.close {
+			padding: 0;
+			background-color: transparent;
+			border: none;
+			float: right;
+			cursor: pointer;
+			outline: none;
+			background-position: top right;
+			width: $base-line-height;
+			height: $base-line-height;
+		}
+	}
+
+	.dialog-body {
+		@include rem(padding, 1rem);
+		background: #FFFFFF;
+	}
+
+	.dialog-footer {
+		@include rem(padding, 1rem);
+		background: #E8E8E8;
+	}
+
+	.dialog-buttons {
+		@include rem(margin-top, 1rem);
+	}
+
+	p {
+		@include rem(margin-bottom, 1rem);
+	}
+
+	@each $type, $dialog in $dialogs {
+		&.dialog-#{$type} {
+			@include dialog($type);
 		}
 	}
 }

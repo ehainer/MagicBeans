@@ -29,3 +29,11 @@
 .icon-safari {
 	@include icon(safari, $width: 40px, $height: 40px);
 }
+
+.icon-zoom-in {
+	@include icon(zoom-in3, $width: 16px, $height: 16px, $color: #CCCCCC);
+}
+
+.icon-zoom-out {
+	@include icon(zoom-out3, $width: 16px, $height: 16px, $color: #CCCCCC);
+}

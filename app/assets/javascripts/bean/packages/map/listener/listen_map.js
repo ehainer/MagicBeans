@@ -4,7 +4,7 @@ Listeners.Map = {
 			try
 			{
 				var address = $(this).data('address');
-				var zoom = $(this).data('zoom');
+				var zoom = $(this).data('zoom') || 'auto';
 				var scroll = $(this).data('scroll');
 				var move = $(this).data('move');
 				var mapArea = $(this);

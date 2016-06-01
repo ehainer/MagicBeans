@@ -13,14 +13,6 @@ var Listeners = {
 				obs.reboot();
 			});
 
-			if(Bean.Config.get('dialog_load')){
-				var $dialog = $(Bean.Config.get('dialog_load'));
-				if($dialog.length){
-					var dialog = new Bean.Dialog($dialog);
-					dialog.show(false, Bean.Config.get('dialog_width'));
-				}
-			}
-
 			$('.field_with_errors').on('keydown change', function(){
 				$(this).removeClass('field_with_errors').off();
 			});
@@ -32,10 +24,8 @@ var Listeners = {
 			});
 
 			// Iterate over each enabled package, and initalize it's listener if available
-			Bean.debug('[Listeners.all] Initializing Packages', function(){
-				$.each(Bean.Config.get('packages'), function(index, package){
-					Bean.Listener.init(package);
-				});
+			Bean.debug('[Listeners.all.once] Initializing Packages', function(){
+				Bean.Listener.init(Bean.Config.get('packages'));
 			});
 		},
 
@@ -65,7 +55,7 @@ var Listeners = {
 			});
 
 			if(Bean.Config.get('packages', []).contains('select')){
-				Bean.debug('[Listeners.always] Initializing Package', function(){
+				Bean.debug('[Listeners.all.always] Initializing Package', function(){
 					Bean.Listener.init('select');
 				});
 			}
@@ -86,7 +76,7 @@ var Listeners = {
 	/*
 	controllerAction: {
 		once: function(observer){
-		}
+		},
 
 		always: function(observer){
 		}
@@ -94,4 +84,38 @@ var Listeners = {
 
 	homeIndex: 'controllerAction'
 	*/
+
+	beansIndex: {
+		once: function(observer){
+			$('.beans-form').on('dialog:open', function(){
+				$('body').trigger('bean:reboot');
+			});
+
+			$('.beans-form').on('dialog:click', function(event, btn){
+				///event.stopImmediatePropagation();
+				if($(btn).hasClass('prompt')){
+					var dialog = $(this).data('dialog');
+					var error1 = dialog.addError('Oh snap you\'re not done doing whatever weird thing we asked you to do', true);
+					console.log(error1);
+					dialog.getDialog().one('mousedown', function(){
+						dialog.removeError(error1);
+						var error2 = dialog.addError('But wait, theres more...');
+						console.log(error2);
+						//dialog.removeError();
+					});
+				}
+			});
+
+			$('img[data-crop]').on('crop:success', function(event, response, cropper){
+				cropper.getDialog().hide();
+				$(this).attr('src', response.avatar);
+			});
+		},
+
+		always: function(observer){
+			Bean.Listener.init('validation', 'select');
+		}
+	},
+
+	beansShow: 'beansIndex'
 };

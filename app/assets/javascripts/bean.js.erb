@@ -97,14 +97,17 @@ var Bean = (function($){
 		},
 
 		Listener: {
-			init: function(package){
-				package = package.substr(0, 1).toUpperCase() + package.substr(1).toLowerCase();
-				if(Listeners[package]){
-					Listeners[package].run();
-					Bean.debug('Initialized Package: Listeners.%s', package, 'info');
-				}else{
-					Bean.debug('Unable to Locate Package: Listeners.%s', package, 'warn');
-				}
+			init: function(){
+				var args = Array.prototype.slice.call(arguments);
+				args.flatten().each(function(package){
+					package = package.substr(0, 1).toUpperCase() + package.substr(1).toLowerCase();
+					if(Listeners[package]){
+						Listeners[package].run();
+						Bean.debug('Initialized Package: Listeners.%s', package, 'info');
+					}else{
+						Bean.debug('Unable to Locate Package: Listeners.%s', package, 'warn');
+					}
+				});
 			}
 		},
 
@@ -257,16 +260,26 @@ var Bean = (function($){
 
 		Dialog: function(title, body, remove){
 			var self = this;
-			var _dialog = null;
-			var _overlay = null;
-			var _closeCallback = null;
-			var _beforeCloseCallback = null;
+			this._theme = null;
+			this._dialog = null;
+			this._overlay = null;
+			this._openCallback = [];
+			this._closeCallback = [];
+			this._beforeCloseCallback = [];
+			this._originalWidth = null;
+			this._originalHeight = null;
 
 			this.show = function(click_close, width, height){
 				self.build().overlay();
-				self.removeError();
+				self.clearErrors();
 				var loader = new Bean.Loader();
 				var dfr = $.Deferred();
+
+				$('body').children(':visible').not(self._dialog).not(self._overlay).addClass('blurry');
+
+				$(window).on('resize', function(){
+					self.center(true);
+				});
 
 				if(self._dialog.find('img').length > 0){
 					loader.preload(self._dialog.find('img')).done(function(){
@@ -274,6 +287,11 @@ var Bean = (function($){
 						if(height !== undefined) self._dialog.height(height);
 						self._dialog.fadeIn(300);
 						self._overlay.fadeIn(200);
+						
+						$.each(self._openCallback, function(index, callback){
+							callback(self);
+						});
+
 						self._dialog.find('button.close').click(self.hide);
 						if(click_close){
 							self._overlay.addClass('clickable').click(self.hide);
@@ -289,6 +307,11 @@ var Bean = (function($){
 					if(height !== undefined) self._dialog.height(height);
 					self._dialog.fadeIn(300);
 					self._overlay.fadeIn(200);
+
+					$.each(self._openCallback, function(index, callback){
+						callback(self);
+					});
+
 					self._dialog.find('button.close').click(self.hide);
 					if(click_close){
 						self._overlay.addClass('clickable').click(self.hide);
@@ -301,30 +324,39 @@ var Bean = (function($){
 			};
 
 			this.hide = function(event){
-				if(typeof self._beforeCloseCallback == 'function'){
-					self._beforeCloseCallback(self);
+				// If there is an error, and it's not set to ignore, don't close the dialog and exit immediately
+				if(self._dialog.find('.dialog-error:not(.ignore)').length){
+					self._dialog.removeClass('pop');
+					self._dialog.get(0).offsetWidth = self._dialog.get(0).offsetWidth;
+					self._dialog.addClass('pop');
+					return;
 				}
-				if(self._dialog.find('.dialog-error:not(.ignore)').length) return;
+
+				$.each(self._beforeCloseCallback, function(index, callback){
+					callback(self);
+				});
+
 				self._dialog.fadeOut(200);
 				self._overlay.fadeOut(200);
-				if(typeof self._closeCallback == 'function'){
-					self._closeCallback(self);
-				}
+
+				$.each(self._closeCallback, function(index, callback){
+					callback(self);
+				});
+
+				$('body').children().not(self._dialog).not(self._overlay).removeClass('blurry');
 			};
 
 			this.build = function(){
-				if($('#dialog').length){
-					$('#dialog').remove();
-				}
+				if($('#dialog').length) $('#dialog').remove();
 
 				if(title instanceof jQuery){
 					self._dialog = title;
 				}else{
-					var html = '<div id="dialog" class="dialog">';
+					var html = '<div id="dialog" class="dialog' + (self._theme ? ' dialog-' + self._theme : '') + '">';
 					html += '<header class="dialog-header"><h4 class="heading">' + title + '</h4>';
-					html += '<button class="close icon-close"></button>';
+					if(remove !== false) html += '<button class="close icon-close"></button>';
 					html += '</header>';
-					html += '<div class="dialog-body">' + (body instanceof $ ? $('<div>').append(body.clone(true)).html() : body) + '</div>';
+					html += '<div class="dialog-body">' + (body instanceof $ ? $('<div />').append(body.clone(true)).html() : body) + '</div>';
 					html += '</div>';
 					$('body').append(html);
 					self._dialog = $('#dialog');
@@ -334,7 +366,24 @@ var Bean = (function($){
 			};
 
 			this.center = function(animate, no_scroll){
+				if(self._dialog.height() >= $(window).height()){
+					self._dialog.find('.dialog-body').css('overflow', 'auto');
+					self._dialog.height($(window).height() - 100);
+				}else{
+					if(self._originalHeight){
+						var windowH = $(window).height();
+						var newH = (windowH >= self._originalHeight ? self._originalHeight : windowH-100);
+						if(newH == self._originalHeight) self._dialog.find('.dialog-body').css('overflow', 'hidden');
+						self._dialog.height(newH);
+					}
+				}
+
+				/*
 				if(self._dialog.height() > $(window).height() && !no_scroll){
+					if(!self._originalHeight){
+						self._originalHeight = self._dialog.outerHeight(true);
+					}
+					self._dialog.find('.dialog-body').css('overflow', 'auto');
 					var newH = $(window).height();
 					if(self._dialog.find('.dialog-header')){
 						newH -= self._dialog.find('.dialog-header').outerHeight(true);
@@ -344,7 +393,15 @@ var Bean = (function($){
 					}
 					newH -= 100;
 					self._dialog.find('.dialog-body').height(newH);
+				}else if(self._dialog.height() <= $(window).height()){
+					if(self._originalHeight){
+						self._dialog.find('.dialog-body').css('overflow', 'hidden');
+						var windowH = $(window).height();
+						var newH = (windowH >= self._originalHeight ? self._originalHeight : windowH-100);
+						self._dialog.find('.dialog-body').height(newH);
+					}
 				}
+				*/
 
 				var windowW = $(window).width();
 				var windowH = $(window).height();
@@ -370,46 +427,65 @@ var Bean = (function($){
 			};
 
 			this.overlay = function(){
-				if(!$('#overlay').length){
-					$('body').append('<div id="overlay"></div>');
-				}
-				self._overlay = $('#overlay');
+				if(!$('.overlay').length) $('body').append('<div class="overlay"></div>');
+				self._overlay = $('.overlay');
+				return this;
+			};
+
+			this.setTheme = function(theme){
+				self._theme = theme;
 				return this;
 			};
 
 			this.onBeforeClose = function(callback){
-				self._beforeCloseCallback = callback;
+				self._beforeCloseCallback.push(callback);
 				return this;
 			};
 
 			this.onClose = function(callback){
-				self._closeCallback = callback;
+				self._closeCallback.push(callback);
 				return this;
 			};
 
-			this.setClassName = function(class_name){
+			this.onOpen = function(callback){
+				self._openCallback.push(callback);
+				return this;
+			};
+
+			this.addClassName = function(class_name){
 				self._dialog.addClass(class_name);
 				return this;
 			};
 
-			this.addError = function(message){
-				self.removeError();
+			this.addError = function(message, ignore){
+				var errorId = Bean.Abstract.getId();
 				self._dialog.addClass('dialog-important');
-				self._dialog.find('.dialog-body').prepend('<div class="dialog-error with-bottom-gap">' + message + '</div>');
+				if(!self._dialog.find('.dialog-errors').length) self._dialog.find('.dialog-body').prepend('<div class="dialog-errors"></div>');
+				self._dialog.find('.dialog-errors').append('<div id="error-' + errorId + '" class="dialog-error ' + (ignore ? 'ignore' : '') + '">' + message + '</div>');
 				self._dialog.find('.dialog-body').scrollTop(0);
-				self._dialog.find('.dialog-error').hide().slideDown(200);
+				self._dialog.find('.dialog-error').last().hide().slideDown(200);
+				return errorId;
+			};
+
+			this.removeError = function(id){
+				if(self._dialog.find('#error-' + id).length){
+					self._dialog.removeClass('dialog-important');
+					self._dialog.find('#error-' + id).slideUp(200, function(){
+						$(this).remove();
+					});
+				}
 				return this;
 			};
 
-			this.removeError = function(){
+			this.clearErrors = function(){
 				self._dialog.removeClass('dialog-important');
-				self._dialog.find('.dialog-error').addClass('ignore').slideUp(200, function(){
+				self._dialog.find('.dialog-error').slideUp(200, function(){
 					$(this).remove();
 				});
 				return this;
 			};
 
-			this.getDialog = function(){
+			this.getHtml = function(){
 				return self._dialog;
 			};
 		},
@@ -426,61 +502,115 @@ var Bean = (function($){
 			}
 		},
 
-		Avatar: {
-			show: function(avatar){
-				var dialog = new Bean.Dialog($('#' + USER_TYPE + '-dialogs-avatar'));
-				dialog.show(false, 'auto').done(function(){
-					var $cropper = $('#image-cropper').cropit({
-						imageState: {
-							src: avatar
-						},
-						imageBackground: true,
-						imageBackgroundBorderWidth: 100,
-						onImageLoaded: function(){
-							dialog.resize();
-							var position = ($("#zoom").data('sliderObject') ? $("#zoom").data('sliderObject').value : $cropper.cropit('zoom')*100);
-							$('.slider-container .slider').remove();
-							$("#zoom").simpleSlider({ value: position, range: [$cropper.cropit('zoom')*100, 100] }).on('slider:changed', function(event, data){
-								$cropper.cropit('zoom', data.value/100);
-							});
-							$cropper.cropit('zoom', position/100);
-						}
-					});
-				});
-				window.event.stopPropagation();
-			},
+		Crop: function(){
+			this._cropCallbacks = [];
+			this._dialog = null;
 
-			beforeSave: function(){
+			this.show = function(image){
+				var self = this;
+				this.getDialog().show(false, 'auto').done(function(){
+					self.initCrop(image);
+					self.initListeners();
+				});
+				return this;
+			};
+
+			this.initCrop = function(image){
+				var self = this;
+				var $cropper = this.getDialog().getHtml().find('#image-cropper').cropit({
+					imageState: { src: image },
+					imageBackground: true,
+					imageBackgroundBorderWidth: 100,
+					allowDragNDrop: false,
+					minZoom: 1,
+					maxZoom: 2,
+					onImageLoaded: function(){
+						self.getDialog().resize();
+						var position = ($('.cropit-slider').data('sliderObject') ? $('.cropit-slider').data('sliderObject').value : $cropper.cropit('zoom')*100);
+						$('.slider-container .slider').remove();
+						var minZoom = $cropper.cropit('zoom')*100;
+							maxZoom = 200; // 200% max zoom
+
+						if(minZoom == maxZoom) minZoom = 100;
+						$('.cropit-slider').simpleSlider({ value: position, range: [minZoom, maxZoom] }).on('slider:changed', function(event, data){
+							$cropper.cropit('zoom', data.value/100);
+						});
+					}
+				});
+			};
+
+			this.initListeners = function(){
+				var self = this;
+				this.getDialog().getHtml().find('.crop-save').on('click', function(){
+					self.crop();
+				});
+				this.getDialog().getHtml().find('.zoom-container .zoom-out').on('click', function(){
+					var ratio = self.getDialog().getHtml().find('.slider-container .dragger').position().left/self.getDialog().getHtml().find('.slider-container .slider').width();
+					var newRatio = Math.max(0, ratio - 0.02);
+					self.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', newRatio);
+				});
+				this.getDialog().getHtml().find('.zoom-container .zoom-in').on('click', function(){
+					var ratio = self.getDialog().getHtml().find('.slider-container .dragger').position().left/self.getDialog().getHtml().find('.slider-container .slider').width();
+					var newRatio = Math.min(2, ratio + 0.02);
+					self.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', newRatio);
+				});
+			};
+
+			this.setZoom = function(zoom){
+				this.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', zoom);
+			};
+
+			this.onCrop = function(callback){
+				this._cropCallbacks.push(callback);
+				return this;
+			};
+
+			this.getDialog = function(){
+				if(this._dialog === null){
+					this._dialog = new Bean.Dialog('', this.getHtml());
+				}
+				return this._dialog;
+			};
+
+			this.getHtml = function(){
+				var cropHtml = '<div class="cropit-container">';
+				cropHtml += '<div id="image-cropper"><div class="cropit-preview"></div></div>';
+				cropHtml += '</div>';
+				cropHtml += '<div class="zoom-container">';
+				cropHtml += '<button class="zoom-icon zoom-out"><i class="icon-zoom-out"></i></button>';
+				cropHtml += '<div class="slider-container"><input type="text" class="cropit-slider" /></div>';
+				cropHtml += '<button class="zoom-icon zoom-in"><i class="icon-zoom-in"></i></button>';
+				cropHtml += '</div>';
+				cropHtml += '<div class="crop-actions-container"><button type="button" class="button button-small button-primary crop-save">Save</button></div>';
+				return cropHtml;
+			};
+
+			this.crop = function(){
+				var self = this;
+				var imageBg = $('#image-cropper .cropit-preview-background');
 				var cropImage = $('#image-cropper').cropit('imageSize');
 				var cropWindow = $('#image-cropper').cropit('previewSize');
-				var cropPosition = $('#image-cropper .cropit-image-background').position();
-				var cropPercentX = Math.abs(cropPosition.left-100)/$('#image-cropper .cropit-image-background').width();
-				var cropPercentY = Math.abs(cropPosition.top-100)/$('#image-cropper .cropit-image-background').height();
-				var cropPercentW = cropWindow.width/$('#image-cropper .cropit-image-background').width();
-				var cropPercentH = cropWindow.height/$('#image-cropper .cropit-image-background').height();
-				var positionX = Math.abs(cropPosition.left-100);
-				var positionY = Math.abs(cropPosition.top-100);
-				var cropX = cropImage.width*cropPercentX;
-				var cropY = cropImage.height*cropPercentY;
-				var cropW = cropImage.width*cropPercentW;
-				var cropH = cropImage.height*cropPercentH;
-				$('#user_crop_x').val(cropX);
-				$('#user_crop_y').val(cropY);
-				$('#user_crop_w').val(cropW);
-				$('#user_crop_h').val(cropH);
-				return true;
-			},
+				var zoom = $('#image-cropper').cropit('zoom');
+				var cropPosition = imageBg.position();
 
-			onUpload: function(file, response){
-				var dialog = new Bean.Dialog($('#crews-dialogs-avatar'));
-				dialog.build();
-				if(response.image){
-					dialog.removeError();
-					$('#image-cropper').cropit('imageSrc', response.image);
-				}else if(response.error){
-					dialog.addError(response.error);
-				}
-			}
+				var cropPercentX = Math.abs(cropPosition.left-100)/(cropImage.width*zoom),
+					cropPercentY = Math.abs(cropPosition.top-100)/(cropImage.height*zoom),
+					cropPercentW = cropWindow.width/(cropImage.width*zoom),
+					cropPercentH = cropWindow.height/(cropImage.height*zoom),
+					positionX = Math.abs(cropPosition.left-100),
+					positionY = Math.abs(cropPosition.top-100),
+					cropX = cropImage.width*cropPercentX,
+					cropY = cropImage.height*cropPercentY,
+					cropW = cropImage.width*cropPercentW,
+					cropH = cropImage.height*cropPercentH;
+
+				var data = { x: cropX, y: cropY, width: cropW, height: cropH }
+
+				$.each(self._cropCallbacks, function(index, callback){
+					callback.call(self, data);
+				});
+				return true;
+			};
 		},
 
 		Calendar: {
@@ -789,6 +919,10 @@ var Bean = (function($){
 				return $.grep(array, function(el, index) {
 					return index === $.inArray(el, array);
 				});
+			},
+
+			getAuthenticityToken: function(){
+				return $('meta[name="csrf-token"]').attr('content');
 			}
 		}
 	};

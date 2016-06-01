@@ -40,3 +40,12 @@ Array.prototype.each = function(callback){
 	}
 	return this;
 };
+
+Array.prototype.flatten = function(){
+	var b = Array.prototype.concat.apply([], this);
+	if(b.length != this.length){
+		b = b.flatten();
+	};
+
+	return b;
+};

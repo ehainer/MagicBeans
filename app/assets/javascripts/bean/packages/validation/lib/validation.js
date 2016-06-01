@@ -6,8 +6,6 @@ var Validation = (function($){
             // is the element, e.g. - Validation.validate.call(element)
             element = element && !element.target ? $(element) : $(this);
 
-            console.log(element, element.val());
-
             var match,
                 result,
                 message,

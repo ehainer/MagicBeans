@@ -12,6 +12,7 @@ module MagicBeans
 				@options = opts
 
 				prepare_options
+				prepare_svg
 			end
 
 			def html_tag
@@ -48,7 +49,19 @@ module MagicBeans
 					@source ||= svg_name
 				end
 
+				def color
+					@options[:color].to_s.gsub(/[^A-Z0-9]+/i, "").upcase
+				end
+
 				def svg_name
+					name = file.is_a?(Symbol) ? file.to_s.dasherize : file.to_s.strip
+					name.gsub! /(^("|'))|(('|")$)/, ""
+					name << ".svg" unless /\.svg$/i =~ name
+					name.gsub! /(\.[A-Z0-9]+)$/i, ".#{color}\\1" unless color.blank?
+					name
+				end
+
+				def source_name
 					name = file.is_a?(Symbol) ? file.to_s.dasherize : file.to_s.strip
 					name.gsub! /(^("|'))|(('|")$)/, ""
 					name << ".svg" unless /\.svg$/i =~ name
@@ -64,6 +77,24 @@ module MagicBeans
 
 				def image_fallback_path
 					MagicBeans.assets.find(image_name).to_s
+				end
+
+				def prepare_svg
+					if !color.blank? && !MagicBeans.assets.find(svg_name)
+						# Get the svg source file and directory in which it lives
+						filepath = MagicBeans.assets.find(source_name)
+						filedir = File.dirname(filepath)
+
+						# Get the svg contents
+						content = File.open(filepath, "r") { |io| io.read }
+
+						# Set the color of any path/stroke in the svg
+						content.gsub! /fill=\"[^\"]+\"/, "fill=\"#{@options[:color]}\""
+						content.gsub! /stroke=\"[^\"]+\"/, "stroke=\"#{@options[:color]}\""
+
+						# Write the new svg file
+						File.open(File.join(filedir, svg_name), "w") { |f| f.puts content }
+					end
 				end
 
 				def svg_attributes
@@ -93,7 +124,7 @@ module MagicBeans
 				end
 
 				def fallback_path
-					@fallback_path ||= (MagicBeans.assets.find(image_name) || File.join(MagicBeans.config.svg_fallback_directory, source.sub(/svg$/i, [fallback_size, fallback_extension].compact.join("."))))
+					@fallback_path ||= (MagicBeans.assets.find(image_name) || File.join(MagicBeans.config.svg_fallback_directory, source.sub(/svg$/i, [fallback_size, fallback_extension].reject(&:blank?).join("."))))
 				end
 
 				def fallback_size
@@ -113,7 +144,6 @@ module MagicBeans
 							convert.merge! ["-background", "none"]
 							convert.merge! ["-gravity", "center"]
 							if fallback_size
-								puts fallback_size
 								convert.merge! ["-density", 1200]
 								convert.merge! ["-resize", fallback_size]
 								convert.merge! ["-extent", fallback_size]
