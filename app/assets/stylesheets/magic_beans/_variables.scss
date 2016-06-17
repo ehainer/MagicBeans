@@ -1,0 +1,377 @@
+// GLOBAL
+$base-font-size: 16px;
+$base-line-height: 1.45rem;
+$content-width: 1200px;
+$content-columns: 24;
+
+
+// COLORS
+$black: #000000;
+$white: #FFFFFF;
+$dark-blue: #323A45;
+$blood-orange: #F6595B;
+$sky-blue: #62CFF0;
+$sun-yellow: #FEC544;
+
+
+// DIALOG
+$overlay-background: rgba(0, 0, 0, 0.6);
+
+
+// AVATAR
+$avatar-zoom-color: #CCCCCC;
+
+
+// BUBBLE
+$bubble-inner-background: $white;
+$bubble-inner-color: #323A45;
+$bubble-border-color: teal;
+$button-loader-background: $white;
+$bubble-border-width: 2px;
+$bubble-point-size: 10px;
+
+
+// TOAST
+$toast-background: #323A45;
+$toast-color: $white;
+$toast-undo-color: teal;
+
+
+// DIALOGS
+$dialogs: (
+	primary: (
+		header: (
+			background: $blood-orange,
+			color: $white,
+			padding: 1rem,
+			font-size: 0.9rem,
+			line-height: 0.9rem,
+			font-weight: bold,
+			text-transform: uppercase,
+			border-top-left-radius: 5px,
+			border-top-right-radius: 5px
+		),
+		body: (
+			background: $white,
+			padding: 1rem,
+			border-bottom-left-radius: 5px,
+			border-bottom-right-radius: 5px
+		),
+		footer: (
+			background: #E8E8E8
+		),
+		error: (
+			font-size: 0.9rem,
+			color: #F0502C,
+			font-weight: bold,
+			text-align: center
+		)
+	),
+	secondary: (
+		header: (
+			background: $sky-blue,
+			color: $white,
+			padding: 1rem,
+		),
+		body: (
+			background: $white,
+			padding: 1rem
+		),
+		footer: (
+			background: #E8E8E8,
+			font-size: 0.8rem
+		),
+		error: (
+			font-size: 0.9rem,
+			color: #F0502C,
+			font-weight: bold,
+			text-align: center,
+			padding-bottom: 1rem
+		)
+	)
+);
+
+
+// INPUTS
+$inputs: (
+	primary: (
+		transition: border-color 500ms,
+		font-family: ('Open Sans',Helvetica,sans-serif),
+		font-size: 1rem,
+		border: 1px solid #CCCCCC,
+		padding: 0.3rem 0.5rem,
+		border-radius: 0,
+		color: #234051,
+		focus: (
+			border: 1px solid #62CFF0
+		),
+		active: (
+			border: 1px solid #62CFF0
+		),
+		choice: (
+			background-color: $sky-blue,
+			color: $white
+		)
+	),
+	secondary: (
+		transition: border-color 500ms,
+		font-family: ('Open Sans',Helvetica,sans-serif),
+		font-size: 1rem,
+		border: 1px solid #CCCCCC,
+		background: $white,
+		padding: 0.3rem 0.5rem,
+		border-radius: 0,
+		font-weight: bold,
+		focus: (
+			border: 1px solid #F6595B
+		),
+		active: (
+			border: 1px solid #F6595B
+		)
+	)
+);
+
+
+// RADIO
+$radios: (
+	primary: (
+		transitions: (background-color 300ms, border 300ms, box-shadow 300ms),
+		width: 16px,
+		height: 16px,
+		gap-color: $white,
+		checked: (
+			border: $blood-orange,
+			color: $blood-orange
+		)
+	),
+	secondary: (
+		transitions: (background-color 300ms, border 300ms, box-shadow 300ms),
+		border-width: 2px,
+		border-color: #CCCCCC,
+		gap-width: 3px,
+		checked: (
+			border: $sky-blue,
+			color: $sky-blue
+		)
+	)
+);
+
+
+// CHECKBOX
+$checkboxes: (
+	primary: (
+		transitions: (background-color 300ms, border 300ms, box-shadow 300ms),
+		width: 16px,
+		height: 16px,
+		gap-color: $white,
+		icon: cross-primary,
+		checked: (
+			border: $blood-orange,
+			color: $blood-orange
+		)
+	),
+	secondary: (
+		transitions: (background-color 300ms, border 300ms, box-shadow 300ms),
+		border-width: 2px,
+		border-color: #CCCCCC,
+		gap-width: 0,
+		icon: cross-secondary,
+		checked: (
+			border: $sky-blue,
+			color: $sky-blue
+		)
+	)
+);
+
+
+// BUTTON
+$buttons: (
+	primary: (
+		transitions: all 500ms,
+		color: $white,
+		background: #F6595B,
+		border: 3px solid #F6595B,
+		font-family: ('Open Sans',Helvetica,sans-serif),
+		font-weight: bold,
+		font-size: 1rem,
+		border-radius: 0,
+		text-transform: uppercase,
+		hover: (
+			border-color: darken($blood-orange, 15%),
+			background: darken($blood-orange, 15%)
+		),
+		loader: (
+			dot-color: $white
+		)
+	),
+	secondary: (
+		transitions: all 500ms,
+		color: $white,
+		background: #62CFF0,
+		border: 3px solid #62CFF0,
+		font-family: ('Open Sans',Helvetica,sans-serif),
+		font-weight: bold,
+		font-size: 1rem,
+		text-transform: uppercase,
+		hover: (
+			background: $white,
+			color: #62CFF0
+		),
+		loader: (
+			dot-color: $white
+		)
+	),
+	tertiary: (
+		transitions: all 500ms,
+		color: #FEE262,
+		background: $white,
+		border: 3px solid #FEE262,
+		font-family: ('Open Sans',Helvetica,sans-serif),
+		font-weight: bold,
+		font-size: 1rem,
+		text-transform: uppercase,
+		hover: (
+			background: #FEE262,
+			color: $white
+		),
+		loader: (
+			dot-color: #FEE262
+		)
+	)
+	// If you are adding more than 3 buttons, check yo self, cause it's probably overkill
+);
+
+
+// BUTTON SIZES
+$button-sizes: (
+	small: (
+		padding: 0.5rem 1rem // Format is [top/bottom left/right] OR [top left/right bottom] OR [top/left/right/bottom] OR [top right left bottom]
+	),
+	medium: (
+		padding: 1rem 1.5rem // Format is [top/bottom left/right] OR [top left/right bottom] OR [top/left/right/bottom] OR [top right left bottom]
+	),
+	large: (
+		padding: 1.4rem 2rem // Format is [top/bottom left/right] OR [top left/right bottom] OR [top/left/right/bottom] OR [top right left bottom]
+	)
+);
+
+
+// SCROLLBARS
+$scrollbars: (
+	primary: (
+		scrollbar: (
+			width: 4px
+		),
+		scrollbar-button: (),
+		scrollbar-track: (
+			border-radius: 0
+		),
+		scrollbar-track-piece: (),
+		scrollbar-thumb: (
+			background: #62CFF0
+		),
+		scrollbar-corner: (),
+		resizer: ()
+	)
+);
+
+
+// CALENDAR
+$calendars: (
+	primary: (
+		container: (
+			background: #323A45,
+			border: none,
+			padding: 1rem
+		),
+		dow: (
+			color: $sky-blue
+		),
+		nav: (
+			background-color: $sky-blue,
+			border: none
+		),
+		date: (
+			width: 40px,
+			height: 40px,
+			line-height: 38px,
+			color: $white,
+			border-radius: 40px,
+			hover: (
+				color: #333,
+				border: 1px solid #CCCCCC,
+				padding: 0
+			),
+			disabled: (
+				color: #999
+			),
+			off: (
+				color: #999 !important
+			),
+			start-date: (
+				border: 1px solid $sky-blue
+			),
+			end-date: (
+				border: 1px solid $blood-orange
+			),
+			in-range: (
+				background: none,
+				color: $white
+			),
+			mini: (
+				background: $sky-blue,
+				color: $white
+			)
+		),
+		month: (
+			color: $white
+		),
+		time: (
+			background: none,
+			color: $white,
+			border-bottom: 1px dotted $sky-blue
+		)
+	)
+);
+
+
+// FILE UPLOAD
+$uploads: (
+	primary: (
+		transitions: all 500ms,
+		border: 1px solid #CCCCCC,
+		over: (
+			transform: scale(1.03),
+			border-color: $sky-blue
+		)
+	)
+);
+
+
+// TOOLTIPS
+$tooltips: (
+	primary: (
+		background: $white,
+		color: $sky-blue,
+		padding: 1rem,
+		border: 4px solid $sky-blue,
+		font-weight: bold,
+		line-height: 1,
+		point: (
+			size: 10px,
+			side: right
+		)
+	),
+	secondary: (
+		background: $sun-yellow,
+		color: $white,
+		padding: 1rem,
+		border: none,
+		font-weight: bold,
+		line-height: 1.2,
+		point: (
+			size: 15px,
+			side: right
+		)
+	)
+);

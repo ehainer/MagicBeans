@@ -1,0 +1,180 @@
+$sg-red: #F0502C;
+$sg-green: #548775;
+$sg-yellow: #FEC544;
+
+.styleguide-container {
+	@include outer-container(100%);
+	background-color: #F8F8F8;
+
+	.styleguide-flash {
+		@include rem(padding, 1rem);
+		width: 100%;
+		position: relative;
+		.close {
+			@include rem(font-size, 1.1rem);
+			@include rem(right, 0.5rem);
+			@include rem(top, 0.9rem);
+			position: absolute;
+			background: none;
+			border: none;
+			float: right;
+			cursor: pointer;
+			outline: none;
+		}
+
+		&.alert {
+			background-color: lighten($sg-red, 32%);
+			color: darken($sg-red, 20%);
+			.close {
+				color: darken($sg-red, 20%);
+			}
+		}
+
+		&.warning {
+			background-color: lighten($sg-yellow, 25%);
+			color: darken($sg-yellow, 25%);
+			.close {
+				color: darken($sg-yellow, 25%);
+			}
+		}
+
+		&.notice {
+			background-color: lighten($sg-green, 32%);
+			color: darken($sg-green, 20%);
+			.close {
+				color: darken($sg-green, 20%);
+			}
+		}
+	}
+
+	.styleguide-row {
+		@include outer-container(100%);
+		border-bottom: 1px solid #DDDDDD;
+		background-color: #FFFFFF;
+		&:first-child {
+			.styleguide-content, .styleguide-annotation {
+				@include rem(padding-top, 2rem);
+			}
+		}
+		&:last-child {
+			.styleguide-content, .styleguide-annotation {
+				@include rem(padding-bottom, 2rem);
+			}
+		}
+	}
+
+	.styleguide-content {
+		@include span-columns(18 of 24);
+		@include rem(padding, 2.5rem 2rem 2.5rem);
+		background-color: #FFFFFF;
+	}
+
+	.styleguide-annotation {
+		@include span-columns(6 of 24);
+		@include pad(0 default 0);
+		@include rem(padding-top, 2.5rem);
+		background-color: #F6595B;
+		color: #FFFFFF;
+		min-height: 600px;
+		h1 {
+			@include rem(font-size, 1.4rem);
+			font-weight: normal;
+			font-family: "Raleway",Helvetica,sans-serif;
+		}
+
+		dl {
+			dt {
+				@include rem(margin-top, 1rem);
+				@include rem(margin-bottom, 0.3rem);
+				border-bottom: 1px solid darken(#F6595B, 20%);
+				font-weight: bold;
+			}
+			dd {
+				@include rem(font-size, 0.8rem);
+				@include rem(line-height, 1rem);
+				p {
+					@include rem(margin-bottom, 0.4rem);
+				}
+			}
+		}
+		b {
+			@include rem(padding, 0.1rem 0.3rem);
+			display: inline;
+			border: 1px solid #FFFFFF;
+			background-color: #676767;
+			border-radius: 4px;
+			white-space: pre;
+			font-family: monospace;
+			font-weight: normal;
+		}
+		a {
+			color: #FFFFFF;
+			font-weight: bold;
+		}
+	}
+
+	.styleguide-label {
+		@include rem(font-size, 0.9rem);
+		color: #000000;
+		font-weight: bold;
+		text-transform: uppercase;
+		margin-bottom: 4px;
+	}
+
+	.styleguide-bubble-columns {
+		@include clearfix;
+		ul {
+			@include span-columns(2 of 6);
+		}
+	}
+
+	.styleguide-doc-default {
+		font-weight: bold;
+	}
+
+	.styleguide-doc-italic {
+		font-style: italic;
+	}
+
+	.column-9 {
+		@include span-columns(9 of 18);
+	}
+
+	.column-6 {
+		@include span-columns(6 of 18);
+	}
+
+	.column-4 {
+		@include span-columns(4.5 of 18);
+	}
+
+	.column-3 {
+		@include span-columns(3 of 6);
+	}
+
+	.space-bottom {
+		@include rem(margin-bottom, 1.5rem);
+		@include clearfix;
+	}
+
+	.dropzone {
+		@include rem(margin-top, 1rem);
+	}
+
+	form {
+		label {
+			@include rem(margin-top, 1rem);
+			display: inline-block;
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+		input[type="submit"], .mce-tinymce {
+			@include rem(margin-top, 1rem);
+		}
+	}
+
+	.map {
+		@include rem(margin-bottom, 1rem);
+	}
+}

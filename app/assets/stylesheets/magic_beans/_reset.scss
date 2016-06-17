@@ -1,0 +1,300 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+}
+input, textarea, select, button {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: $base-line-height;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html {
+	height: 100%;
+}
+button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="range"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+input[type="text"],
+input[type="password"]
+select, textarea {
+	outline: none;
+}
+
+input[type="radio"], input[type="checkbox"] {
+	@include rem(height, $base-line-height);
+	cursor: pointer;
+	vertical-align: top;
+	& + label {
+		vertical-align: top;
+		display: inline-block;
+		cursor: pointer;
+	}
+}
+
+.input {
+	@include rem(line-height, $base-line-height);
+	width: 100%;
+	overflow: hidden;
+	background: none;
+
+	@each $type, $input in $inputs {
+		&.input-#{$type} {
+			@include input($type);
+		}
+	}
+
+	&.mce-tinymce {
+		padding: 0;
+	}
+	&.mce-content-body {
+		border: none !important;
+		height: 100%;
+	}
+}
+
+.button {
+	cursor: pointer;
+	display: inline-block;
+	outline: none;
+	text-decoration: none;
+
+	// Ensure buttons next to one another have space between them
+	& + & {
+		@include rem(margin-left, 1rem);
+	}
+
+	@each $type, $button in $buttons {
+		&.button-#{$type} {
+			@include button($type);
+		}
+	}
+
+	@each $type, $size in $button-sizes {
+		&.button-#{$type} {
+			@include button-size($type);
+		}
+	}
+
+	&[disabled], &.thinking {
+		cursor: default;
+	}
+}
+
+.radio {
+	&:not(#foo) {
+		visibility: hidden;
+		display: none;
+		width: 0;
+		float: left;
+	}
+	@each $type, $radio in $radios {
+		&.radio-#{$type} {
+			@include radio($type);
+		}
+	}
+}
+
+.checkbox {
+	&:not(#foo) {
+		visibility: hidden;
+		display: none;
+		width: 0;
+		float: left;
+	}
+	@each $type, $checkbox in $checkboxes {
+		&.checkbox-#{$type} {
+			@include checkbox($type);
+		}
+	}
+}
+
+.scrollbar {
+	@each $type, $scrollbar in $scrollbars {
+		&.scrollbar-#{$type} {
+			@include scrollbar($type);
+		}
+	}
+}
+
+.calendar {
+	@each $type, $calendar in $calendars {
+		&.calendar-#{$type} {
+			@include calendar($type);
+		}
+	}
+}
+
+.upload {
+	@each $type, $upload in $uploads {
+		&.upload-#{$type} {
+			@include upload($type);
+		}
+	}
+}
+
+.tooltip {
+	@include rem(padding, 0.5rem);
+	display: none;
+	position: absolute;
+	bottom: 100%;
+	pointer-events: none;
+	white-space: nowrap;
+	z-index: 1050;
+	background: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	margin-bottom: 10px;
+
+	&:after, &:before {
+		@include rem(left, 1rem);
+		content: " ";
+		position: absolute;
+		top: 100%;
+		width: 0;
+		height: 0;
+	}
+	&:after {
+		border-left: 0 solid transparent;
+		border-right: 9px solid transparent;
+		border-top: 10px solid #FFFFFF;
+	}
+
+	&:before {
+		border-left: 0 solid transparent;
+		border-right: 12px solid transparent;
+		border-top: 12px solid #CCCCCC;
+		margin-left: -1px;
+	}
+
+	@each $type, $tooltip in $tooltips {
+		&.tooltip-#{$type} {
+			@include tooltip($type);
+		}
+	}
+}
+
+.dialog {
+	@include rem(margin, 2rem 0);
+	display: none;
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	width: 500px;
+	z-index: 2000;
+	margin-left: -250px;
+	text-transform: none;
+	cursor: initial;
+
+	.dialog-header {
+		@include rem(padding, 1rem);
+		background: #234051;
+		color: #FFFFFF;
+		.heading {
+			display: inline-block;
+		}
+		.close {
+			padding: 0;
+			background-color: transparent;
+			border: none;
+			float: right;
+			cursor: pointer;
+			outline: none;
+			background-position: top right;
+			width: $base-line-height;
+			height: $base-line-height;
+		}
+	}
+
+	.dialog-body {
+		@include rem(padding, 1rem);
+		background: #FFFFFF;
+	}
+
+	.dialog-footer {
+		@include rem(padding, 1rem);
+		background: #E8E8E8;
+	}
+
+	.dialog-buttons {
+		@include rem(margin-top, 1rem);
+	}
+
+	p {
+		@include rem(margin-bottom, 1rem);
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	img:not([class*="cropit"]) {
+		display: block;
+		max-width: 100%;
+	}
+
+	@each $type, $dialog in $dialogs {
+		&.dialog-#{$type} {
+			@include dialog($type);
+		}
+	}
+}
+
+.mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset {
+	box-sizing: border-box !important;
+}
