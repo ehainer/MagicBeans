@@ -1,0 +1,39 @@
+.icon-android {
+	@include icon(android, $width: 40px, $height: 40px);
+}
+
+.icon-airplane {
+	@include icon(airplane);
+}
+
+.icon-close {
+	@include icon(cross);
+}
+
+.icon-calendar {
+	@include icon(calendar5);
+}
+
+.icon-phone2 {
+	@include icon(phone2, $width: 40px, $height: 40px);
+}
+
+.icon-paw {
+	@include icon(paw, $width: 40px, $height: 40px);
+}
+
+.icon-stars {
+	@include icon(stars, $width: 40px, $height: 40px);
+}
+
+.icon-safari {
+	@include icon(safari, $width: 40px, $height: 40px);
+}
+
+.icon-zoom-in {
+	@include icon(zoom-in3, $width: 16px, $height: 16px, $color: #CCCCCC);
+}
+
+.icon-zoom-out {
+	@include icon(zoom-out3, $width: 16px, $height: 16px, $color: #CCCCCC);
+}

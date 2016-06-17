@@ -1,0 +1,842 @@
+@function is-numeric($values) {
+	$number: true;
+	@each $value in $values {
+		@if type-of($value) != number {
+			$number: false;
+		}
+	}
+	@return $number;
+}
+
+@function is-of-numeric-type($values, $type) {
+	$valid: true;
+	@each $value in $values {
+		@if type-of($value) != number {
+			$valid: false;
+		} @else if unit($value) != $type {
+			$valid: false;
+		}
+	}
+	@return $valid;
+}
+
+@function map-try($map, $key, $default) {
+	@if map-has-key($map, $key) {
+		@return map-get($map, $key);
+	} @else {
+		@return map-get($map, $default);
+	}
+}
+
+@function extract-side-value($list, $side) {
+	$listLength: length($list);
+	@if $listLength == 1 {
+		@return nth($list, 1);
+	} @else if $listLength == 2 {
+		@if $side == top or $side == bottom {
+			@return nth($list, 1);
+		} @else {
+			@return nth($list, 2);
+		}
+	} @else if $listLength == 3 {
+		@if $side == top {
+			@return nth($list, 1);
+		} @else if $side == bottom {
+			@return nth($list, 3);
+		} @else {
+			@return nth($list, 2);
+		}
+	} @else if $listLength == 4 {
+		@if $side == top {
+			@return nth($list, 1);
+		} @else if $side == right {
+			@return nth($list, 2);
+		} @else if $side == bottom {
+			@return nth($list, 3);
+		} @else {
+			@return nth($list, 4);
+		}
+	}
+	@return 0;
+}
+
+@function to-px($values) {
+	$font-size: $base-font-size;
+	$px-values: ();
+	@each $value in $values {
+		@if $value == 0 or $value == 0px {
+			$px-values: join($px-values, 0);
+		} @else if type-of($value) == number and not unitless($value) and (unit($value) == px) {
+			$px-values: join($px-values, round($value));
+		} @else if type-of($value) == number and not unitless($value) and (unit($value) == "%") {
+			$px-values: join($px-values, #{$value});
+		} @else if $value == auto {
+			$px-values: join($px-values, auto);
+		} @else {
+			$value: $value / ($value * 0 + 1);
+			$px-values: join($px-values, round($value * $font-size));
+		}
+	}
+
+	@return nth($px-values, 1);
+}
+
+@function find-value-in($list, $property, $default) {
+	@if map-has-key($list, $property) {
+		@return map-get($list, $property);
+	} @else {
+		@return $default;
+	}
+}
+
+@function contains($list, $var) {
+	@return not (null == index($list, $var));
+}
+
+/**
+ * @see https://css-tricks.com/snippets/sass/strip-unit-function/
+ */
+@function strip-unit($number) {
+	@if type-of($number) == 'number' and not unitless($number) {
+		@return $number / ($number * 0 + 1);
+	}
+
+	@return $number;
+}
+
+@mixin clearfix {
+	&:before, &:after {
+		content: " ";
+		display: table;
+	}
+
+	&:after {
+		clear: both;
+	}
+
+	*zoom: 1;
+}
+
+/**
+ * @see http://davidensinger.com/2013/03/using-rems-with-sass/
+ */
+@mixin rem($property, $values) {
+	$font-size: $base-font-size;
+	$px-values: ();
+	$rem-values: ();
+	@each $value in $values {
+		@if $value == 0 or $value == 0px {
+			$px-values: join($px-values, 0);
+			$rem-values: join($rem-values, 0);
+		} @else if type-of($value) == number and not unitless($value) and (unit($value) == px) {
+			$new-rem-value: $value / $font-size;
+			$px-values: join($px-values, round($value));
+			$rem-values: join($rem-values, unquote("#{$new-rem-value}rem"));
+		} @else if type-of($value) == number and not unitless($value) and (unit($value) == "%") {
+			$px-values: join($px-values, #{$value});
+			$rem-values: join($rem-values, #{$value});
+		} @else if $value == auto {
+			$px-values: join($px-values, auto);
+			$rem-values: join($rem-values, auto);
+		} @else {
+			$value: $value / ($value * 0 + 1);
+			$px-values: join($px-values, round($value * $font-size));
+			$rem-values: join($rem-values, unquote("#{$value}rem"));
+		}
+	}
+
+	#{$property}: $px-values;
+	#{$property}: $rem-values;
+}
+
+@mixin property-from-state($map, $state, $prop) {
+	@if map-has-key($map, $state) {
+		$nested: map-get($map, $state);
+		@each $property in $prop {
+			@if map-has-key($nested, $property) {
+				#{$property}: map-get($nested, $property);
+			}
+		}
+	}
+}
+
+@mixin tooltip($type) {
+	$tooltip: map-get($tooltips, $type);
+	@each $property, $value in $tooltip {
+		@if $property == point {
+			&:after {
+				$point: $value;
+				$size: map-get($point, size);
+				$background: map-try($point, background-color, background);
+				@if map-get($point, direction) == down {
+					@include rem(border-right-size, $size);
+					border-left: 0 solid transparent;
+					border-right-style: solid;
+					border-right-color: transparent;
+					border-top: $size solid $background;
+					top: 100%;
+				} @else if map-get($point, direction) == up {
+					@include rem(border-right-size, $size);
+					border-left: 0 solid transparent;
+					border-right-style: solid;
+					border-right-color: transparent;
+					border-bottom: $size solid $background;
+					bottom: 100%;
+				}
+
+				@if map-get($point, side) == right {
+					@include rem(right, 1rem);
+					left: auto;
+				}
+			}
+		} @else {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+}
+
+@mixin input($type) {
+	$input: map-get($inputs, $type);
+
+	@each $property, $value in $input {
+		@if contains((hover focus active placeholder), $property) {
+			@if $property == placeholder {
+				&.placeholding {
+					@each $placeholder-property, $placeholder-value in $value {
+						#{$placeholder-property}: $placeholder-value;
+					}
+					@if not map-has-key($value, color) {
+						color: #CCCCCC;
+					}
+				}
+				&::-webkit-input-placeholder {
+					@each $placeholder-property, $placeholder-value in $value {
+						#{$placeholder-property}: $placeholder-value;
+					}
+				}
+				&::-moz-placeholder {
+					@each $placeholder-property, $placeholder-value in $value {
+						#{$placeholder-property}: $placeholder-value;
+					}
+				}
+				&:-ms-input-placeholder {
+					@each $placeholder-property, $placeholder-value in $value {
+						#{$placeholder-property}: $placeholder-value;
+					}
+				}
+				&:-moz-placeholder {
+					@each $placeholder-property, $placeholder-value in $value {
+						#{$placeholder-property}: $placeholder-value;
+					}
+				}
+			} @else {
+				&:#{$property}, &.pseudo-#{$property} {
+					@each $nested-property, $nested-value in $value {
+						@if is-of-numeric-type($nested-value, rem) {
+							@include rem($nested-property, $nested-value);
+						} @else {
+							#{$nested-property}: $nested-value;
+						}
+					}
+				}
+			}
+		} @else if $property != choice {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+	@if not map-has-key($input, placeholder) {
+		&.placeholding {
+			color: #999999;
+		}
+	}
+
+	@if map-has-key($input, font-size) {
+		& + .chosen-drop {
+			@include rem(font-size, map-get($input, font-size));
+		}
+	}
+	@if map-has-key($input, padding) {
+		&.chosen-choices {
+			$list: map-get($input, padding);
+			$leftPadding: extract-side-value($list, left);
+			$topPadding: extract-side-value($list, top);
+			$margin: $leftPadding - $topPadding;
+			@include rem(padding, $topPadding $topPadding 0);
+			li {
+				@include rem(margin-bottom, $topPadding);
+			}
+			.search-field {
+				@include rem(margin-left, $margin);
+			}
+			.search-choice + .search-field {
+				margin-left: 0;
+			}
+		}
+
+		& + .chosen-drop .chosen-search {
+			@include rem(padding, map-get($input, padding));
+		}
+	}
+	@if map-has-key($input, choice) {
+		&.chosen-choices {
+			li.search-choice {
+				$choice: map-get($input, choice);
+				@each $choice-property, $choice-value in $choice {
+					@if is-of-numeric-type($choice-value, rem) {
+						@include rem($choice-property, $choice-value);
+					} @else {
+						#{$choice-property}: $choice-value;
+					}
+				}
+			}
+		}
+	}
+
+	&.icon-left {
+		$list: map-get($input, padding);
+		$size: find-value-in($input, line-height, $base-line-height);
+		$topPadding: extract-side-value($list, top);
+		$bottomPadding: extract-side-value($list, bottom);
+		$padding: $size + $topPadding + $bottomPadding;
+		$iconSize: ($size - 0.2rem);
+		@include rem(padding-left, $padding);
+		background-size: $iconSize;
+		background-position: left (($padding/2) - ($iconSize/2)) center;
+	}
+
+	&.icon-right {
+		$list: map-get($input, padding);
+		$size: find-value-in($input, line-height, $base-line-height);
+		$topPadding: extract-side-value($list, top);
+		$bottomPadding: extract-side-value($list, bottom);
+		$padding: $size + $topPadding + $bottomPadding;
+		$iconSize: ($size - 0.2rem);
+		@include rem(padding-right, $padding);
+		background-size: ($size - 0.2rem);
+		background-position: right (($padding/2) - ($iconSize/2)) center;
+	}
+
+	@if map-has-key($input, transition) {
+		& + .chosen-drop {
+			transition: map-get($input, transition);
+		}
+	}
+}
+
+@mixin button($type) {
+	$button: map-get($buttons, $type);
+
+	@if map-has-key($button, transitions) {
+		transition: map-get($button, transitions);
+	}
+
+	@each $property, $value in $button {
+		@if contains((hover focus active), $property) {
+			&:not([disabled]):#{$property}, &.pseudo-#{$property} {
+				@each $nested-property, $nested-value in $value {
+					@if is-of-numeric-type($nested-value, rem) {
+						@include rem($nested-property, $nested-value);
+					} @else {
+						#{$nested-property}: $nested-value;
+					}
+				}
+			}
+		} @else if $property != loader {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+
+	// If focus styles were not provided but hover styles were, include hover styles as focus for ADA compliance
+	@if not map-has-key($button, focus) and map-has-key($button, hover) {
+		&:focus {
+			@each $nested-property, $nested-value in map-get($button, hover) {
+				@if is-of-numeric-type($nested-value, rem) {
+					@include rem($nested-property, $nested-value);
+				} @else {
+					#{$nested-property}: $nested-value;
+				}
+			}
+		}
+	}
+
+	@if map-has-key($button, loader) {
+		$loader: map-get($button, loader);
+		&.thinking, &.thinking:hover {
+			@each $property, $value in $button {
+				@if not contains((loader hover focus active), $property) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+			.spinner > span {
+				background-color: map-try($loader, dot-color, #FFFFFF);
+			}
+		}
+	}
+}
+
+@mixin button-size($type) {
+	$size: map-get($button-sizes, $type);
+	@each $property, $value in $size {
+		@if is-of-numeric-type($value, rem) {
+			@include rem($property, $value);
+		} @else {
+			#{$property}: $value;
+		}
+	}
+}
+
+@mixin scrollbar($type) {
+	$scrollbar: map-get($scrollbars, $type);
+	@each $property, $value in $scrollbar {
+		&::-webkit-#{$property} {
+			@each $nested-property, $nested-value in $value {
+				@if is-of-numeric-type($nested-value, rem) {
+					@include rem($nested-property, $nested-value);
+				} @else {
+					#{$nested-property}: $nested-value;
+				}
+			}
+		}
+	}
+}
+
+@mixin radio($type) {
+	&:not(#foo) {
+		$radio: map-get($radios, $type);
+		$width: find-value-in($radio, width, $base-font-size);
+		$height: find-value-in($radio, height, $base-font-size);
+		$checked: find-value-in($radio, checked, ( color: #234051, border: #234051 ));
+		$line-height: find-value-in($radio, line-height, $base-line-height);
+		& + label {
+			padding-left: to-px($width) + 6px;
+			@if map-has-key($radio, line-height) {
+				@include rem(line-height, map-get($radio, line-height));
+			}
+			&:before {
+				@if map-has-key($radio, transitions) {
+					transition: map-get($radio, transitions);
+				}
+				box-shadow: inset 0 0 0 find-value-in($radio, gap-width, 3px) transparent;
+				border-radius: 50%;
+				content: '';
+				background: transparent;
+				border: find-value-in($radio, border-width, 2px) solid find-value-in($radio, border-color, #CCCCCC);
+				display: inline-block;
+				width: $width;
+				height: $height;
+				text-align: center;
+				vertical-align: top;
+				margin-top: floor((to-px($line-height) - to-px($height))/2);
+				margin-left: -(to-px($width) + 6px);
+				margin-right: 6px;
+			}
+		}
+		&:checked + label:before {
+			background-color: find-value-in($checked, color, #000000);
+			border: find-value-in($radio, border-width, 2px) solid find-value-in($checked, border, #000000);
+			box-shadow: inset 0 0 0 find-value-in($radio, gap-width, 3px) find-value-in($radio, gap-color, #FFFFFF);
+		}
+	}
+}
+
+@mixin checkbox($type) {
+	&:not(#foo) {
+		$checkbox: map-get($checkboxes, $type);
+		$width: find-value-in($checkbox, width, $base-font-size);
+		$height: find-value-in($checkbox, height, $base-font-size);
+		$checked: find-value-in($checkbox, checked, ( color: #234051, border: #234051 ));
+		$line-height: find-value-in($checkbox, line-height, $base-line-height);
+		& + label {
+			padding-left: to-px($width) + 6px;
+			@if map-has-key($checkbox, line-height) {
+				@include rem(line-height, map-get($checkbox, line-height));
+			}
+			&:before {
+				@if map-has-key($checkbox, transitions) {
+					transition: map-get($checkbox, transitions);
+				}
+				box-shadow: inset 0 0 0 find-value-in($checkbox, gap-width, 3px) transparent;
+				content: '';
+				background: transparent;
+				border: find-value-in($checkbox, border-width, 2px) solid find-value-in($checkbox, border-color, #CCCCCC);
+				display: inline-block;
+				width: $width;
+				height: $height;
+				text-align: center;
+				vertical-align: top;
+				margin-top: floor((to-px($line-height) - to-px($height))/2);
+				margin-left: -(to-px($width) + 6px);
+				margin-right: 6px;
+			}
+		}
+		&:checked + label:before {
+			@if map-has-key($checkbox, icon) {
+				@include icon(find-value-in($checkbox, icon, cross), $width: 10px, $height: 10px);
+				border: find-value-in($checkbox, border-width, 2px) solid find-value-in($checked, border, #000000);
+			} @else {
+				background-color: find-value-in($checked, color, #000000);
+				border: find-value-in($checkbox, border-width, 2px) solid find-value-in($checked, border, #000000);
+				box-shadow: inset 0 0 0 find-value-in($checkbox, gap-width, 3px) find-value-in($checkbox, gap-color, #FFFFFF);
+			}
+		}
+	}
+}
+
+@mixin icon($icon, $fallback: null, $width: null, $height: null, $color: null) {
+	background-size: 100%;
+	@if $width == null {
+		$width: to-px($base-line-height) - to-px(0.2rem);
+	}
+	@if $height == null {
+		$height: to-px($base-line-height) - to-px(0.2rem);
+	}
+	$size: "#{strip-unit($width)}x#{strip-unit($height)}";
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-image: svg-icon($icon, $fallback, $size, $color);
+}
+
+@mixin calendar($type) {
+	$calendar: map-get($calendars, $type);
+	&.daterangepicker {
+		@each $property, $value in find-value-in($calendar, container, ()) {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+	.calendar {
+		.calendar-table {
+			$date: find-value-in($calendar, date, ());
+			@if strip-unit(find-value-in($date, border-radius, 0)) > 0 {
+				.table-condensed {
+					border-collapse: separate;
+				}
+			}
+			th {
+				&.month {
+					@each $property, $value in find-value-in($calendar, month, ()) {
+						@if is-of-numeric-type($value, rem) {
+							@include rem($property, $value);
+						} @else {
+							#{$property}: $value;
+						}
+					}
+				}
+				&.dow {
+					@each $property, $value in find-value-in($calendar, dow, ()) {
+						@if is-of-numeric-type($value, rem) {
+							@include rem($property, $value);
+						} @else {
+							#{$property}: $value;
+						}
+					}
+				}
+				&.next, &.prev {
+					@each $property, $value in find-value-in($calendar, nav, ()) {
+						@if is-of-numeric-type($value, rem) {
+							@include rem($property, $value);
+						} @else {
+							#{$property}: $value;
+						}
+					}
+				}
+			}
+			tbody td {
+				@each $property, $value in find-value-in($calendar, date, ()) {
+					@if contains((hover disabled off start-date end-date in-range mini), $property) {
+						@if $property == hover {
+							&:hover {
+								@each $nested-property, $nested-value in $value {
+									@if is-of-numeric-type($nested-value, rem) {
+										@include rem($nested-property, $nested-value);
+									} @else {
+										#{$nested-property}: $nested-value;
+									}
+								}
+							}
+						} @elseif $property == mini {
+							.mini-date {
+								@each $nested-property, $nested-value in $value {
+									@if is-of-numeric-type($nested-value, rem) {
+										@include rem($nested-property, $nested-value);
+									} @else {
+										#{$nested-property}: $nested-value;
+									}
+								}
+								&:before {
+									@if map-has-key($value, background-color) or map-has-key($value, background) {
+										@include triangle(12px, map-try($value, background-color, background), up);
+									}
+								}
+							}
+						} @else {
+							&.#{$property} {
+								@each $nested-property, $nested-value in $value {
+									@if is-of-numeric-type($nested-value, rem) {
+										@include rem($nested-property, $nested-value);
+									} @else {
+										#{$nested-property}: $nested-value;
+									}
+								}
+							}
+						}
+					} @else {
+						@if is-of-numeric-type($value, rem) {
+							@include rem($property, $value);
+						} @else {
+							#{$property}: $value;
+						}
+					}
+				}
+				&.start-date.end-date {
+					$startDate: find-value-in($date, start-date, ());
+					$endDate: find-value-in($date, end-date, ());
+					$borderRadius: find-value-in($date, border-radius, 100%);
+					$radius: extract-side-value($borderRadius, top);
+					border: none;
+					position: relative;
+					@if map-has-key($date, height) {
+						height: to-px(map-get($date, height)) - 1px;
+					}
+					&:before {
+						content: "";
+						display: block;
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: find-value-in($date, width, 50%) / 2;
+						height: find-value-in($date, height, 100%);
+						border-radius: $radius 0 0 $radius;
+						border: 1px solid $sky-blue;
+						border-right-color: transparent;
+					}
+					&:after {
+						content: "";
+						display: block;
+						position: absolute;
+						top: 0;
+						right: 0;
+						width: find-value-in($date, width, 50%) / 2;
+						height: find-value-in($date, height, 100%);
+						border-radius: 0 $radius $radius 0;
+						border: 1px solid $blood-orange;
+						border-left-color: transparent;
+					}
+				}
+			}
+		}
+		.calendar-time {
+			$time: find-value-in($calendar, time, ());
+			.daterangepicker-time-input {
+				@each $nested-property, $nested-value in $time {
+					@if is-of-numeric-type($nested-value, rem) {
+						@include rem($nested-property, $nested-value);
+					} @else {
+						#{$nested-property}: $nested-value;
+					}
+				}
+			}
+		}
+	}
+}
+
+@mixin upload($type) {
+	$upload: map-get($uploads, $type);
+
+	@if map-has-key($upload, transitions) {
+		transition: map-get($upload, transitions);
+	}
+
+	@each $property, $value in $upload {
+		@if contains((over max error), $property) {
+			@if $property == over {
+				&.over {
+					@each $nested-property, $nested-value in $value {
+						@if is-of-numeric-type($nested-value, rem) {
+							@include rem($nested-property, $nested-value);
+						} @else {
+							#{$nested-property}: $nested-value;
+						}
+					}
+				}
+			}
+
+		} @else {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+}
+
+@mixin tooltip($type) {
+	$tooltip: map-get($tooltips, $type);
+
+	$point: find-value-in($tooltip, point, ());
+	$point-size: find-value-in($point, size, 10px);
+	$point-side: find-value-in($point, side, left);
+	$background: map-try($tooltip, background-color, background);
+	$border-width-list: map-try($tooltip, border-width, border);
+	$border-color-list: map-try($tooltip, border-color, border);
+	$border-width: 0;
+	$border-color: none;
+
+	@if length($border-width-list) == 3 {
+		$border-width: nth($border-width-list, 1);
+	} @else if length($border-width-list) == 1 and is-numeric(nth($border-width-list, 1)) {
+		$border-width: $border-width-list;
+	}
+
+	@if length($border-color-list) == 3 {
+		$border-color: nth($border-color-list, 3);
+	} @else if length($border-color-list) == 1 {
+		$border-color: $border-color-list;
+	}
+
+	margin-bottom: $point-size;
+
+	@each $property, $value in $tooltip {
+		@if not ($property == point) {
+			@if is-of-numeric-type($value, rem) {
+				@include rem($property, $value);
+			} @else {
+				#{$property}: $value;
+			}
+		}
+	}
+
+	&:after, &:before {
+		@include rem($point-side, 1rem);
+		content: " ";
+		position: absolute;
+		top: 100%;
+		width: 0;
+		height: 0;
+	}
+	&:after {
+		border-left: 0 solid transparent;
+		border-right: ($point-size - $border-width) solid transparent;
+		border-top: ($point-size - if($border-width > 0, $border-width, 0)) solid $background;
+	}
+
+	@if ($border-width != none) and ($border-width > 0) {
+		border: $border-width solid $border-color;
+		&:before {
+			border-left: 0 solid transparent;
+			border-right: ($point-size + $border-width + 1) solid transparent;
+			border-top: ($point-size + $border-width + 1) solid $border-color;
+			margin-left: -($border-width);
+		}
+	}
+}
+
+@mixin dialog($type) {
+	$dialog: map-get($dialogs, $type);
+	$important-background: #F0502C;
+	$important-color: #FFFFFF;
+
+	@if map-has-key($dialog, header) {
+		$header: map-get($dialog, header);
+		.dialog-header {
+
+			@each $property, $value in $header {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+
+			.heading {
+				color: find-value-in($header, color, #323A45);
+				font-weight: find-value-in($header, font-weight, bold);
+			}
+			.close {
+				width: find-value-in($header, line-height, $base-line-height);
+				height: find-value-in($header, line-height, $base-line-height);
+			}
+		}
+	}
+
+	@if map-has-key($dialog, body) {
+		$body: map-get($dialog, body);
+		.dialog-body {
+
+			@each $property, $value in $body {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	@if map-has-key($dialog, footer) {
+		$footer: map-get($dialog, footer);
+		.dialog-footer {
+
+			@each $property, $value in $footer {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	@if map-has-key($dialog, error) {
+		$error: map-get($dialog, error);
+		$important-background: find-value-in($error, color, $important-background);
+		.dialog-error {
+
+			@each $property, $value in $error {
+				@if not ($property == point) {
+					@if is-of-numeric-type($value, rem) {
+						@include rem($property, $value);
+					} @else {
+						#{$property}: $value;
+					}
+				}
+			}
+		}
+	}
+
+	&.dialog-important {
+		.dialog-header {
+			background: $important-background;
+			.heading {
+				font-weight: bold;
+				color: $important-color;
+			}
+		}
+	}
+}

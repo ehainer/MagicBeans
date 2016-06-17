@@ -1,0 +1,6 @@
+.input-errors {
+	@include rem(font-size, 0.8rem);
+	color: red;
+	.error-line {
+	}
+}

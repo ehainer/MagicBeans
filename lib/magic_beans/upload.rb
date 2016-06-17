@@ -1,10 +1,19 @@
+<<<<<<< HEAD
+=======
+require 'digest/sha1'
+>>>>>>> 8ca71828528c4a5e4136f50847aa057d67ef3282
 module MagicBeans
 	module Upload
 
 		def self.included(base)
 			base.send :extend, ClassMethods
+<<<<<<< HEAD
 			base.send :after_action, :commit_uploads
 			base.send :after_action, :remove_uploads
+=======
+			base.send :before_action, :init_upload_resource
+			base.send :before_action, :remove_uploads, only: [:create, :update]
+>>>>>>> 8ca71828528c4a5e4136f50847aa057d67ef3282
 		end
 
 		module ClassMethods
