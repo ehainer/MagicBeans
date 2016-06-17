@@ -12,29 +12,41 @@ module MagicBeans
 		attr_accessor :to, :from
 
 		def email(subject, **args, &block)
-			@email.permit!
-			@email.notification = self
-			@email.to = args[:to] || to
-			@email.from = args[:from] || from
-			@email.subject = subject
-			@email.vars = args
-			@email.instance_exec &block if block_given?
+			# Flags Email as deliverable?
+			email_instance.permit!
+			# Set the recipient. If value of args[:to] is nil value of the notification's :to will be used,
+			# or finally, `notifyable.email` will be tried automatically
+			email_instance.to = args[:to] || to
+			# Set the sender. If value of args[:from] is nil and the notifications :from is nil,
+			# ultimately the default from in the mailer will be used
+			email_instance.from = args[:from] || from
+			# Set the email subject
+			email_instance.subject = subject
+			# All args are passed in as email args, which will be converted to instance variables within NotificationMailer
+			email_instance.vars = args
+			# If a block is provided, allow calls to methods like `attach`, `method`, and `mailer`
+			email_instance.instance_exec &block if block_given?
 		end
 
 		def sms(message, **args, &block)
-			@sms.permit!
-			@sms.notification = self
-			@sms.to = args[:to] || to
-			@sms.from = args[:from] || from || MagicBeans.config.twilio.from
-			@sms.message = message
-			@sms.instance_exec &block if block_given?
+			# Flags SMS as deliverable?
+			sms_instance.permit!
+			# Set the recipient. If value of args[:to] is nil value of `notifyable.phone` will be tried automatically
+			sms_instance.to = args[:to]
+			# Set the sender. If value of args[:from] is nil the default twilio from phone number will be used
+			sms_instance.from = args[:from] || MagicBeans.config.twilio.from
+			# Set the SMS message
+			sms_instance.message = message
+			# If a block is provided, allow calls to methods like `attach`
+			sms_instance.instance_exec &block if block_given?
 		end
 
 		class SMS
 
 			attr_accessor :to, :from, :message, :attachments, :response, :notification
 
-			def initialize
+			def initialize(**args)
+				args.each { |k, v| send "#{k}=", v }
 				@attachments ||= []
 				@permitted = false
 				@result = {}
@@ -50,7 +62,7 @@ module MagicBeans
 
 			def before_deliver
 				# Try once more to fetch a to phone number, only at this point is notifyable saved, and it's data accessible
-				@to ||= notification.notifyable.try(:phone)
+				@to ||= notification.try(:notifyable).try(:phone)
 				notification.to_phone = @to
 			end
 
@@ -68,7 +80,7 @@ module MagicBeans
 					request << Rack::Utils.parse_nested_query(client.last_request.body)
 					response << JSON.parse(client.last_response.body)
 				rescue Twilio::REST::RequestError => e
-					puts e.to_yaml
+					raise MagicBeans::Error.new(e.message)
 				end
 			end
 
@@ -134,7 +146,8 @@ module MagicBeans
 
 			attr_accessor :to, :from, :subject, :vars, :attachments, :notification
 
-			def initialize
+			def initialize(**args)
+				args.each { |k, v| send "#{k}=", v }
 				@vars ||= {}
 				@attachments ||= {}
 				@mailer_class = "NotificationMailer"
@@ -153,7 +166,7 @@ module MagicBeans
 
 			def before_deliver
 				# Try once more to fetch a to email address, only at this point is notifyable saved, and it's data accessible
-				@to ||= notification.notifyable.try(:email)
+				@to ||= notification.try(:notifyable).try(:email)
 				notification.to_email = @to
 			end
 
@@ -206,16 +219,16 @@ module MagicBeans
 				return if self.errors.any?
 
 				begin
-					if @sms.deliverable?
-						@sms.deliver
-						self.request[:sms] = @sms.request
-						self.response[:sms] = @sms.response
+					if sms_instance.deliverable?
+						sms_instance.deliver
+						self.request[:sms] = sms_instance.request
+						self.response[:sms] = sms_instance.response
 					end
 
-					if @email.deliverable?
-						@email.deliver
-						self.request[:email] = @email.request
-						self.response[:email] = @email.response
+					if email_instance.deliverable?
+						email_instance.deliver
+						self.request[:email] = email_instance.request
+						self.response[:email] = email_instance.response
 					end
 
 				rescue MagicBeans::Error => e
@@ -224,16 +237,23 @@ module MagicBeans
 			end
 
 			def validate
-				@sms.before_deliver
-				@email.before_deliver
+				sms_instance.before_deliver if sms_instance.deliverable?
+				email_instance.before_deliver if email_instance.deliverable?
 
-				(@sms.errors + @email.errors).each { |error| self.errors.add :base, error }
+				(sms_instance.errors + email_instance.errors).each { |error| self.errors.add :base, error }
+			end
+
+			def email_instance
+				@email ||= Email.new(notification: self)
+			end
+
+			def sms_instance
+				@sms ||= SMS.new(notification: self)
 			end
 
 			def setup
-				@email ||= Email.new
-				@sms ||= SMS.new
-
+				# Set the request and response data to a blank hash, more info will be populated in each
+				# when the `deliver` method is called on SMS or Email instance
 				self.request = {}
 				self.response = {}
 			end

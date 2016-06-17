@@ -1,7 +1,13 @@
-require "magic_beans/view_helpers"
-require "magic_beans/sass_helpers"
+require "sass/rails"
 
 module MagicBeans
+
+	extend ActiveSupport::Autoload
+
+	autoload :ViewHelpers
+
+	autoload :SassHelpers
+
 	class Engine < ::Rails::Engine
 		isolate_namespace MagicBeans
 
@@ -30,7 +36,14 @@ module MagicBeans
 		end
 
 		initializer "magic_beans.sass_helpers" do
-			Sass::Script::Functions.send :include, ::MagicBeans::SassHelpers
+			::Sass::Script::Functions.send :include, ::MagicBeans::SassHelpers
+		end
+
+		config.generators do |g|
+			g.test_framework :rspec, fixture: false
+			g.fixture_replacement :factory_girl, dir: 'spec/factories'
+			g.assets false
+			g.helper false
 		end
 
 		config.assets.precompile += %w( bean.js.erb tinymce.css placeholder-1.jpg placeholder-2.jpg placeholder-3.jpg placeholder-4.jpg placeholder-5.jpg placeholder-6.jpg placeholder-7.jpg placeholder-8.jpg )
