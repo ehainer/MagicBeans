@@ -1,4 +1,6 @@
 require "sass/rails"
+require "carrierwave"
+require "twilio-ruby"
 
 module MagicBeans
 
@@ -33,6 +35,10 @@ module MagicBeans
 		initializer "magic_beans.locale" do
 			ActionController::Base.send :include, ::MagicBeans::Locale
 			ActiveRecord::Base.send :include, ::MagicBeans::Locale
+		end
+
+		initializer "magic_beans.notifications" do
+			ActiveRecord::Base.send :include, ::MagicBeans::Notifyable
 		end
 
 		initializer "magic_beans.sass_helpers" do

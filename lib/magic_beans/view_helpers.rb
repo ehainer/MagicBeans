@@ -9,7 +9,6 @@ module MagicBeans
 
 		def svg_tag(source, image = nil, **options)
 			svg = SVG.new(source, image, options)
-			svg.log
 			svg.html_tag
 		end
 	end

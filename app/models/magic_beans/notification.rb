@@ -5,21 +5,19 @@ module MagicBeans
 
 		after_initialize :setup
 
-		before_save :validate, on: :create
+		before_validation :validate
 
-		before_save :deliver, on: :create
-
-		attr_accessor :to, :from
+		before_create :deliver
 
 		def email(subject, **args, &block)
 			# Flags Email as deliverable?
 			email_instance.permit!
 			# Set the recipient. If value of args[:to] is nil value of the notification's :to will be used,
 			# or finally, `notifyable.email` will be tried automatically
-			email_instance.to = args[:to] || to
+			email_instance.to = args[:to]
 			# Set the sender. If value of args[:from] is nil and the notifications :from is nil,
 			# ultimately the default from in the mailer will be used
-			email_instance.from = args[:from] || from
+			email_instance.from = args[:from]
 			# Set the email subject
 			email_instance.subject = subject
 			# All args are passed in as email args, which will be converted to instance variables within NotificationMailer
@@ -41,6 +39,15 @@ module MagicBeans
 			sms_instance.instance_exec &block if block_given?
 		end
 
+		# Called from the before_validation callback within `notifyable`
+		# makes one final pass to set the email and phone as the to attribute
+		# If already set however, this does nothing. We do this because simply calling
+		# `notifyable` here returns nil until it's actually saved
+		def to(email, phone)
+			email_instance.to ||= email
+			sms_instance.to ||= phone
+		end
+
 		class SMS
 
 			attr_accessor :to, :from, :message, :attachments, :response, :notification
@@ -60,28 +67,19 @@ module MagicBeans
 				@result[:response] ||= []
 			end
 
-			def before_deliver
-				# Try once more to fetch a to phone number, only at this point is notifyable saved, and it's data accessible
-				@to ||= notification.try(:notifyable).try(:phone)
-				notification.to_phone = @to
-			end
-
 			def deliver
-				begin
-					if attachments.length > 1
-						begin
-							client.messages.create({ from: from_formatted, to: to_formatted, media_url: attachments.shift }.compact)
-							request << Rack::Utils.parse_nested_query(client.last_request.body)
-							response << JSON.parse(client.last_response.body)
-						end until attachments.length == 1
-					end
-
-					client.messages.create({ from: from_formatted, to: to_formatted, body: message, media_url: attachments.shift }.compact)
-					request << Rack::Utils.parse_nested_query(client.last_request.body)
-					response << JSON.parse(client.last_response.body)
-				rescue Twilio::REST::RequestError => e
-					raise MagicBeans::Error.new(e.message)
+				notification.to_phone = @to
+				if attachments.length > 1
+					begin
+						client.messages.create({ from: from_formatted, to: to_formatted, media_url: attachments.shift }.compact)
+						request << Rack::Utils.parse_nested_query(client.last_request.body)
+						response << JSON.parse(client.last_response.body)
+					end until attachments.length == 1
 				end
+
+				client.messages.create({ from: from_formatted, to: to_formatted, body: message, media_url: attachments.shift }.compact)
+				request << Rack::Utils.parse_nested_query(client.last_request.body)
+				response << JSON.parse(client.last_response.body)
 			end
 
 			def attach(url)
@@ -100,12 +98,23 @@ module MagicBeans
 				@permitted = true
 			end
 
+			def valid_phone?
+				begin
+					return true if to.blank? # Handle a blank `to` separately in the errors method below
+					format to
+					true
+				rescue => e
+					false
+				end
+			end
+
 			def errors
 				output = []
 				return output unless @permitted
-				output << "SMS recipient cannot be blank" if to.blank?
-				output << "SMS sender cannot be blank" if from.blank?
-				output << "SMS message cannot be blank" if message.blank?
+				output << "recipient cannot be blank" if to.blank?
+				output << "recipient is not a valid phone number" unless valid_phone?
+				output << "sender cannot be blank" if from.blank?
+				output << "message cannot be blank" if message.blank?
 				output
 			end
 
@@ -120,25 +129,18 @@ module MagicBeans
 				end
 
 				def format(input)
-					# If already in the correct format, just return it
-					return input if input =~ /^\+[0-9]+$/
-
-					begin
-						# Try to format the number via Twilio's api
-						number = lookup.phone_numbers.get input
-						number.phone_number
-					rescue => e
-						# If anything happens, just try with what was provided
-						input
-					end
+					# Try to format the number via Twilio's api
+					# raises an exception if the input was invalid
+					number = lookup.phone_numbers.get input
+					number.phone_number
 				end
 
 				def client
-					@client ||= Twilio::REST::Client.new MagicBeans.config.twilio.account_sid, MagicBeans.config.twilio.auth_token
+					@client ||= ::Twilio::REST::Client.new MagicBeans.config.twilio.account_sid, MagicBeans.config.twilio.auth_token
 				end
 
 				def lookup
-					@lookup ||= Twilio::REST::LookupsClient.new MagicBeans.config.twilio.account_sid, MagicBeans.config.twilio.auth_token
+					@lookup ||= ::Twilio::REST::LookupsClient.new MagicBeans.config.twilio.account_sid, MagicBeans.config.twilio.auth_token
 				end
 		end
 
@@ -150,7 +152,7 @@ module MagicBeans
 				args.each { |k, v| send "#{k}=", v }
 				@vars ||= {}
 				@attachments ||= {}
-				@mailer_class = "NotificationMailer"
+				@mailer_class = "MagicBeans::NotificationMailer"
 				@mailer_method = "notify"
 				@permitted = false
 				@result = {}
@@ -164,13 +166,8 @@ module MagicBeans
 				@result[:response] ||= []
 			end
 
-			def before_deliver
-				# Try once more to fetch a to email address, only at this point is notifyable saved, and it's data accessible
-				@to ||= notification.try(:notifyable).try(:email)
-				notification.to_email = @to
-			end
-
 			def deliver
+				notification.to_email = @to
 				request << { to: to, from: from, subject: subject }.compact.merge(vars: vars).merge(attachments: attachments)
 				mail = mailer.to_s.classify.constantize.send method, { to: to, from: from, subject: subject }.compact, vars, attachments
 				mail.deliver_later!
@@ -183,6 +180,8 @@ module MagicBeans
 				if file.is_a?(File)
 					path = file.path
 					file.close
+				elsif !File.exists?(path)
+					path = MagicBeans.assets.find(path)
 				end
 
 				attachments[name] = path
@@ -207,8 +206,8 @@ module MagicBeans
 			def errors
 				output = []
 				return output unless @permitted
-				output << "Email recipient cannot be blank" if to.blank?
-				output << "Email subject cannot be blank" if subject.blank?
+				output << "recipient cannot be blank" if to.blank?
+				output << "subject cannot be blank" if subject.blank?
 				output
 			end
 		end
@@ -216,31 +215,28 @@ module MagicBeans
 		private
 
 			def deliver
-				return if self.errors.any?
+				if sms_instance.deliverable?
+					sms_instance.deliver
+					self.request[:sms] = sms_instance.request
+					self.response[:sms] = sms_instance.response
+				end
 
-				begin
-					if sms_instance.deliverable?
-						sms_instance.deliver
-						self.request[:sms] = sms_instance.request
-						self.response[:sms] = sms_instance.response
-					end
-
-					if email_instance.deliverable?
-						email_instance.deliver
-						self.request[:email] = email_instance.request
-						self.response[:email] = email_instance.response
-					end
-
-				rescue MagicBeans::Error => e
-					self.errors.add :base, error
+				if email_instance.deliverable?
+					email_instance.deliver
+					self.request[:email] = email_instance.request
+					self.response[:email] = email_instance.response
 				end
 			end
 
 			def validate
-				sms_instance.before_deliver if sms_instance.deliverable?
-				email_instance.before_deliver if email_instance.deliverable?
+				# Add SMS related errors to self
+				sms_instance.errors.each { |error| self.errors.add :sms, error }
 
-				(sms_instance.errors + email_instance.errors).each { |error| self.errors.add :base, error }
+				# Add Email related errors to self
+				email_instance.errors.each { |error| self.errors.add :email, error }
+
+				# Return false if there are any errors, stopping the save process
+				return !self.errors.messages.any?
 			end
 
 			def email_instance

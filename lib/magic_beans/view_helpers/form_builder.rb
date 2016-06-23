@@ -9,9 +9,9 @@ module MagicBeans
 
 			class UploadField
 
-				include ActionDispatch::Routing::UrlFor
-				include ActionDispatch::Routing::PolymorphicRoutes
-				include Rails.application.routes.url_helpers
+				include ::ActionDispatch::Routing::PolymorphicRoutes
+				include ::Rails.application.routes.url_helpers
+				include ::MagicBeans::Engine.routes.url_helpers
 
 				def initialize(model, method, options)
 					@model = model

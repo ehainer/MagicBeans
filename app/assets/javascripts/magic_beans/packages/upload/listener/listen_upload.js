@@ -48,9 +48,11 @@ Listeners.Upload = {
 					});
 				},
 				success: function(file, response){
-					// For every upload, add the upload hash to the commit list
-					$.each(response.uploads, function(index, hash){
-						if(!form.find('input[value="' + hash + '"]').length) form.prepend('<input type="hidden" name="upload_commit[]" value="' + hash + '" />');
+					// For every upload, add the upload id to the commit list
+					$.each(response.uploads, function(key, uploads){
+						$.each(uploads, function(index, id){
+							if(!form.find('input[value="' + id + '"]').length) form.prepend('<input type="hidden" name="' + key + '[commit][]" value="' + id + '" />');
+						});
 					});
 
 					// Since success is also dispatched for each file in successmultiple,

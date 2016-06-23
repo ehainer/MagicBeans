@@ -1,0 +1,656 @@
+<div class="styleguide-container">
+	<div class="styleguide-row">
+		<% flash.each do |key,value| %>
+			<div class="styleguide-flash flash <%= key %>"><%= [value].flatten.join("<br />").html_safe %><button class="close" onclick="Bean.Flash.close(this);"><%= svg_tag :cross %></button></div>
+		<% end %>
+		<div class="styleguide-content">
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Standard Text Input</div>
+					<%= text_field_tag :text, "", class: "input input-primary" %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Input With Placeholder</div>
+					<%= text_field_tag :text, "", placeholder: "Visible When Empty", class: "input input-primary" %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Masked Input (Phone)</div>
+					<%= telephone_field_tag :text, "", class: "input input-primary", data: { mask: "(000) 000-0000" } %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Input With Icon Left</div>
+					<%= text_field_tag :text, "", class: "input input-primary icon-left icon-phone2" %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Input With Icon Right</div>
+					<%= text_field_tag :text, "", class: "input input-primary icon-right icon-safari" %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Numeric Input</div>
+					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Numeric Input With Negative</div>
+					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true, negative: true } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Numeric Input With Decimal</div>
+					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true, decimal: true } %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Standard Select</div>
+					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary" %>
+				</div>
+
+				<div class="column-6">
+					<div class="styleguide-label">Select With Search</div>
+					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { search: true, search_placeholder: "Search For Something" } %>
+				</div>
+
+				<div class="column-6">
+					<div class="styleguide-label">Select Input</div>
+					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { behavior: :input } %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Multi Select</div>
+					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", multiple: true %>
+				</div>
+
+				<div class="column-6">
+					<div class="styleguide-label">Select With Custom Scrollbar (webkit only)</div>
+					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary scrollbar scrollbar-primary" %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Default Date Input</div>
+					<%= text_field_tag :date, "Thursday, Mar 24th 2016", class: "input input-primary", data: { date: true } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Default Date Range</div>
+					<div class="column-3">
+						<%= text_field_tag :start, "", class: "input input-primary", data: { date: :start, end: "#end" } %>
+					</div>
+					<div class="column-3">
+						<%= text_field_tag :end, "", class: "input input-primary", data: { date: :end } %>
+					</div>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Date Range [Primary Theme]</div>
+					<div class="column-3">
+						<%= text_field_tag :start2, "", class: "input input-primary calendar calendar-primary", data: { date: :start, end: "#end2" } %>
+					</div>
+					<div class="column-3">
+						<%= text_field_tag :end2, "", class: "input input-primary calendar calendar-primary", data: { date: :end } %>
+					</div>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Date Input With Custom Date Format</div>
+					<%= text_field_tag :date, "", class: "input input-primary", data: { date: true, format: "YYYY-MM-DD HH:mm:ss" } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Date Input With Time Picker</div>
+					<%= text_field_tag :date, "", class: "input input-primary", data: { date: true, time: true, format: "dddd, MMM Do YYYY h:mm A", iso8601: Time.new.iso8601 } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Date Range With Time Picker [Primary Theme]</div>
+					<div class="column-3">
+						<%= text_field_tag :start3, "", class: "input input-primary calendar calendar-primary", data: { date: :start, time: true, end: "#end3", format: "MMM DD h:mm A" } %>
+					</div>
+					<div class="column-3">
+						<%= text_field_tag :end3, "", class: "input input-primary calendar calendar-primary", data: { date: :end, time: true, format: "MMM DD h:mm A" } %>
+					</div>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-6">
+					<div class="styleguide-label">Editable Textarea</div>
+					<%= text_area_tag :textarea1, "", class: "input input-primary", data: { editable: :custom } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Editable Textarea Bottom Toolbar</div>
+					<%= text_area_tag :textarea2, "", class: "input input-primary", data: { editable: :custom, toolbar: "underline italic bold | image link", plugins: "image link", position: :bottom } %>
+				</div>
+				<div class="column-6">
+					<div class="styleguide-label">Autogrow Textarea</div>
+					<%= text_area_tag :textarea3, "", class: "input input-primary", data: { autogrow: true } %>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-4">
+					<div class="styleguide-label">Standard Radio</div>
+					<div>
+						<%= radio_button_tag :radio_fallback, "1", true %>
+						<%= label_tag :radio_fallback_1, "Radio 1" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_fallback, "2", nil %>
+						<%= label_tag :radio_fallback_2, "Radio 2" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_fallback, "3", nil %>
+						<%= label_tag :radio_fallback_3, "Radio 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Radio [Primary Theme]</div>
+					<div>
+						<%= radio_button_tag :radio_primary, "1", true, class: "radio radio-primary" %>
+						<%= label_tag :radio_primary_1, "Radio 1" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_primary, "2", nil, class: "radio radio-primary" %>
+						<%= label_tag :radio_primary_2, "Radio 2" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_primary, "3", nil, class: "radio radio-primary" %>
+						<%= label_tag :radio_primary_3, "Radio 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Radio [Secondary Theme]</div>
+					<div>
+						<%= radio_button_tag :radio_secondary, "1", true, class: "radio radio-secondary" %>
+						<%= label_tag :radio_secondary_1, "Radio 1" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_secondary, "2", nil, class: "radio radio-secondary" %>
+						<%= label_tag :radio_secondary_2, "Radio 2" %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_secondary, "3", nil, class: "radio radio-secondary" %>
+						<%= label_tag :radio_secondary_3, "Radio 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Radio Multiline [Primary Theme]</div>
+					<div>
+						<%= radio_button_tag :radio_multiline, "1", true, class: "radio radio-primary" %>
+						<%= label_tag :radio_multiline_1, Faker::Lorem.paragraph %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_multiline, "2", nil, class: "radio radio-primary" %>
+						<%= label_tag :radio_multiline_2, Faker::Lorem.word %>
+					</div>
+					<div>
+						<%= radio_button_tag :radio_multiline, "3", nil, class: "radio radio-primary" %>
+						<%= label_tag :radio_multiline_3, Faker::Lorem.sentence %>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="column-4">
+					<div class="styleguide-label">Standard Checkbox</div>
+					<div>
+						<%= check_box_tag :checkbox_fallback_1, "1", true %>
+						<%= label_tag :checkbox_fallback_1, "Checkbox 1" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_fallback_2, "2", nil %>
+						<%= label_tag :checkbox_fallback_2, "Checkbox 2" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_fallback_3, "3", nil %>
+						<%= label_tag :checkbox_fallback_3, "Checkbox 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Checkbox [Primary Theme]</div>
+					<div>
+						<%= check_box_tag :checkbox_primary_1, "1", true, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_primary_1, "Checkbox 1" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_primary_2, "2", nil, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_primary_2, "Checkbox 2" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_primary_3, "3", nil, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_primary_3, "Checkbox 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Checkbox [Secondary Theme]</div>
+					<div>
+						<%= check_box_tag :checkbox_secondary_1, "1", true, class: "checkbox checkbox-secondary" %>
+						<%= label_tag :checkbox_secondary_1, "Checkbox 1" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_secondary_2, "2", nil, class: "checkbox checkbox-secondary" %>
+						<%= label_tag :checkbox_secondary_2, "Checkbox 2" %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_secondary_3, "3", nil, class: "checkbox checkbox-secondary" %>
+						<%= label_tag :checkbox_secondary_3, "Checkbox 3" %>
+					</div>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Checkbox Multiline [Primary Theme]</div>
+					<div>
+						<%= check_box_tag :checkbox_multiline_1, "1", true, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_multiline_1, Faker::Lorem.paragraph %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_multiline_2, "2", nil, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_multiline_2, Faker::Lorem.word %>
+					</div>
+					<div>
+						<%= check_box_tag :checkbox_multiline_3, "3", nil, class: "checkbox checkbox-primary" %>
+						<%= label_tag :checkbox_multiline_3, Faker::Lorem.sentence %>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Form Fields</h1>
+			<dl>
+				<dt><a name="theming"></a>Theming</dt>
+				<dd>
+					<p>Theming in Magic Beans is a very simple process. All &quot;themes&quot; are defined in <b>cloud/_variables.scss</b> within each respective object map. The objects include, but are not limited to: input, radio, checkbox, button, calendar, and scrollbar.</p>
+					<p>To theme an element, start by adding the CSS class that matches the object you wish to theme (exception: textarea, which uses the same &quot;input&quot; class), i.e. <b>&lt;input type=&quot;text&quot; class=&quot;input&quot;</b></p>
+					<p>To style with a defined theme, also apply the CSS class <b>&lt;type&gt;-&lt;theme&gt;</b>, where &lt;theme&gt; is the name of the theme defined within the <b>$&lt;type&gt;s</b> (inputs, radios, buttons, scrollbars, etc...) variable in _variables.scss (primary, secondary, etc...)</p>
+					<p>For input fields with embedded icons, use the CSS classes <b>icon-left</b> and <b>icon-right</b> in conjunction with a specific <b>icon-&lt;icon&gt;</b> class, where &lt;icon&gt; is the name of the icon you wish to include. Note that icon specific classes are not created dynamically, and must be defined in the cloud/_icon.scss file.</p>
+				</dd>
+				<br />
+				<dt>Input Options</dt>
+				<dd>
+					<p><b>data-mask=&quot;&lt;mask&gt;&quot;</b> Apply a mask to the input field. Use the number 0 in place of numbers, all other characters are treated literally and will be injected/removed as needed when typing.</p>
+					<p><b>data-numeric=&quot;true&quot;</b> Ensure that only numeric characters can be entered.</p>
+					<p><b>data-negative=&quot;true&quot;</b> Use in conjunction with numeric option to allow negative numbers to be entered.</p>
+					<p><b>data-decimal=&quot;true&quot;</b> Use in conjunction with numeric option to allow decimal numbers to be entered.</p>
+				</dd>
+				<dt>Select Options</dt>
+				<dd>
+					<p><b>data-search=&quot;true/false&quot;</b> Allows/disallows search in &quot;select&quot; dropdowns.</p>
+					<p><b>data-search-placeholder=&quot;&lt;text&gt;&quot;</b> Sets the placeholder text of the select search box to the value of &lt;text&gt;.</p>
+					<p><b>data-behavior=&quot;&lt;type&gt;&quot;</b> Configures element to behave as if it is whatever the value of &lt;type&gt; is. For now, only the value &quot;input&quot; is supported, which is essentially a text input with a predefined set of options that show on focus.</p>
+				</dd>
+				<dt>Calendar Options</dt>
+				<dd>
+					<p><b>data-date=&quot;true/start/end&quot;</b> Configures input to be a date only field. Focusing on the field will yield the date picker(s). If value is "true", field will behave a single date picker. If value is "start", the field will behave as a date range picker and attempt to locate an end input field (in the order listed) by either using the CSS selector found in the value of <b>data-end</b> attribute of iteself or looking for a following element with the attribute <b>data-date=&quot;end&quot;</b></p>
+					<p><b>data-format=&quot;&lt;format&gt;&quot;</b> <span class="styleguide-doc-default">Default: dddd, MMM Do YYYY</span> Specifies the format of rendered dates in input fields, as well as defining the format that existing dates <span class="styleguide-doc-italic">should</span> match in order to be parsed by the underlying date handler framework, momentJS. For consistency and reliability, it is encouraged to use the <b>data-iso8601</b> attribute to provide existing dates, and use this field strictly to define the format of output dates. See below for more information.</p>
+					<p><b>data-iso8601=&quot;&lt;ISO-8601 Formatted Date/Time&gt;&quot;</b> Strongly recommended that existing dates be output as the value of this attribute in the standardized iso-8601 format. Outputted dates will still conform to the defined <b>data-format</b> (or default) value above.</p>
+					<p><b>data-time=&quot;true&quot;</b> Includes a time picker on each calendar.</p>
+					<p><b>data-increment=&quot;&lt;increment&gt;&quot;</b> <span class="styleguide-doc-default">Default: 30</span> Set the increment value in the time picker drop down, in minutes. Also controls how much the time will increase/decrease when the up/down arrows are pressed while focused.</p>
+				</dd>
+				<dt>Textarea Options</dt>
+				<dd>
+					<p><b>data-editable=&lt;theme&gt;</b> On textarea inputs only, given a &lt;theme&gt; name, will convert the field to a rich text formattable field using the Tinymce theme specified. The theme files should be accesible within the /assets/&lt;theme&gt;/ directory. The default theme name is &quot;lightgray&quot;</p>
+					<p>See <a href="http://skin.tinymce.com/" target="_blank">http://skin.tinymce.com/</a> to create WYSIWYG editor skins.</p>
+					<p><b>data-toolbar=&quot;&lt;toolbar&gt;&quot;</b> Used in conjunction with <b>data-editable</b> to specify a space delimeted list of toolbar buttons on the editor, in the order listed. If not specified, the default buttons are [bold italic underline] in that order. Note that some buttons require the corresponding plugin also be loaded For that, see <b>data-plugins</b></p>
+					<p><b>data-plugins=&quot;&lt;toolbar&gt;&quot;</b> Used in conjunction with <b>data-toolbar</b> to specify a list of plugins that should also be loaded to add additional functionality to the editor.</p>
+					<p><b>data-position=&quot;top|bottom&quot;</b> The location of the toolbar within the text editor. Defaults to top if not specified.</p>
+					<p><b>data-autogrow=&quot;true&quot;</b> If specified, the textarea input will grow as the length of text within it grows. Does not work with <b>data-editable</b> fields.</p>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="space-bottom">
+				<div class="column-9">
+					<div class="styleguide-label">Standard Button</div>
+					<button class="button button-small button-primary">Button Primary</button>
+					<button class="button button-small button-secondary">Button Secondary</button>
+					<button class="button button-small button-tertiary">Button Tertiary</button>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label">Input Submit Button</div>
+					<input type="submit" class="button button-small button-primary" value="Button Primary" />
+					<input type="submit" class="button button-small button-secondary" value="Button Secondary" />
+					<input type="submit" class="button button-small button-tertiary" value="Button Tertiary" />
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-9">
+					<div class="styleguide-label">Link Button</div>
+					<a href="#" class="button button-small button-primary">Button Primary</a>
+					<a href="#" class="button button-small button-secondary">Button Secondary</a>
+					<a href="#" class="button button-small button-tertiary">Button Tertiary</a>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label">Button Sizes</div>
+					<a href="#" class="button button-small button-primary">Button Small</a>
+					<a href="#" class="button button-medium button-primary">Button Medium</a>
+					<a href="#" class="button button-large button-primary">Button Large</a>
+				</div>
+			</div>
+			<div>
+				<div class="column-9">
+					<div class="styleguide-label">Standard Button Loader</div>
+					<button type="button" class="button button-small button-primary" data-loadable="true">Button Primary</button>
+					<button type="button" class="button button-small button-secondary" data-loadable="true">Button Secondary</button>
+					<button type="button" class="button button-small button-tertiary" data-loadable="true">Button Tertiary</button>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label">Link Button Loader</div>
+					<a href="javascript:void(0);" class="button button-small button-primary" data-loadable="true">Button Primary</a>
+					<a href="javascript:void(0);" class="button button-small button-secondary" data-loadable="true">Button Secondary</a>
+					<a href="javascript:void(0);" class="button button-small button-tertiary" data-loadable="true">Button Tertiary</a>
+				</div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Buttons</h1>
+			<dl>
+				<dt>About Buttons</dt>
+				<dd>
+					<p>Buttons are largely governed by <a href="#theming">theming</a>, and as a result do not offer much in terms of customization via <b>data-*</b> attributes.</p>
+				</dd>
+				<dt>Button Options</dt>
+				<dd>
+					<p><b>data-loadable=&quot;true&quot;</b> Only applicable to &lt;a&gt; and &lt;button&gt; tags due to the need to alter the innerHTML property (self closing &lt;input /&gt; tags can not have any markup within), loadable adds a subtle animation to the button when clicked, useful in conjunction with buttons that trigger AJAX requests or some other backgrounded process that needs waiting time. While the animation is triggered automatically when the button is clicked, it is up to the developer to stop the animation (if necessary) by simply removing the <b>thinking</b> class that is applied. Alternatively, and suggested, the developer may trigger one of [loader:toggle, loader:toggle:on, loader:toggle:off] events on the jQuery instance of the element. Triggering events are preferred as other properties on the button are also made when the animation is triggered, such as disabling the button when the animation is active, and re-enabling it when not active.</p>
+				</dd>
+			</dd>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-4">
+				<div class="styleguide-label">Tooltip Default</div>
+				<div data-tooltip="Morbi eget sapien varius, iaculis enim nec, fringilla quam.">Lorem ipsum dolor sit amet</div>
+			</div>
+			<div class="column-4">
+				<div class="styleguide-label">Tooltip Multiline</div>
+				<div data-tooltip="Sed a venenatis tortor. Nulla dapibus ante in ex feugiat lobortis. Aenean sit amet hendrerit erat. Suspendisse lectus urna, aliquet id ipsum et, pulvinar lobortis purus." data-multiline="350">Lorem ipsum dolor sit amet</div>
+			</div>
+			<div class="column-4">
+				<div class="styleguide-label">Tooltip On Button [Primary Theme]</div>
+				<div data-tooltip="Mauris euismod dui ut faucibus aliquet." data-theme="primary"><input type="button" class="button button-small button-primary" name="tooltip" value="Proin eleifend" /></div>
+			</div>
+			<div class="column-4">
+				<div class="styleguide-label">Tooltip On Input [Secondary Theme]</div>
+				<div data-tooltip="Etiam ullamcorper, velit euismod tempor varius" data-theme="secondary"><input type="text" class="input input-primary" name="tooltip" value="Vivamus pulvinar fringilla placerat. Aenean id feugiat ipsum." /></div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Tooltips</h1>
+			<dl>
+				<dt>About Tooltips</dt>
+				<dd>
+					<p>Tooltips are an easy way to display smaller bits of information when a given element is hovered over. Due to the fact that tooltips rely on markup being injected into a given element, any self closing element (i.e. &lt;input /&gt;) must be wrapped in another element, such as a div/span tag, and the tooltip applied to that element.</p>
+				</dd>
+				<dt>Tooltip Options</dt>
+				<dd>
+					<p><b>data-tooltip=&quot;&lt;text&gt;&quot;</b> The text to display within the tooltip box when hovered. Note that the text will by default be all on a single line, and expand horizontally as needed. If word wrapping is needed, see <b>data-multiline</b></p>
+					<p><b>data-multiline=&quot;width&quot;</b> The max width the tooltip box can grow to before word wrapping is enforced.</p>
+					<p><b>data-theme=&quot;&lt;theme&gt;&quot;</b> The tooltip theme name (i.e. - primary, secondary, etc...). If not specified the default tooltip style will apply.</p>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="space-bottom">
+				<div class="column-9">
+					<div class="styleguide-label">Horizontal Bubble Group</div>
+					<div class="bubble-content" data-bubble="Bubble Content">Horizontal Area</div>
+					<div class="bubble-content" data-bubble="Event Longer Bubble Content">Even More Horizontal Area</div>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label">Vertical Bubble Group</div>
+					<ul>
+						<li data-bubble="Bubble!">Vertical Item 1</li>
+						<li data-bubble="Oh Snap, Bubbles!">Vertical Item 2</li>
+						<li data-bubble="Man I Love Bubbles">Super Long Vertical Item 3</li>
+						<li data-bubble="Seriously, Bubbles are Da Bomb">Vertical Item 4</li>
+					</ul>
+				</div>
+			</div>
+			<div>
+				<div class="column-9">
+					<div class="styleguide-label">Multi Column Bubble Group</div>
+					<div class="styleguide-bubble-columns">
+						<ul>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Bubble!">Vertical Item 1</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Oh Snap, Bubbles!">Vertical Item 2</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Man I Love Bubbles">Super Long Vertical Item 3</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Seriously, Bubbles are Da Bomb">Vertical Item 4</li>
+						</ul>
+						<ul>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Bubble!">Vertical Item 5</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Oh Snap, Bubbles!">Vertical Item 6</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Man I Love Bubbles">Super Long Vertical Item 7</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Seriously, Bubbles are Da Bomb">Vertical Item 8</li>
+						</ul>
+						<ul>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Bubble!">Vertical Item 9</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Oh Snap, Bubbles!">Vertical Item 10</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Man I Love Bubbles">Super Long Vertical Item</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="Seriously, Bubbles are Da Bomb">Vertical Item 12</li>
+						</ul>
+					</div>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label">Multi Column Bubble Group With Images</div>
+					<div class="styleguide-bubble-columns">
+						<ul>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-1.jpg", width: 160, height: 100)}") %>">Vertical Item 1</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-2.jpg", width: 160, height: 100)}") %>">Vertical Item 2</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-3.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 3</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-4.jpg", width: 160, height: 100)}") %>">Vertical Item 4</li>
+						</ul>
+						<ul>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-5.jpg", width: 160, height: 100)}") %>">Vertical Item 5</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-6.jpg", width: 160, height: 100)}") %>">Vertical Item 6</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-7.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 7</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-8.jpg", width: 160, height: 100)}") %>">Vertical Item 8</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Bubbles</h1>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-9">
+				<div class="styleguide-label">Static Map</div>
+				<div class="map" data-address="600 S Broadway, Denver CO 80209" data-zoom="14" data-move="false"></div>
+			</div>
+			<div class="column-9">
+				<div class="styleguide-label">Input Responsive Map</div>
+				<div class="map" id="map"></div>
+				<%= text_field_tag :address, "", class: "input input-primary", data: { location: "#map", zoom: 4, scroll: true, drag: true } %>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Maps</h1>
+			<dl>
+				<dt>About Maps</dt>
+				<dd>
+					<p>Maps make it easier to quickly generate customized Google maps as well as tie them to user input, as in the case of <b>data-location</b>. Each map instantiated via the use of <b>data-location</b> will have two hidden input elements appended immediately following the input field the attribute is applied to. The two elements will receive the latitude and longitude of the current address displayed in the map. Or, in the case of a draggable pin/marker, the lat/long of that. The name of these elements will by default share the name of the input field <b>data-location</b> is found on, suffixed by &quot;[latitude]&quot; and &quot;[longitude]&quot; respectively. If the name of the input element matches the format &quot;xxxxxx[yyyyy]&quot;, the &quot;[yyyyy]&quot; portion will be stripped, leaving either &quot;xxxxxx[latitude]&quot; or &quot;xxxxxx[longitude]&quot;. If the value of &quot;xxxxxx&quot; needs to be different than the default, it can be controlled via the <b>data-prefix</b> attribute, see options below.</p>
+				</dd>
+				<dt>Map Options</dt>
+				<dd>
+					<p><b>data-address=&quot;&lt;address&gt;&quot;</b> Specify an address that should be loaded into the element this attribute is applied to (usually a div). The map size is dependent on the size of the element <b>data-address</b> is applied to, and should be handled separately.</p>
+					<p><b>data-location=&quot;selector&quot;</b> Applicable to &lt;input /&gt; fields only, ties the input field to a map that will render within the element matched by the provided jQuery selector. When the input is blurred or the enter key is pressed, the map will update with the address that was entered (if found, otherwise returns to default grayscale zoomed out map.) The input field will also receive address autocompletion.</p>
+					<p><b>data-zoom=&quot;&lt;zoom level&gt;&quot;</b> Defaults to &quot;auto&quot; Provides a zoom level (1 - 20, 1 being the world, 20 being building level) that the map should default to when an address is loaded. In the case of <b>data-location</b> this zoom level will be applied whenever the address changes, regardless of what zoom level the user was at before.</p>
+					<p><b>data-scroll=&quot;true/false&quot;</b> Defaults to false. Whether to allow scroll wheel zooming when hovering over the map area.</p>
+					<p><b>data-move=&quot;true/false&quot;</b> Defaults to false. Whether to allow the user to click and drag the map to move it around. If false, the map will essentially be static. Useful in conjunction with <b>data-zoom</b> to quickly render static, &quot;view-only&quot; maps.</p>
+					<p><b>data-drag=&quot;true/false&quot;</b> Defaults to false. Used only in conjunction with <b>data-location</b>, whether or not to allow dragging and dropping of the location &quot;pin&quot; within the map.</p>
+					<p><b>data-prefix=&quot;&lt;name&gt;&quot;</b> Defaults to the name attribute of the &lt;input /&gt; element, stripped of any trailing text matching the regex <b>/\[[A-Z0-9_]+\]/i</b> (i.e. - if name is "address[place]" the prefix will be "address"). Only applies to <b>data-location</b> attribute, specifies the prefix for the two dynamically generated lat/long hidden input field names.</p>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="space-bottom">
+				<div class="column-4">
+					<div class="styleguide-label">Default Confirmation</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="yes no" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Confirm With Custom Title / Width</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="continue cancel" data-title="Make A Decision" data-width="700" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Confirm With Overlay Click To Close</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="secondary" data-buttons="ok cancel" data-outside="true" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Confirm With Custom Content</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="#confirmation-content" data-theme="secondary" data-outside="true" value="Submit" />
+					</form>
+				</div>
+			</div>
+			<div>
+				<div class="column-4">
+					<div class="styleguide-label">Uncloseable Dialog</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="yes no" data-closeable="false" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Scrollable Dialog</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="#confirmation-scrollable" data-footer="#confirmation-footer" data-theme="secondary" data-width="70%" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label">Preloading Image Dialog</div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-confirmation="<img src='<%= image_path "placeholder-1.jpg" %>' />" data-theme="secondary" data-width="70%" value="Submit" />
+					</form>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;" id="confirmation-content">
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae metus efficitur, cursus urna a, tempus mauris. Mauris pulvinar, velit vitae congue molestie, odio diam laoreet magna, in porttitor ex quam vel nunc.</p>
+			<p>Pellentesque vel tristique purus, at consequat neque. Donec at aliquet nibh. Donec ut augue vel orci rutrum bibendum vel finibus dolor.</p>
+			<p>Cras molestie accumsan suscipit. Nam molestie est ac magna semper imperdiet. Suspendisse potenti. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras eleifend lacinia tortor sed interdum.</p>
+			<form onsubmit="return false;">
+				<p>
+					<label for="dialog-name">Name</label>
+					<%= select_tag "dialog-name", options_for_select(@options), placeholder: "Who Are You?", class: "input input-primary validate-select", data: { search: true } %>
+				</p>
+				<p>
+					<label for="dialog-relation">Relation</label>
+					<input type="text" id="dialog-relation" name="dialog-relation" class="input input-primary validate-required" />
+				</p>
+				<input type="submit" class="button button-small button-tertiary prompt" value="Try Me" />
+			</form>
+		</div>
+		<div style="display: none;" id="confirmation-footer">
+			<p>Quisque nec elementum sapien. Phasellus metus sem, ornare at lorem at, fringilla pretium leo. Duis in fringilla arcu, quis facilisis leo. Suspendisse eu nisl quis augue porta euismod. Nulla fringilla vestibulum velit at consequat. Fusce scelerisque tortor fringilla, viverra elit eget, venenatis sem. Donec at mattis ligula. Integer auctor, dolor id cursus convallis, lorem sem venenatis enim, at feugiat velit tortor a arcu.</p>
+		</div>
+		<div style="display: none;" id="confirmation-scrollable">
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ipsum lectus, vestibulum sed diam at, vestibulum porta ipsum. Nulla gravida faucibus purus, et tempus leo lacinia sed. Fusce id velit vitae leo auctor tempus accumsan eu eros. In quis mollis quam, a elementum dolor. Aenean commodo, dui vitae tincidunt blandit, enim tellus tincidunt mauris, eu maximus dui ex non eros. Sed tempor nunc at arcu bibendum, eu ultricies est volutpat. Suspendisse malesuada neque magna, ultricies accumsan eros sodales lobortis. Mauris suscipit justo nec libero vulputate blandit. Mauris finibus elementum felis eu efficitur. Fusce euismod in ipsum nec congue. Praesent ut arcu nec eros eleifend lacinia vel sed sapien.</p>
+			<p>Praesent at lacus in magna mattis placerat. Phasellus sit amet ipsum odio. Ut ac facilisis nibh, eget pretium massa. Nulla suscipit, justo non auctor semper, nulla ligula gravida dui, vitae mattis erat eros eget massa. Vestibulum suscipit ligula ut est placerat hendrerit. Etiam faucibus tellus quis est aliquam, a accumsan dui semper. Donec in lobortis lacus, dictum luctus magna. Quisque quis augue vitae ante tincidunt egestas quis id ligula. Cras risus diam, rutrum sit amet imperdiet quis, mattis eu libero. Donec eget viverra risus, eu faucibus risus. Aenean quis tellus nulla. Integer vel bibendum eros. Cras sit amet efficitur orci. Pellentesque posuere eros et lorem ultricies, at hendrerit libero dapibus. Pellentesque vulputate sagittis diam nec accumsan.</p>
+			<p>Nulla facilisi. Quisque sit amet efficitur nisi. Fusce et tempor dolor, ac faucibus velit. Nam finibus leo eu orci rhoncus, sed commodo nisi tincidunt. Vivamus ut ullamcorper nulla. Sed laoreet ante non dolor semper luctus. Nullam volutpat, purus iaculis aliquet auctor, nibh nibh tempor nisi, eget malesuada nunc purus eu libero. Donec lectus metus, scelerisque vitae bibendum quis, dictum a justo. Suspendisse pretium a magna nec tristique. Nullam rutrum condimentum eros, ac convallis purus suscipit non. Morbi sit amet nisi ligula. Integer vitae turpis tristique, convallis urna ac, imperdiet felis. Maecenas molestie rhoncus diam a suscipit.</p>
+			<p>Sed non odio facilisis, molestie eros in, facilisis orci. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed pulvinar ante at sagittis hendrerit. Suspendisse potenti. Maecenas quis tincidunt tellus, vitae ultrices nunc. In ullamcorper turpis dui, eu viverra odio aliquet vitae. In at fringilla lorem.</p>
+			<p>Aenean varius sed nisi sit amet pulvinar. Sed volutpat pellentesque lectus interdum varius. Suspendisse et ornare magna, ut auctor libero. Integer laoreet justo id sem auctor, ac rutrum magna auctor. Ut in auctor purus, sed ornare purus. Donec in euismod massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis ut nisi at leo cursus fermentum et ut lectus.</p>
+			<p>Cras vel est vel ipsum elementum cursus vel a lacus. Ut lorem erat, pellentesque et lacinia nec, pharetra ut purus. Proin vehicula nisi nec mi feugiat, non iaculis nisl pellentesque. Aliquam orci ipsum, ultrices vel finibus ut, posuere nec ipsum. Sed sollicitudin diam fermentum, pulvinar magna eget, rhoncus erat. Donec ac ipsum eu eros cursus volutpat ut ac massa. Donec efficitur ornare enim, in dictum nisl euismod eu. Proin vel enim sem. Ut varius in eros at convallis. Nunc sed ipsum nisi. Vivamus eros orci, venenatis sit amet aliquet at, aliquam nec lectus. Duis ac sapien non sapien bibendum maximus a vel enim. Nulla pharetra quam sodales orci varius semper. Quisque dapibus orci nibh, vel euismod nulla consectetur non. Aenean eleifend hendrerit turpis non placerat.</p>
+			<p>Vivamus vel sem eu ligula malesuada vulputate. Duis mollis diam leo, in sollicitudin ex auctor ut. Vestibulum nec semper nunc. Nunc consequat aliquam ligula, ac elementum lectus sodales vitae. Duis quis blandit risus. Praesent ut commodo nibh. Sed vel ante vel lectus imperdiet molestie. Sed massa tortor, porta vel ornare vel, molestie vitae libero. Aliquam tristique tortor in feugiat accumsan. Donec euismod dapibus lorem, a pellentesque justo. Sed velit ligula, tempor sed dictum in, cursus in massa. Phasellus fringilla eros sed consequat ultrices. Nulla porta ante a ipsum pretium fermentum.</p>
+			<p>Nullam iaculis consectetur nisl ac dictum. Nulla imperdiet diam vel est ultrices finibus vel pretium tortor. Vestibulum consequat eget diam quis iaculis. Donec semper erat in efficitur semper. Ut pellentesque lacinia elit at tempus. Donec quis justo vitae ante rhoncus commodo. Nam elementum porta semper. Donec venenatis dui nec felis ultricies, quis faucibus erat scelerisque. Quisque pellentesque felis at mi varius pulvinar. Donec sed placerat eros. Aenean condimentum viverra magna, posuere sagittis neque dictum hendrerit.</p>
+			<p>Ut vitae consequat dui. In pulvinar fermentum orci sed viverra. Phasellus et nunc a turpis pharetra fringilla. Quisque egestas eros vitae urna gravida accumsan. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elementum metus nec orci convallis, mattis lacinia nulla laoreet. Sed congue venenatis mi, sit amet luctus erat auctor quis.</p>
+			<p>Morbi vitae mollis justo, ac elementum lacus. Cras nisi eros, vulputate quis congue ut, blandit in ex. Duis sit amet mi quis nulla aliquam sollicitudin. Nullam condimentum felis nec erat vehicula, id accumsan diam consectetur. Mauris ex turpis, rhoncus a ornare vitae, malesuada eu lorem. Nulla id tortor eget massa vulputate maximus quis et erat. In faucibus aliquam metus in fermentum. Suspendisse at libero fermentum, imperdiet ligula sed, pharetra arcu. Aliquam rhoncus congue ullamcorper. Phasellus congue ultrices pretium. Praesent sed tempor elit, in consequat purus. Maecenas congue condimentum metus, ac maximus enim lacinia nec. Praesent faucibus, dolor sed lacinia cursus, sem diam luctus dui, eu viverra sem lorem eget libero. Sed non leo ut arcu rutrum condimentum vitae a neque. Vivamus felis ligula, iaculis ut gravida vel, ultrices eget ex. Sed quis massa rutrum, pellentesque sapien et, mollis nunc.</p>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Confirmations</h1>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-6">
+				<div class="styleguide-label">Standard Upload</div>
+				<%= form_for @bean do |f| %>
+					<%= f.label :first_name %>
+					<%= f.text_field :first_name, class: "input input-primary" %>
+					<%= f.label :last_name %>
+					<%= f.text_field :last_name, class: "input input-primary" %>
+					<%= f.label :email %>
+					<%= f.text_field :email, class: "input input-primary" %>
+					<%= f.upload_field :avatar, class: "upload upload-primary", data: { preserve: true } %>
+					<%= f.upload_field :attachments, multiple: true, class: "upload upload-primary", data: { max: 5, preserve: true } %>
+					<%= f.submit "Submit", class: "button button-small button-primary" %>
+				<% end %>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Uploads</h1>
+		</div>
+	</div>
+
+	<!--
+	<div class="dz-preview dz-file-preview" id="preview-element" style="background: green;">
+		<div class="dz-image"><img data-dz-thumbnail /></div>
+		<div class="dz-details">
+			<div class="dz-size"><span data-dz-size></span></div>
+			<div class="dz-filename"><span data-dz-name></span></div>
+		</div>
+		<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+		<div class="dz-error-message"><span data-dz-errormessage></span></div>
+		<div class="dz-success-mark"></div>
+		<div class="dz-error-mark"></div>
+	</div>
+	-->
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-6">
+				<div class="styleguide-label">Standard Crop</div>
+				<button class="button button-small button-primary" data-crop="<%= crop_beans_path %>" data-type="avatar" data-id="<%= @bean.id %>">Crop Avatar</button>
+			</div>
+			<div class="column-6">
+				<div class="styleguide-label">Standard Crop (AJAX)</div>
+				<img src="<%= @bean.avatar.thumb.url %>" data-crop="<%= crop_beans_path %>" data-type="avatar" data-id="<%= @bean.id %>" data-remote="true" />
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Cropping</h1>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-6">
+				<div class="styleguide-label">Inline Validation</div>
+				<%= form_for @bean do |f| %>
+					<%= f.label :first_name %>
+					<%= f.text_field :first_name, class: "input input-primary validate-not-empty validate-required" %>
+					<%= f.label :last_name %>
+					<%= f.text_field :last_name, class: "input input-primary validate-not-empty validate-required" %>
+					<%= f.label :email %>
+					<%= f.text_field :email, class: "input input-primary validate-email validate-required" %>
+					<%= f.label :best_friend %>
+					<%= select_tag :best_friend, options_for_select(@options), placeholder: "Pick Your Best Friend", class: "input input-primary validate-select", data: { search: true, search_placeholder: "Search For Your Best Friend" } %>
+					<%= f.label :credit_card_number %>
+					<%= text_field_tag :credit_card_number, "", class: "input input-primary validate-cc-number" %>
+					<%= f.label :age %>
+					<%= text_field_tag :age, "", class: "input input-primary validate-length", data: { min: 8, max: 14 } %>
+					<%= f.submit "Submit", class: "button button-small button-primary" %>
+				<% end %>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Validation</h1>
+		</div>
+	</div>
+</div>

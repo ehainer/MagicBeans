@@ -4,6 +4,7 @@ require "magic_beans/assets"
 require "magic_beans/upload"
 require "magic_beans/crop"
 require "magic_beans/locale"
+require "magic_beans/notifyable"
 
 module MagicBeans
 

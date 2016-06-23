@@ -125,11 +125,7 @@ module MagicBeans
 				end
 
 				def fallback_path
-<<<<<<< HEAD
 					@fallback_path ||= (MagicBeans.assets.find(image_name) || File.join(MagicBeans.config.svg.fallback_directory, source.sub(/svg$/i, [fallback_size, fallback_extension].reject(&:blank?).join("."))))
-=======
-					@fallback_path ||= (MagicBeans.assets.find(image_name) || File.join(MagicBeans.config.svg_fallback_directory, source.sub(/svg$/i, [fallback_size, fallback_extension].reject(&:blank?).join("."))))
->>>>>>> 8ca71828528c4a5e4136f50847aa057d67ef3282
 				end
 
 				def fallback_size
