@@ -26,6 +26,11 @@ Gem::Specification.new do |s|
   s.add_dependency "mini_magick"
   s.add_dependency "twilio-ruby", "~> 4.11.1"
   s.add_dependency "multi_json", "1.7.8"
+  s.add_dependency "colorize"
+  s.add_dependency "google_hash"
+  s.add_dependency "bourbon"
+  s.add_dependency "neat"
+  s.add_dependency "jquery-rails"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"
@@ -34,4 +39,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-sidekiq"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "faker"
+  #s.add_development_dependency "selenium-webdriver"
+  #s.add_development_dependency "capybara-webkit"
 end

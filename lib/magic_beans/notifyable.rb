@@ -1,20 +1,14 @@
 module MagicBeans
 	module Notifyable
 
-		def self.included(base)
-			base.send :extend, ClassMethods
-			base.send :include, InstanceMethods
-		end
+		def notifyable
+			include InstanceMethods
 
-		module ClassMethods
+			before_validation :validate_notifications
 
-			def notifyable
-				before_validation :validate_notifications
+			after_validation :clean_notification_validation
 
-				after_validation :clean_notification_validation
-
-				has_many :notifications, as: :notifyable, class_name: "MagicBeans::Notification"
-			end
+			has_many :notifications, as: :notifyable, class_name: "MagicBeans::Notification"
 		end
 
 		module InstanceMethods
@@ -22,7 +16,7 @@ module MagicBeans
 			private
 
 				def validate_notifications
-					# Find all notification records that haven't been save yet
+					# Find all notification records that haven't been saved yet
 					self.notifications.select(&:new_record?).each do |notification|
 
 						# Set the to value for both the email and phone, if any on this model

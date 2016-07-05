@@ -1,3 +1,68 @@
+.dialog {
+	@include rem(padding, 2rem 0);
+	display: none;
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	width: 500px;
+	z-index: 2000;
+	margin-left: -250px;
+	text-transform: none;
+	cursor: initial;
+
+	.dialog-header {
+		@include rem(padding, 1rem);
+		background: #234051;
+		color: #FFFFFF;
+		.heading {
+			display: inline-block;
+		}
+		.close {
+			padding: 0;
+			background-color: transparent;
+			border: none;
+			float: right;
+			cursor: pointer;
+			outline: none;
+			background-position: top right;
+			width: $base-line-height;
+			height: $base-line-height;
+		}
+	}
+
+	.dialog-body {
+		@include rem(padding, 1rem);
+		background: #FFFFFF;
+	}
+
+	.dialog-footer {
+		@include rem(padding, 1rem);
+		background: #E8E8E8;
+	}
+
+	.dialog-buttons {
+		@include rem(margin-top, 1rem);
+	}
+
+	p {
+		@include rem(margin-bottom, 1rem);
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	img:not([class*="cropit"]) {
+		display: block;
+		max-width: 100%;
+	}
+
+	@each $type, $dialog in $dialogs {
+		&.dialog-#{$type} {
+			@include dialog($type);
+		}
+	}
+}
+
 #overlay {
 	display: none;
 	position: fixed;

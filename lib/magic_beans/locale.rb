@@ -1,5 +1,6 @@
-require 'digest/md5'
-require 'csv'
+require "digest"
+require "csv"
+require "google_hash"
 
 module MagicBeans
 	module Locale
@@ -8,13 +9,18 @@ module MagicBeans
 			return (text % args) unless MagicBeans.config.locale.enabled?
 
 			begin
-				@translator ||= {}
-				@translator[locale] ||= Translation.new(locale)
-				@translator[locale].translate text, **args
+				raise "Locale can only contain the characters A-Z, and _" unless locale.to_s =~ /^[A-Z_]+$/i
+				translator(locale).translate text, **args
 			rescue => e
 				MagicBeans.log("Translation", e.message.to_s + " (Original Translation Text: #{text})", true)
 				text % args
 			end
+		end
+
+		def translator(locale = I18n.locale)
+			@translators ||= {}
+			@translators[locale.to_s] ||= Translation.new(locale)
+			@translators[locale.to_s]
 		end
 
 		class Translation
@@ -30,11 +36,36 @@ module MagicBeans
 				phrase(text, args) % args
 			end
 
+			def []=(text, translation)
+				unless list.has_key?(text)
+					CSV.open(path, "a", force_quotes: true) { |f| f.puts [text, translation] }
+					list[text] = translation
+				end
+			end
+
+			def destroy
+				File.unlink(path) if File.exists?(path)
+				load_list
+			end
+
+			def path
+				@path ||= Rails.root.join("config", "locales", "#{locale}.csv")
+			end
+
 			private
 
+				def write(text)
+					unless list.has_key?(text)
+						CSV.open(path, "a", force_quotes: true) { |f| f.puts [text, text] }
+						list[text] = text
+						MagicBeans.log("Translation", "Added translation for text '#{text}'")
+					end
+				end
+
 				def load_list
-					@list = GoogleHashDenseRubyToRuby.new
+					@list = ::GoogleHashDenseRubyToRuby.new
 					@last_modified = modified
+					Rails.cache.delete_matched("translations/phrase") if Rails.cache.respond_to?(:delete_matched)
 					CSV.foreach(path, force_quotes: true) { |row| list[row.first] = row.last unless list.has_key?(row.first) } if File.exists?(path)
 				end
 
@@ -45,37 +76,21 @@ module MagicBeans
 					Rails.cache.fetch(key) { list[text] } || text
 				end
 
-				def write(text)
-					unless list.has_key?(text)
-						CSV.open(path, "a", force_quotes: true) { |f| f.puts [text, text] }
-						list[text] = text
-					end
-				end
-
-				def path
-					@path ||= Rails.root.join("config", "locales", "#{locale}.csv")
-				end
-
 				def modified
 					if File.exists? path
-						File.new(path).ctime.to_i
+						File.mtime(path).to_i
 					else
 						Time.now.to_i
 					end
 				end
 
 				def build?
-					MagicBeans.config.locale.build_environment.flatten.uniq.map(&:to_s).include?(Rails.env)
+					[MagicBeans.config.locale.build_environment].flatten.map(&:to_s).uniq.include?(Rails.env.to_s)
 				end
 
 				def phrase_key(text, args)
-					key = Digest::MD5.hexdigest [text, locale, modified].map(&:to_s).join + args.keys.join
+					key = Digest::SHA256.hexdigest [text, locale, modified].map(&:to_s).join + args.map { |k,v| "#{k}#{v}" }.join
 					"translations/phrase/#{key}"
-				end
-
-				def list_key
-					key = Digest::MD5.hexdigest [locale, modified].map(&:to_s).join
-					"translations/list/#{key}"
 				end
 		end
 	end

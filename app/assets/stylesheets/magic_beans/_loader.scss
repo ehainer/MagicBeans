@@ -1,0 +1,78 @@
+.loading {
+	@include rem(padding, 1rem);
+	position: relative;
+}
+
+.loader {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.loader-dot {
+	display: inline-block;
+	position: absolute;
+	margin: 0 auto;
+	width: 90px;
+	height: 16px;
+	text-align: center;
+	.bounce1 {
+		animation-delay: -0.32s;
+	}
+
+	.bounce2 {
+		animation-delay: -0.16s;
+	}
+	& > span {
+		@include rem(margin, 0 0.2rem);
+		animation: bouncedelay 1.4s infinite ease-in-out both;
+		-webkit-mask-image: -webkit-radial-gradient(circle, white, black);
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background-color: #323A45;
+		border-radius: 50%;
+	}
+}
+
+.loader-circle {
+	@include rem(width, 2rem);
+	@include rem(height, 2rem);
+	@include rem(margin-left, -1rem);
+	@include rem(margin-top, -1rem);
+	display: block;
+	border-radius: 50%;
+	border: 3px solid rgba(50, 58, 69, 0.2);
+	border-top-color: #323A45;
+	animation: spin 1s infinite linear;
+}
+
+.loader-stream {
+	height: 5px;
+	.dot1 {
+		animation-delay: 0.80s;
+	}
+	.dot2 {
+		animation-delay: 0.64s;
+	}
+	.dot3 {
+		animation-delay: 0.48s;
+	}
+	.dot4 {
+		animation-delay: 0.32s;
+	}
+	.dot5 {
+		animation-delay: 0.16s;
+	}
+	& > span {
+		@include rem(margin, 0 0.1rem);
+		opacity: 0;
+		display: inline-block;
+		border-radius: 50%;
+		width: 5px;
+		height: 5px;
+		background-color: #323A45;
+		animation: stream 3s infinite ease-in-out;
+	}
+}

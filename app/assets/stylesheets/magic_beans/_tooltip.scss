@@ -1,0 +1,39 @@
+.tooltip {
+	@include rem(padding, 0.5rem);
+	display: none;
+	position: absolute;
+	bottom: 100%;
+	pointer-events: none;
+	white-space: nowrap;
+	z-index: 1050;
+	background: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	margin-bottom: 10px;
+
+	&:after, &:before {
+		@include rem(left, 1rem);
+		content: " ";
+		position: absolute;
+		top: 100%;
+		width: 0;
+		height: 0;
+	}
+	&:after {
+		border-left: 0 solid transparent;
+		border-right: 9px solid transparent;
+		border-top: 10px solid #FFFFFF;
+	}
+
+	&:before {
+		border-left: 0 solid transparent;
+		border-right: 12px solid transparent;
+		border-top: 12px solid #CCCCCC;
+		margin-left: -1px;
+	}
+
+	@each $type, $tooltip in $tooltips {
+		&.tooltip-#{$type} {
+			@include tooltip($type);
+		}
+	}
+}

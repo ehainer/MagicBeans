@@ -1,4 +1,4 @@
-//= require moment
+//= require magic_beans/moment
 //= require magic_beans/abstract
 //= require magic_beans/plugins
 //= require magic_beans/callbacks
@@ -235,28 +235,56 @@ var Bean = (function($){
 		Loader: function(){
 			var loaded = 0;
 
-			this.preload = function(images){
+			this.load = function(src){
 				var dfr = $.Deferred();
 
-				if(images.length == 0) return dfr.resolve().promise();
+				try
+				{
+					if($(src).attr('src') !== undefined){
+						src = $(src).attr('src');
+					}
+				}catch(e){
+				}
 
-				images.each(function(){
-					var img = new Image();
-					$(img).css('display', 'none');
-					document.body.appendChild(img);
-					$(img).on('load', function(){
-						if(images.length == ++loaded){
-							dfr.resolve();
-						}
-						$(img).remove();
-					});
-					img.src = $(this).attr('src');
-					$(this).attr('style', function(i, style){
+				if(src == undefined) return dfr.reject().promise();
+
+				var image = new Image();
+				$(image).css('display', 'none');
+				document.body.appendChild(image);
+				$(image).on('load', function(){
+					$(image).attr('style', function(i, style){
 						return style.replace(/display[^;]+;?/g, '');
 					});
+					dfr.resolve($(image).clone());
+					$(image).remove();
+				});
+				image.src = src;
+				return dfr.promise();
+			};
+
+			this.loadAll = function(images, callback){
+				var dfr = $.Deferred();
+				var images = $.makeArray(images).flatten();
+				var result = [];
+				var loaded = 0;
+				this.loadEach(images, function(image){
+					result.push(image);
+					if(images.length == ++loaded){
+						dfr.resolve(result);
+					}
 				});
 				return dfr.promise();
-			}
+			};
+
+			this.loadEach = function(images, callback){
+				var self = this;
+				$.each($.makeArray(images).flatten(), function(index, url){
+					self.load(url).done(function(image){
+						callback(image);
+					});
+				});
+				return this;
+			};
 		},
 
 		Dialog: function(title, body, footer){
@@ -269,9 +297,21 @@ var Bean = (function($){
 			this._beforeCloseCallback = [];
 			this._resizeTimer = null;
 
-			this.show = function(overlay_close, button_close, width, height){
+			this.setBody = function(html){
+				this._dialog.find('.dialog-body').html(html);
+				return this;
+			};
+
+			this.setFooter = function(html){
+				this._dialog.find('.dialog-footer').html(html);
+				return this;
+			};
+
+			this.show = function(overlay_close, button_close, header, width, height){
+				if(header !== false) header = true;
+
 				// Render and display the dialog, centered, and remove any existing errors
-				self.render(overlay_close, button_close, width, height).center().clearErrors();
+				self.render(overlay_close, button_close, header, width, height).center().clearErrors();
 				var loader = new Bean.Loader();
 				var dfr = $.Deferred();
 
@@ -287,18 +327,18 @@ var Bean = (function($){
 				});
 
 				// Preloads any images in the dialog, and upon loading everything, re-center the dialog as it's size may have changed
-				loader.preload(self._dialog.find('img')).done(function(){
+				loader.loadAll(self._dialog.find('img'), function(){
 					self.center(true);
 					dfr.resolve();
 				});
 				return dfr.promise();
 			};
 
-			this.render = function(overlay_close, button_close, width, height){
+			this.render = function(overlay_close, button_close, header, width, height){
 				$('body').css('overflow', 'hidden');
-				self.overlay().build(button_close);
-				if(width !== undefined) self._dialog.width(width);
-				if(height !== undefined) self._dialog.height(height);
+				self.overlay().build(button_close, header);
+				if(width != undefined) self._dialog.width(width);
+				if(height != undefined) self._dialog.height(height);
 				this._dialog.data('dialog', self);
 				this._dialog.fadeIn(200);
 				this._overlay.fadeIn(200);
@@ -311,7 +351,7 @@ var Bean = (function($){
 
 				self._dialog.find('button.close').click(self.hide);
 
-				if(overlay_close){
+				if(overlay_close || header === false){
 					this._overlay.addClass('clickable').click(function(event){
 						if($(event.target).attr('id') == 'overlay') self.hide();
 					});
@@ -351,7 +391,7 @@ var Bean = (function($){
 				$('body').children(':visible').not(self._overlay).removeClass('blurry');
 			};
 
-			this.build = function(button_close){
+			this.build = function(button_close, header){
 				// If any other dialogs are visible, remove them
 				if($('#dialog').length) $('#dialog').remove();
 
@@ -359,11 +399,14 @@ var Bean = (function($){
 					self._dialog = title;
 				}else{
 					var html = '<div id="dialog" class="dialog' + (self._theme ? ' dialog-' + self._theme : '') + '">';
-					html += '<header class="dialog-header"><h4 class="heading">' + title + '</h4>';
 
-					// If close button is not disabled, add it
-					if(button_close !== false) html += '<button class="close icon-close"></button>';
-					html += '</header>';
+					if(header){
+						html += '<header class="dialog-header"><h4 class="heading">' + title + '</h4>';
+
+						// If close button is not disabled, add it
+						if(button_close !== false) html += '<button class="close icon-close"></button>';
+						html += '</header>';
+					}
 
 					// Add the dialog body content
 					html += '<div class="dialog-body">' + body + '</div>';

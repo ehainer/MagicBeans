@@ -1,0 +1,13 @@
+.checkbox {
+	&:not(#foo) {
+		visibility: hidden;
+		display: none;
+		width: 0;
+		float: left;
+	}
+	@each $type, $checkbox in $checkboxes {
+		&.checkbox-#{$type} {
+			@include checkbox($type);
+		}
+	}
+}

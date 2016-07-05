@@ -1,17 +1,17 @@
 class MagicBeans::BeansController < ApplicationController
 
-	include MagicBeans::Upload
-
-	include MagicBeans::Crop
-
 	before_action :init_objects
 
 	uploadable MagicBeans::Bean
 
-	crop_for :avatar
+	croppable MagicBeans::Bean
 
 	def on_crop_success(resource)
-		render text: resource.first_name + " OH BOY!"
+		redirect_to(resource, notice: __("CROP SUCCESS")) and return true
+	end
+
+	def on_crop_failure(resource)
+		redirect_to(resource, alert: __("CROP FAILURE")) and return true
 	end
 
 	def index
@@ -43,17 +43,12 @@ class MagicBeans::BeansController < ApplicationController
 		end
 	end
 
-	def notify
-		@bean = MagicBeans::Bean.new(first_name: "John", last_name: "Smith", email: "eric@commercekitchen.com", phone: "970-581-3387")
+	def get_proc_resource
+		MagicBeans::Bean.new(first_name: "PROC")
+	end
 
-		@bean.notifications.build do |n|
-			n.sms __("Welcome, %{name}!", name: @bean.first_name)
-			n.email __("Welcome, %{name}", name: @bean.first_name), body: __("Login to the new site"), subtext: "Yadda yadda yadda"
-		end
-
-		@bean.save
-
-		render json: { request: notification.request, response: notification.response }
+	def get_symbol_resource
+		MagicBeans::Bean.new(first_name: "SYMBOL")
 	end
 
 	private
@@ -65,4 +60,5 @@ class MagicBeans::BeansController < ApplicationController
 		def init_objects
 			@options = 20.times.map { |i| [Faker::Name.name, i] }
 		end
+
 end

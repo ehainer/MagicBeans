@@ -91,10 +91,9 @@ var Listeners = {
 				$('body').trigger('bean:reboot');
 			});
 
-			$('.beans-form').on('dialog:click', function(event, btn){
+			$('.beans-form').on('dialog:click', function(event, dialog, btn){
 				///event.stopImmediatePropagation();
 				if($(btn).hasClass('prompt')){
-					var dialog = $(this).data('dialog');
 					var error1 = dialog.addError('Oh snap you\'re not done doing whatever weird thing we asked you to do', true);
 					dialog.getHtml().one('mousedown', function(){
 						dialog.removeError(error1);
@@ -106,10 +105,22 @@ var Listeners = {
 			});
 
 			$('img[data-crop]').on('crop:success', function(event, response, cropper){
+				console.log(response);
 				cropper.getDialog().hide();
 				$(this).attr('src', response.thumb);
 			}).on('crop:failure', function(event, response, cropper){
 				alert('Crop failed! ' + response.responseText);
+			});
+
+			$('#loading-image-dialog').on('dialog:open', function(event, dialog){
+				dialog.setBody('<div class="loading"><span class="loader loader-circle"></span></div>');
+				setTimeout(function(){
+					var loader = new Bean.Loader();
+					loader.load('https://images.unsplash.com/photo-1467634764965-325ecb804113?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=3cee706463b4b03a2a4614fa582e439c').done(function(image){
+						dialog.setBody(image).center();
+						console.log('done');
+					});
+				}, 3000);
 			});
 		},
 

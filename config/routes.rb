@@ -1,15 +1,10 @@
 MagicBeans::Engine.routes.draw do
-	resources :beans do
-		collection do
-			get :notify
+	root "beans#index"
 
-			# Crop routes
-			get :image
-			post :crop
+	resources :beans, only: [:show, :create, :update]
 
-			# Upload routes
-			post :upload
-			delete :remove
-		end
+	scope "beans" do
+		uploadable :beans
+		croppable :beans
 	end
 end

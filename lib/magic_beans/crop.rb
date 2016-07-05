@@ -2,134 +2,182 @@ require 'tempfile'
 module MagicBeans
 	module Crop
 
-		def self.included(base)
-			base.send :extend, ClassMethods
+		def croppable(resource = nil, **args)
+			extend ClassMethods
+			include InstanceMethods
+
+			resource_class = resource.to_s.constantize rescue nil
+
+			raise MagicBeans::Crop::ArgumentError.new("Unknown resource class '#{resource}' defined") if resource_class.blank?
+
+			@cropper = Cropper.new(resource_class, **args)
 		end
 
 		module ClassMethods
 
-			def crops
-				@crops ||= []
-			end
+			attr_accessor :cropper
 
-			def crop_for(name, options={})
-				crops << Crop.new(name, options)
-			end
 		end
 
-		class Crop
+		module InstanceMethods
+			def crop
+				begin
+					type = crop_params[:type].to_s.underscore.to_sym
 
-			def initialize(name, options)
-				@name = name
-				@options = options.deep_symbolize_keys
-			end
+					from = cropper.resource.try(type).try(:path)
 
-			def name
-				@name.to_s
-			end
+					raise MagicBeans::Crop::InvalidMount.new("Unknown image path for uploader mount with name '#{type}'") if from.blank?
 
-			def resource(klass)
-				if @options[:resource].respond_to? :call
-					@options[:resource].call(klass)
-				else
-					klass.send :instance_variable_get, "@#{klass.controller_name.to_s.classify.downcase}"
-				end
-			end
+					# Create a temp file to store the newly cropped image
+					to = Tempfile.new(["#{cropper.resource.id}_#{type}", File.extname(from)])
 
-			def versions(klass, type)
-				resource(klass).send(type).versions.map { |version, uploader| { version => uploader.url } }.reduce(:merge).merge(type.to_sym => resource(klass).send(type).url)
-			end
+					# Crop the image, scale up if it's smaller than the required crop size
+					img = MiniMagick::Image.new(from)
+					img.crop("#{crop_params[:width]}x#{crop_params[:height]}+#{crop_params[:x]}+#{crop_params[:y]}")
+					img.resize "300x300" if img.width < 300 || img.height < 300
+					img.write to.path
+					to.close
 
-			def success(klass, res)
-				klass.send(@options[:success], res) if !@options[:success].blank? && klass.respond_to?(@options[:success])
-			end
+					# Set the new image on the resource
+					cropper.resource.send("#{type}=", to)
 
-			def failure(klass, res)
-				klass.send(@options[:failure], res) if !@options[:failure].blank? && klass.respond_to?(@options[:failure])
-			end
-		end
+					# Remove the temp file
+					to.unlink
 
-		def crop
-			crop_type = crop_params[:type]
-			cropper = crop_for(crop_type)
+					# Output the results, or redirect, depending on what was requested
+					respond_to do |format|
+						resource = cropper.resource
+						if resource.save
+							# Recreate the versions defined in the uploader to ensure the images are generated
+							resource.send(type).recreate_versions!
 
-			if cropper
-				resource = cropper.resource(self)
-				from = resource.try(crop_type).path
-
-				# Create a temp file to store the newly cropped image
-				to = Tempfile.new(["#{resource.id}_#{crop_type}", File.extname(from)])
-
-				# Crop the image, scale up if it's smaller than the required crop size
-				img = MiniMagick::Image.new(from)
-				img.crop("#{crop_params[:width]}x#{crop_params[:height]}+#{crop_params[:x]}+#{crop_params[:y]}")
-				img.resize "300x300" if img.width < 300 || img.height < 300
-				img.write to.path
-				to.close
-
-				# Set the new image on the resource
-				resource.send("#{crop_type}=", to)
-
-				# Remove the temp file
-				to.unlink
-
-				# Output the results, or redirect, depending on what was requested
-				respond_to do |format|
-					if resource.save
-						# If a success method/proc was defined, do that, otherwise redirect to the resource
-						format.html { cropper.success(self, resource) || redirect_to(resource) }
-						format.json { render json: cropper.versions(self, crop_type) }
-					else
+							# If a success method/proc was defined, do that, otherwise redirect to the resource
+							format.html do
+								if cropper.has_success?
+									cropper.success
+									return
+								else
+									redirect_to(resource)
+								end
+							end
+							format.json { render json: cropper.versions(type) }
+						else
+							raise MagicBeans::Crop::RecordInvalid.new(resource: resource)
+						end
+					end
+				rescue MagicBeans::Crop::RecordInvalid => e
+					respond_to do |format|
 						# If a failure method/proc was defined, do that, otherwise redirect to the resource with the flash
-						format.html { cropper.failure(self, resource) || redirect_to(resource, alert: resource.errors.full_messages) }
-						format.json { render json: cropper.versions(self, crop_type).merge(error: resource.errors.full_messages), status: 400 }
+						format.html do
+							if cropper.has_failure?
+								cropper.failure
+								return
+							else
+								redirect_to(cropper.resource, alert: e.data[:resource].errors.full_messages)
+							end
+						end
+						format.json { render json: cropper.versions(type).merge(error: e.message), status: 400 }
 					end
 				end
-			else
-				raise MagicBeans::Error.new("Unknown crop for uploader '#{crop_type}'")
 			end
 
-		end
-
-		def image
-			begin
+			def image
 				type = params[:type].to_s.underscore.to_sym
-				cropper = crop_for(type)
-				render json: { url: cropper.resource(self).try(type).url }
-			rescue => e
-				puts e.message
-				render json: { url: "" }
+				render json: { url: cropper.resource.try(type).try(:url) }
 			end
+
+			def cropper
+				self.class.cropper.controller = self
+				self.class.cropper
+			end
+
+			private
+	
+				def crop_params
+					data = params.require(:crop).permit(:x, :y, :width, :height, :ajax, :id, :type)
+	
+					# Sanitize values that can only be numeric values, since they get passed directly to a MiniMagick command
+					[:x, :y, :width, :height].each do |arg|
+						raise MagicBeans::Crop::ArgumentError.new("Value passed for crop '#{arg}' is not numeric") unless (true if Float(data[arg]) rescue false)
+					end
+	
+					# If all was well, return the param data
+					data
+				end
 		end
 
-		private
+		class Cropper
 
-			def crop_params
-				data = params.require(:crop).permit(:x, :y, :width, :height, :ajax, :id, :type)
+			attr_accessor :options, :controller, :resource_class
 
-				# Sanitize values that can only be numeric values, since they get passed directly to a MiniMagick command
-				[:x, :y, :width, :height].each do |arg|
-					raise MagicBeans::Error.new("Value passed for crop '#{arg}' is not numeric") unless (true if Float(data[arg]) rescue false)
-				end
-
-				# If all was well, return the param data
-				data
+			def initialize(resource, **args)
+				@resource_class = resource
+				@options = args.compact.deep_symbolize_keys.select { |key, _| [:resource, :success, :failure].include?(key) }
 			end
 
-			def resource_id
-				params[:id]
+			def versions(type)
+				resource.send(type).versions.map do |version, uploader|
+					{ version => uploader.url + "?#{Time.now.to_i}" }
+				end.reduce(:merge).merge(type.to_sym => resource.send(type).url + "?#{Time.now.to_i}")
+			end
+
+			def success
+				if options[:success].respond_to? :call
+					options[:success].call resource
+					true
+				elsif !options[:success].blank? && controller.respond_to?(options[:success])
+					controller.send options[:success], resource
+					true
+				else
+					false
+				end
+			end
+
+			def failure
+				if options[:failure].respond_to? :call
+					options[:failure].call resource
+					true
+				elsif !options[:failure].blank? && controller.respond_to?(options[:failure])
+					controller.send options[:failure], resource
+					true
+				else
+					false
+				end
+			end
+
+			def has_success?
+				if options[:success].respond_to?(:call) || (!options[:success].blank? && controller.respond_to?(options[:success]))
+					true
+				else
+					false
+				end
+			end
+
+			def has_failure?
+				if options[:failure].respond_to?(:call) || (!options[:failure].blank? && controller.respond_to?(options[:failure]))
+					true
+				else
+					false
+				end
+			end
+
+			def params
+				controller.send :params
 			end
 
 			def resource
-				controller_name.to_s.classify.constantize
+				if options[:resource].respond_to? :call
+					options[:resource].call controller
+				elsif !options[:resource].blank? && controller.respond_to?(options[:resource])
+					controller.send options[:resource]
+				elsif controller.instance_variable_defined?("@#{resource_class.to_s.classify.demodulize.underscore}")
+					controller.instance_variable_get "@#{resource_class.to_s.classify.demodulize.underscore}"
+				elsif !params[:id].blank?
+					resource_class.to_s.classify.safe_constantize.find(params[:id])
+				else
+					resource_class.to_s.classify.safe_constantize.new
+				end
 			end
-
-			def resource_name
-				resource.name.underscore
-			end
-
-			def crop_for(name)
-				self.class.crops.find { |cropper| cropper.name == name.to_s }
-			end
+		end
 	end
 end

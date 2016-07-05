@@ -4,7 +4,7 @@ Listeners.Bubble = {
             if($('<div />').html($(this).data('bubble')).find('img').length && !$(this).data('loaded_images') && !Bean.Abstract.isMobile()){
                 var loader = new Bean.Loader();
                 var self = $(this);
-                loader.preload($('<div />').html($(this).data('bubble')).find('img')).done(function(){
+                loader.loadAll($('<div />').html($(this).data('bubble')).find('img')).done(function(){
                     self.data('loaded_images', true);
                     //self.trigger('mouseenter');
                 });

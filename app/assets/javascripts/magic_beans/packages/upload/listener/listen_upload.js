@@ -18,7 +18,6 @@ Listeners.Upload = {
 			var accept = field.data('accept');
 			var uploadMax = field.data('max') || null;
 			var uploadUrl = field.data('upload');
-			//var removeUrl = field.data('remove');
 			var preview = field.data('preview') ? $('<div />').html($(field.data('preview')).show()).html() : Dropzone.prototype.defaultOptions.previewTemplate;
 
 			Bean.debug('Initializing Uploader With Options: %O', field.data(), 'info');
@@ -50,6 +49,9 @@ Listeners.Upload = {
 				success: function(file, response){
 					// For every upload, add the upload id to the commit list
 					$.each(response.uploads, function(key, uploads){
+						// Add the id to the file element, used when the removedfile action occurs (see init below)
+						$(file.previewElement).attr('data-id', uploads[0]);
+
 						$.each(uploads, function(index, id){
 							if(!form.find('input[value="' + id + '"]').length) form.prepend('<input type="hidden" name="' + key + '[commit][]" value="' + id + '" />');
 						});
@@ -61,17 +63,16 @@ Listeners.Upload = {
 
 					// Dispatch that an upload occurred
 					form.trigger('upload:success', [file, response]);
-
-					// Add the id to the file element, used when the removedfile action occurs (see init below)
-					$(file.previewElement).attr('data-id', response.uploads[0]);
 				},
 				successmultiple: function(files, response){
 					$.each(files, function(index, file){
 						// Dispatch that an upload occurred
 						form.trigger('upload:success', [file, response]);
 
-						// Add the id to the file element, used when the removedfile action occurs (see init below)
-						$(file.previewElement).attr('data-id', response.uploads[index]);
+						$.each(response.uploads, function(key, uploads){
+							// Add the id to the file element, used when the removedfile action occurs (see init below)
+							$(file.previewElement).attr('data-id', uploads[index]);
+						});
 					});
 				},
 				error: function(file, message, xhr){
@@ -85,9 +86,14 @@ Listeners.Upload = {
 					// of the upload, so it will actually be removed when the form is submitted
 					dz.on('removedfile', function(file){
 						var id   = $(file.previewElement).data('id'),
-							name = field.attr('name').replace(/\[\]$/, '') + '[remove][]';
+							name = field.attr('name').replace(/\[.*$/i, ''),
+							file = $(file.previewElement).data('file') === true;
 
-						form.prepend('<input type="hidden" name="' + name + '" value="' + id + '" />');
+						// Remove the commit input
+						form.find('input[name="' + name + '[commit][]"][value="' + id + '"]').remove();
+
+						// Add the remove input
+						form.prepend('<input type="hidden" name="' + name + '[remove][' + (file ? 'file' : 'temp') + '][]" value="' + id + '" />');
 					});
 
 					// If set to preserve file uploads, iterate through each uploaded file associated with
@@ -98,6 +104,7 @@ Listeners.Upload = {
 								dz.files.push(fileObject);
 								dz.options.addedfile.call(dz, fileObject);
 								$(fileObject.previewElement).attr('data-id', id);
+								$(fileObject.previewElement).attr('data-file', 'true');
 								dz._enqueueThumbnail(fileObject);
 								dz.options.complete.call(dz, fileObject);
 								dz._updateMaxFilesReachedClass();

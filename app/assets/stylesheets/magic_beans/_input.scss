@@ -1,0 +1,20 @@
+.input {
+	@include rem(line-height, $base-line-height);
+	width: 100%;
+	overflow: hidden;
+	background: none;
+
+	@each $type, $input in $inputs {
+		&.input-#{$type} {
+			@include input($type);
+		}
+	}
+
+	&.mce-tinymce {
+		padding: 0;
+	}
+	&.mce-content-body {
+		border: none !important;
+		height: 100%;
+	}
+}

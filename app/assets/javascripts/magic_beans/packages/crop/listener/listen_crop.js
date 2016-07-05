@@ -7,12 +7,11 @@ Listeners.Crop = {
 					form = $(this).closest('form'),
 					type = $(this).data('type'),
 					action = $(this).data('crop'),
-					remote = $(this).data('remote') || false,
-					id = (form.length ? form.attr('action').match(/\/([0-9]+)/)[1] : ($(this).data('id') || null));
+					remote = $(this).data('remote') || false;
 
 				$.ajax({
-					url: '/beans/image',
-					data: { id: id, type: type }
+					url: action.replace('/crop', '/image'),
+					data: { type: type }
 				}).done(function(response){
 					// Create cropper instance
 					var cropper = new Bean.Crop();
@@ -26,7 +25,7 @@ Listeners.Crop = {
 					cropper.onCrop(function(data){
 						var formHtml = '<form action="' + action + '" method="POST">';
 						formHtml += '<input type="hidden" name="authenticity_token" value="' + Bean.Abstract.getAuthenticityToken() + '" />';
-						formHtml += '<input type="hidden" name="id" value="' + (isNaN(id) ? '' : id) + '" />';
+						formHtml += '<input type="hidden" name="_method" value="patch" />';
 						formHtml += '<input type="hidden" name="crop[ajax]" value="' + remote + '" />';
 						formHtml += '<input type="hidden" name="crop[type]" value="' + type + '" />';
 						formHtml += '<input type="hidden" name="crop[x]" value="' + data.x + '" />';
@@ -39,7 +38,7 @@ Listeners.Crop = {
 
 						if(remote){
 							$.ajax({
-								url: action + (remote ? '.json' : ''),
+								url: action + '.json',
 								method: 'POST',
 								data: form.serializeForm(),
 								dataType: 'json'

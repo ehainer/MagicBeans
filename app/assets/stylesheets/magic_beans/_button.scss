@@ -1,0 +1,27 @@
+.button {
+	cursor: pointer;
+	display: inline-block;
+	outline: none;
+	text-decoration: none;
+
+	// Ensure buttons next to one another have space between them
+	& + & {
+		@include rem(margin-left, 1rem);
+	}
+
+	@each $type, $button in $buttons {
+		&.button-#{$type} {
+			@include button($type);
+		}
+	}
+
+	@each $type, $size in $button-sizes {
+		&.button-#{$type} {
+			@include button-size($type);
+		}
+	}
+
+	&[disabled], &.thinking {
+		cursor: default;
+	}
+}

@@ -6,76 +6,76 @@
 		<div class="styleguide-content">
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Standard Text Input</div>
+					<div class="styleguide-label"><%= __("Standard Text Input") %></div>
 					<%= text_field_tag :text, "", class: "input input-primary" %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Input With Placeholder</div>
+					<div class="styleguide-label"><%= __("Input With Placeholder") %></div>
 					<%= text_field_tag :text, "", placeholder: "Visible When Empty", class: "input input-primary" %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Masked Input (Phone)</div>
+					<div class="styleguide-label"><%= __("Masked Input (Phone)") %></div>
 					<%= telephone_field_tag :text, "", class: "input input-primary", data: { mask: "(000) 000-0000" } %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Input With Icon Left</div>
+					<div class="styleguide-label"><%= __("Input With Icon Left") %></div>
 					<%= text_field_tag :text, "", class: "input input-primary icon-left icon-phone2" %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Input With Icon Right</div>
-					<%= text_field_tag :text, "", class: "input input-primary icon-right icon-safari" %>
+					<div class="styleguide-label"><%= __("Input With Icon Right") %></div>
+					<%= text_field_tag :text, "", class: "input input-primary icon-right icon-search" %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Numeric Input</div>
+					<div class="styleguide-label"><%= __("Numeric Input") %></div>
 					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Numeric Input With Negative</div>
+					<div class="styleguide-label"><%= __("Numeric Input With Negative") %></div>
 					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true, negative: true } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Numeric Input With Decimal</div>
+					<div class="styleguide-label"><%= __("Numeric Input With Decimal") %></div>
 					<%= text_field_tag :text, "", class: "input input-primary", data: { numeric: true, decimal: true } %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Standard Select</div>
+					<div class="styleguide-label"><%= __("Standard Select") %></div>
 					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary" %>
 				</div>
 
 				<div class="column-6">
-					<div class="styleguide-label">Select With Search</div>
+					<div class="styleguide-label"><%= __("Select With Search") %></div>
 					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { search: true, search_placeholder: "Search For Something" } %>
 				</div>
 
 				<div class="column-6">
-					<div class="styleguide-label">Select Input</div>
+					<div class="styleguide-label"><%= __("Select Input") %></div>
 					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { behavior: :input } %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Multi Select</div>
+					<div class="styleguide-label"><%= __("Multi Select") %></div>
 					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", multiple: true %>
 				</div>
 
 				<div class="column-6">
-					<div class="styleguide-label">Select With Custom Scrollbar (webkit only)</div>
+					<div class="styleguide-label"><%= __("Select With Custom Scrollbar (webkit only)") %></div>
 					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary scrollbar scrollbar-primary" %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Default Date Input</div>
+					<div class="styleguide-label"><%= __("Default Date Input") %></div>
 					<%= text_field_tag :date, "Thursday, Mar 24th 2016", class: "input input-primary", data: { date: true } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Default Date Range</div>
+					<div class="styleguide-label"><%= __("Default Date Range") %></div>
 					<div class="column-3">
 						<%= text_field_tag :start, "", class: "input input-primary", data: { date: :start, end: "#end" } %>
 					</div>
@@ -84,7 +84,7 @@
 					</div>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Date Range [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Date Range [Primary Theme]") %></div>
 					<div class="column-3">
 						<%= text_field_tag :start2, "", class: "input input-primary calendar calendar-primary", data: { date: :start, end: "#end2" } %>
 					</div>
@@ -95,15 +95,15 @@
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Date Input With Custom Date Format</div>
+					<div class="styleguide-label"><%= __("Date Input With Custom Date Format") %></div>
 					<%= text_field_tag :date, "", class: "input input-primary", data: { date: true, format: "YYYY-MM-DD HH:mm:ss" } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Date Input With Time Picker</div>
+					<div class="styleguide-label"><%= __("Date Input With Time Picker") %></div>
 					<%= text_field_tag :date, "", class: "input input-primary", data: { date: true, time: true, format: "dddd, MMM Do YYYY h:mm A", iso8601: Time.new.iso8601 } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Date Range With Time Picker [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Date Range With Time Picker [Primary Theme]") %></div>
 					<div class="column-3">
 						<%= text_field_tag :start3, "", class: "input input-primary calendar calendar-primary", data: { date: :start, time: true, end: "#end3", format: "MMM DD h:mm A" } %>
 					</div>
@@ -114,21 +114,21 @@
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
-					<div class="styleguide-label">Editable Textarea</div>
+					<div class="styleguide-label"><%= __("Editable Textarea") %></div>
 					<%= text_area_tag :textarea1, "", class: "input input-primary", data: { editable: :custom } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Editable Textarea Bottom Toolbar</div>
+					<div class="styleguide-label"><%= __("Editable Textarea Bottom Toolbar") %></div>
 					<%= text_area_tag :textarea2, "", class: "input input-primary", data: { editable: :custom, toolbar: "underline italic bold | image link", plugins: "image link", position: :bottom } %>
 				</div>
 				<div class="column-6">
-					<div class="styleguide-label">Autogrow Textarea</div>
+					<div class="styleguide-label"><%= __("Autogrow Textarea") %></div>
 					<%= text_area_tag :textarea3, "", class: "input input-primary", data: { autogrow: true } %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-4">
-					<div class="styleguide-label">Standard Radio</div>
+					<div class="styleguide-label"><%= __("Standard Radio") %></div>
 					<div>
 						<%= radio_button_tag :radio_fallback, "1", true %>
 						<%= label_tag :radio_fallback_1, "Radio 1" %>
@@ -143,7 +143,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Radio [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Radio [Primary Theme]") %></div>
 					<div>
 						<%= radio_button_tag :radio_primary, "1", true, class: "radio radio-primary" %>
 						<%= label_tag :radio_primary_1, "Radio 1" %>
@@ -158,7 +158,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Radio [Secondary Theme]</div>
+					<div class="styleguide-label"><%= __("Radio [Secondary Theme]") %></div>
 					<div>
 						<%= radio_button_tag :radio_secondary, "1", true, class: "radio radio-secondary" %>
 						<%= label_tag :radio_secondary_1, "Radio 1" %>
@@ -173,7 +173,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Radio Multiline [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Radio Multiline [Primary Theme]") %></div>
 					<div>
 						<%= radio_button_tag :radio_multiline, "1", true, class: "radio radio-primary" %>
 						<%= label_tag :radio_multiline_1, Faker::Lorem.paragraph %>
@@ -190,7 +190,7 @@
 			</div>
 			<div>
 				<div class="column-4">
-					<div class="styleguide-label">Standard Checkbox</div>
+					<div class="styleguide-label"><%= __("Standard Checkbox") %></div>
 					<div>
 						<%= check_box_tag :checkbox_fallback_1, "1", true %>
 						<%= label_tag :checkbox_fallback_1, "Checkbox 1" %>
@@ -205,7 +205,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Checkbox [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Checkbox [Primary Theme]") %></div>
 					<div>
 						<%= check_box_tag :checkbox_primary_1, "1", true, class: "checkbox checkbox-primary" %>
 						<%= label_tag :checkbox_primary_1, "Checkbox 1" %>
@@ -220,7 +220,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Checkbox [Secondary Theme]</div>
+					<div class="styleguide-label"><%= __("Checkbox [Secondary Theme]") %></div>
 					<div>
 						<%= check_box_tag :checkbox_secondary_1, "1", true, class: "checkbox checkbox-secondary" %>
 						<%= label_tag :checkbox_secondary_1, "Checkbox 1" %>
@@ -235,7 +235,7 @@
 					</div>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Checkbox Multiline [Primary Theme]</div>
+					<div class="styleguide-label"><%= __("Checkbox Multiline [Primary Theme]") %></div>
 					<div>
 						<%= check_box_tag :checkbox_multiline_1, "1", true, class: "checkbox checkbox-primary" %>
 						<%= label_tag :checkbox_multiline_1, Faker::Lorem.paragraph %>
@@ -300,13 +300,13 @@
 		<div class="styleguide-content">
 			<div class="space-bottom">
 				<div class="column-9">
-					<div class="styleguide-label">Standard Button</div>
+					<div class="styleguide-label"><%= __("Standard Button") %></div>
 					<button class="button button-small button-primary">Button Primary</button>
 					<button class="button button-small button-secondary">Button Secondary</button>
 					<button class="button button-small button-tertiary">Button Tertiary</button>
 				</div>
 				<div class="column-9">
-					<div class="styleguide-label">Input Submit Button</div>
+					<div class="styleguide-label"><%= __("Input Submit Button") %></div>
 					<input type="submit" class="button button-small button-primary" value="Button Primary" />
 					<input type="submit" class="button button-small button-secondary" value="Button Secondary" />
 					<input type="submit" class="button button-small button-tertiary" value="Button Tertiary" />
@@ -314,13 +314,13 @@
 			</div>
 			<div class="space-bottom">
 				<div class="column-9">
-					<div class="styleguide-label">Link Button</div>
+					<div class="styleguide-label"><%= __("Link Button") %></div>
 					<a href="#" class="button button-small button-primary">Button Primary</a>
 					<a href="#" class="button button-small button-secondary">Button Secondary</a>
 					<a href="#" class="button button-small button-tertiary">Button Tertiary</a>
 				</div>
 				<div class="column-9">
-					<div class="styleguide-label">Button Sizes</div>
+					<div class="styleguide-label"><%= __("Button Sizes") %></div>
 					<a href="#" class="button button-small button-primary">Button Small</a>
 					<a href="#" class="button button-medium button-primary">Button Medium</a>
 					<a href="#" class="button button-large button-primary">Button Large</a>
@@ -328,13 +328,13 @@
 			</div>
 			<div>
 				<div class="column-9">
-					<div class="styleguide-label">Standard Button Loader</div>
+					<div class="styleguide-label"><%= __("Standard Button Loader") %></div>
 					<button type="button" class="button button-small button-primary" data-loadable="true">Button Primary</button>
 					<button type="button" class="button button-small button-secondary" data-loadable="true">Button Secondary</button>
 					<button type="button" class="button button-small button-tertiary" data-loadable="true">Button Tertiary</button>
 				</div>
 				<div class="column-9">
-					<div class="styleguide-label">Link Button Loader</div>
+					<div class="styleguide-label"><%= __("Link Button Loader") %></div>
 					<a href="javascript:void(0);" class="button button-small button-primary" data-loadable="true">Button Primary</a>
 					<a href="javascript:void(0);" class="button button-small button-secondary" data-loadable="true">Button Secondary</a>
 					<a href="javascript:void(0);" class="button button-small button-tertiary" data-loadable="true">Button Tertiary</a>
@@ -359,19 +359,19 @@
 	<div class="styleguide-row">
 		<div class="styleguide-content">
 			<div class="column-4">
-				<div class="styleguide-label">Tooltip Default</div>
+				<div class="styleguide-label"><%= __("Tooltip Default") %></div>
 				<div data-tooltip="Morbi eget sapien varius, iaculis enim nec, fringilla quam.">Lorem ipsum dolor sit amet</div>
 			</div>
 			<div class="column-4">
-				<div class="styleguide-label">Tooltip Multiline</div>
+				<div class="styleguide-label"><%= __("Tooltip Multiline") %></div>
 				<div data-tooltip="Sed a venenatis tortor. Nulla dapibus ante in ex feugiat lobortis. Aenean sit amet hendrerit erat. Suspendisse lectus urna, aliquet id ipsum et, pulvinar lobortis purus." data-multiline="350">Lorem ipsum dolor sit amet</div>
 			</div>
 			<div class="column-4">
-				<div class="styleguide-label">Tooltip On Button [Primary Theme]</div>
+				<div class="styleguide-label"><%= __("Tooltip On Button [Primary Theme]") %></div>
 				<div data-tooltip="Mauris euismod dui ut faucibus aliquet." data-theme="primary"><input type="button" class="button button-small button-primary" name="tooltip" value="Proin eleifend" /></div>
 			</div>
 			<div class="column-4">
-				<div class="styleguide-label">Tooltip On Input [Secondary Theme]</div>
+				<div class="styleguide-label"><%= __("Tooltip On Input [Secondary Theme]") %></div>
 				<div data-tooltip="Etiam ullamcorper, velit euismod tempor varius" data-theme="secondary"><input type="text" class="input input-primary" name="tooltip" value="Vivamus pulvinar fringilla placerat. Aenean id feugiat ipsum." /></div>
 			</div>
 		</div>
@@ -396,12 +396,12 @@
 		<div class="styleguide-content">
 			<div class="space-bottom">
 				<div class="column-9">
-					<div class="styleguide-label">Horizontal Bubble Group</div>
+					<div class="styleguide-label"><%= __("Horizontal Bubble Group") %></div>
 					<div class="bubble-content" data-bubble="Bubble Content">Horizontal Area</div>
 					<div class="bubble-content" data-bubble="Event Longer Bubble Content">Even More Horizontal Area</div>
 				</div>
 				<div class="column-9">
-					<div class="styleguide-label">Vertical Bubble Group</div>
+					<div class="styleguide-label"><%= __("Vertical Bubble Group") %></div>
 					<ul>
 						<li data-bubble="Bubble!">Vertical Item 1</li>
 						<li data-bubble="Oh Snap, Bubbles!">Vertical Item 2</li>
@@ -412,7 +412,7 @@
 			</div>
 			<div>
 				<div class="column-9">
-					<div class="styleguide-label">Multi Column Bubble Group</div>
+					<div class="styleguide-label"><%= __("Multi Column Bubble Group") %></div>
 					<div class="styleguide-bubble-columns">
 						<ul>
 							<li data-group=".styleguide-bubble-columns" data-bubble="Bubble!">Vertical Item 1</li>
@@ -435,19 +435,19 @@
 					</div>
 				</div>
 				<div class="column-9">
-					<div class="styleguide-label">Multi Column Bubble Group With Images</div>
+					<div class="styleguide-label"><%= __("Multi Column Bubble Group With Images") %></div>
 					<div class="styleguide-bubble-columns">
 						<ul>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-1.jpg", width: 160, height: 100)}") %>">Vertical Item 1</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-2.jpg", width: 160, height: 100)}") %>">Vertical Item 2</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-3.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 3</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-4.jpg", width: 160, height: 100)}") %>">Vertical Item 4</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("1.jpg", width: 160, height: 100)}") %>">Vertical Item 1</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("2.jpg", width: 160, height: 100)}") %>">Vertical Item 2</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("3.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 3</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("4.jpg", width: 160, height: 100)}") %>">Vertical Item 4</li>
 						</ul>
 						<ul>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-5.jpg", width: 160, height: 100)}") %>">Vertical Item 5</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-6.jpg", width: 160, height: 100)}") %>">Vertical Item 6</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-7.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 7</li>
-							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("placeholder-8.jpg", width: 160, height: 100)}") %>">Vertical Item 8</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("5.jpg", width: 160, height: 100)}") %>">Vertical Item 5</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("6.jpg", width: 160, height: 100)}") %>">Vertical Item 6</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("7.jpg", width: 160, height: 100)}") %>">Super Long Vertical Item 7</li>
+							<li data-group=".styleguide-bubble-columns" data-bubble="<%= html_escape("#{image_tag("8.jpg", width: 160, height: 100)}") %>">Vertical Item 8</li>
 						</ul>
 					</div>
 				</div>
@@ -461,11 +461,11 @@
 	<div class="styleguide-row">
 		<div class="styleguide-content">
 			<div class="column-9">
-				<div class="styleguide-label">Static Map</div>
+				<div class="styleguide-label"><%= __("Static Map") %></div>
 				<div class="map" data-address="600 S Broadway, Denver CO 80209" data-zoom="14" data-move="false"></div>
 			</div>
 			<div class="column-9">
-				<div class="styleguide-label">Input Responsive Map</div>
+				<div class="styleguide-label"><%= __("Input Responsive Map") %></div>
 				<div class="map" id="map"></div>
 				<%= text_field_tag :address, "", class: "input input-primary", data: { location: "#map", zoom: 4, scroll: true, drag: true } %>
 			</div>
@@ -495,48 +495,60 @@
 		<div class="styleguide-content">
 			<div class="space-bottom">
 				<div class="column-4">
-					<div class="styleguide-label">Default Confirmation</div>
+					<div class="styleguide-label"><%= __("Default Confirmation") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="yes no" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="primary" data-buttons="yes no" value="Submit" />
 					</form>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Confirm With Custom Title / Width</div>
+					<div class="styleguide-label"><%= __("Confirm With Custom Title / Width") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="continue cancel" data-title="Make A Decision" data-width="700" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="primary" data-buttons="continue cancel" data-title="Make A Decision" data-width="700" value="Submit" />
 					</form>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Confirm With Overlay Click To Close</div>
+					<div class="styleguide-label"><%= __("Confirm With Overlay Click To Close") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="secondary" data-buttons="ok cancel" data-outside="true" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="secondary" data-buttons="ok cancel" data-outside="true" value="Submit" />
 					</form>
 				</div>
 				<div class="column-4">
-					<div class="styleguide-label">Confirm With Custom Content</div>
+					<div class="styleguide-label"><%= __("Confirm With Custom Content") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="#confirmation-content" data-theme="secondary" data-outside="true" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="#confirmation-content" data-theme="secondary" data-outside="true" value="Submit" />
+					</form>
+				</div>
+			</div>
+			<div class="space-bottom">
+				<div class="column-4">
+					<div class="styleguide-label"><%= __("Uncloseable Dialog") %></div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="primary" data-buttons="yes no" data-closeable="false" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label"><%= __("Scrollable Dialog (With Footer)") %></div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-dialog="#confirmation-scrollable" data-footer="#confirmation-footer" data-theme="secondary" data-width="70%" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label"><%= __("Image Dialog") %></div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-dialog="<img src='<%= image_path "19.jpg" %>' />" data-theme="secondary" data-width="70%" value="Submit" />
+					</form>
+				</div>
+				<div class="column-4">
+					<div class="styleguide-label"><%= __("Headerless Dialog") %></div>
+					<form action="/" method="get" class="beans-form">
+						<input type="submit" class="button button-small button-primary" data-dialog="<img src='<%= image_path "22.jpg" %>' />" data-theme="secondary" data-width="70%" data-header="false" value="Submit" />
 					</form>
 				</div>
 			</div>
 			<div>
 				<div class="column-4">
-					<div class="styleguide-label">Uncloseable Dialog</div>
-					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="Are you sure?" data-theme="primary" data-buttons="yes no" data-closeable="false" value="Submit" />
-					</form>
-				</div>
-				<div class="column-4">
-					<div class="styleguide-label">Scrollable Dialog</div>
-					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="#confirmation-scrollable" data-footer="#confirmation-footer" data-theme="secondary" data-width="70%" value="Submit" />
-					</form>
-				</div>
-				<div class="column-4">
-					<div class="styleguide-label">Preloading Image Dialog</div>
-					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-confirmation="<img src='<%= image_path "placeholder-1.jpg" %>' />" data-theme="secondary" data-width="70%" value="Submit" />
-					</form>
+					<div class="styleguide-label"><%= __("Loading Image Dialog") %></div>
+					<button type="button" id="loading-image-dialog" class="button button-small button-primary" data-dialog="" data-theme="secondary" data-width="70%" data-header="false">Submit</button>
 				</div>
 			</div>
 		</div>
@@ -570,6 +582,19 @@
 			<p>Nullam iaculis consectetur nisl ac dictum. Nulla imperdiet diam vel est ultrices finibus vel pretium tortor. Vestibulum consequat eget diam quis iaculis. Donec semper erat in efficitur semper. Ut pellentesque lacinia elit at tempus. Donec quis justo vitae ante rhoncus commodo. Nam elementum porta semper. Donec venenatis dui nec felis ultricies, quis faucibus erat scelerisque. Quisque pellentesque felis at mi varius pulvinar. Donec sed placerat eros. Aenean condimentum viverra magna, posuere sagittis neque dictum hendrerit.</p>
 			<p>Ut vitae consequat dui. In pulvinar fermentum orci sed viverra. Phasellus et nunc a turpis pharetra fringilla. Quisque egestas eros vitae urna gravida accumsan. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin elementum metus nec orci convallis, mattis lacinia nulla laoreet. Sed congue venenatis mi, sit amet luctus erat auctor quis.</p>
 			<p>Morbi vitae mollis justo, ac elementum lacus. Cras nisi eros, vulputate quis congue ut, blandit in ex. Duis sit amet mi quis nulla aliquam sollicitudin. Nullam condimentum felis nec erat vehicula, id accumsan diam consectetur. Mauris ex turpis, rhoncus a ornare vitae, malesuada eu lorem. Nulla id tortor eget massa vulputate maximus quis et erat. In faucibus aliquam metus in fermentum. Suspendisse at libero fermentum, imperdiet ligula sed, pharetra arcu. Aliquam rhoncus congue ullamcorper. Phasellus congue ultrices pretium. Praesent sed tempor elit, in consequat purus. Maecenas congue condimentum metus, ac maximus enim lacinia nec. Praesent faucibus, dolor sed lacinia cursus, sem diam luctus dui, eu viverra sem lorem eget libero. Sed non leo ut arcu rutrum condimentum vitae a neque. Vivamus felis ligula, iaculis ut gravida vel, ultrices eget ex. Sed quis massa rutrum, pellentesque sapien et, mollis nunc.</p>
+			<p>Morbi ultricies in dui non varius. Ut ante orci, commodo id erat a, condimentum gravida ante. Suspendisse et feugiat massa, a tempus lectus. Nullam vulputate quam eget ipsum fermentum, et fringilla felis sagittis. Sed a volutpat urna. Vestibulum gravida mi venenatis tellus interdum, sed laoreet purus rhoncus. Aenean egestas tempus ligula, sed blandit erat elementum eget. Fusce nunc lorem, iaculis vitae mattis ornare, accumsan sit amet sem. Praesent sed dui ut metus rutrum euismod sed non neque. Aenean maximus magna pretium nibh accumsan, at ornare diam maximus. Nulla et purus interdum, accumsan ante aliquam, aliquet ligula.</p>
+			<p>Suspendisse pellentesque libero vel nisi consequat, et imperdiet lectus faucibus. Sed semper augue libero, eu scelerisque lorem cursus id. Phasellus ligula lacus, eleifend vitae enim vel, lacinia feugiat arcu. Vivamus non velit lacinia elit consequat varius. Mauris ut venenatis purus. Proin eu tellus ut diam auctor rhoncus a sed dui. Curabitur vitae pulvinar lacus, quis molestie nunc. Aenean vitae condimentum sapien.</p>
+			<p>Suspendisse iaculis purus sed turpis sollicitudin lacinia. Donec a iaculis nunc. Nunc vehicula auctor mi consequat tempor. Cras nec nisi euismod, pellentesque urna in, luctus est. Sed eleifend imperdiet porttitor. Pellentesque aliquam justo sed accumsan commodo. Integer scelerisque blandit condimentum. Ut vitae tempus nulla. Aliquam laoreet leo in massa tempor ultricies. Curabitur vestibulum enim et libero pharetra, eu luctus enim auctor. Morbi viverra pharetra vestibulum. Pellentesque leo odio, ultrices hendrerit augue rhoncus, pulvinar eleifend dolor. Praesent consequat tincidunt nunc, et finibus est ullamcorper at.</p>
+			<p>Cras imperdiet maximus nisl. Nullam feugiat urna nunc, rutrum pharetra nunc aliquam vitae. Aliquam erat volutpat. Vivamus in elementum justo, id bibendum eros. Phasellus tempus, elit vel vestibulum convallis, nibh nibh porta tortor, sit amet semper leo odio non urna. Mauris aliquet in ipsum eu vehicula. Donec porttitor enim sed ante fermentum ornare. Nulla sit amet dictum nulla.</p>
+			<p>Praesent suscipit est et tortor tristique congue. Sed tristique sapien sollicitudin luctus iaculis. Nullam sollicitudin, nisl eu congue fringilla, sapien massa luctus lacus, eget ultricies libero elit et quam. Etiam sed quam vehicula, rutrum augue sed, suscipit lectus. Quisque eget sapien sed elit feugiat porttitor. Nunc pulvinar suscipit augue, sit amet volutpat magna pellentesque eget. Curabitur orci purus, blandit at mauris at, viverra blandit ante. Morbi vitae velit purus. Curabitur interdum tincidunt leo vel mollis. Fusce pharetra fringilla ipsum ac vestibulum.</p>
+			<p>Sed eget commodo augue. Praesent feugiat eu massa id mattis. Sed viverra congue lorem, at luctus nisi bibendum in. Ut vitae mi ut tortor blandit fringilla ac sed quam. Morbi sollicitudin mattis eros. In posuere dui eget turpis auctor, vel posuere velit imperdiet. Donec sollicitudin ante eget urna tincidunt sagittis. Nulla convallis sapien quis mauris venenatis, quis mollis lectus feugiat. Nulla tristique pharetra mauris a interdum. Suspendisse blandit diam dolor, ac tincidunt ante tincidunt ac. Sed eget mi condimentum, molestie nulla sit amet, condimentum tortor.</p>
+			<p>Nulla eget sem volutpat, consequat ex at, viverra ipsum. Fusce id lorem sem. Aenean a dignissim arcu. Vestibulum vel tristique elit, in congue ex. Morbi sapien nunc, accumsan at interdum at, laoreet id libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt, est eu eleifend rhoncus, urna ex blandit purus, a dignissim velit arcu luctus magna.</p>
+			<p>Nullam augue orci, mollis id vulputate eu, faucibus ut lorem. Sed quis fringilla justo. Suspendisse potenti. Donec volutpat odio quam, in elementum nisl iaculis a. Suspendisse placerat porta tellus tempus hendrerit. Suspendisse sodales volutpat ligula, suscipit euismod justo maximus vel. Quisque pharetra neque eu varius vestibulum. Proin id sapien suscipit quam viverra gravida vitae vitae felis. Etiam imperdiet nisi ac velit sagittis scelerisque. Integer vitae enim eu erat posuere egestas vitae ut elit. Aenean cursus eget lectus a viverra. Aliquam suscipit aliquam finibus. Integer lacinia, urna et aliquet efficitur, lectus tortor cursus sem, at porttitor nunc enim sit amet eros. Maecenas pretium eros purus, ac congue lacus tincidunt in. Duis porta finibus enim et imperdiet. Duis in quam facilisis, dignissim eros eu, venenatis ligula.</p>
+			<p>Fusce fermentum lorem ac condimentum elementum. Mauris vehicula a felis id malesuada. Cras pharetra egestas lorem. Suspendisse pharetra tincidunt malesuada. Aliquam lacinia odio molestie nunc semper suscipit. Nunc eget elit id mi ornare pulvinar. Donec vehicula lacus in neque euismod aliquam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi vel convallis arcu. Maecenas vel ipsum metus. Aenean auctor pulvinar diam, sit amet rhoncus ipsum accumsan at. Nullam at placerat ex. Curabitur sapien lectus, tincidunt sed elementum eget, dignissim vel mauris.</p>
+			<p>Vivamus congue, eros accumsan cursus pellentesque, tortor ligula dignissim enim, quis semper est ligula non nibh. Duis sit amet gravida sapien. Mauris scelerisque nulla rhoncus velit porttitor rutrum. Duis ultrices faucibus accumsan. Suspendisse potenti. Morbi non sapien leo. Suspendisse sit amet elementum nunc. Donec congue, erat at suscipit fermentum, ante lorem semper felis, et dignissim lacus dolor nec urna. Sed dictum justo varius rutrum lobortis. Quisque quis rhoncus nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla congue orci orci, nec euismod nunc finibus a. Cras finibus orci nec augue eleifend dignissim. Cras nisl risus, malesuada ac fringilla sit amet, ultricies nec risus. In vulputate ipsum ac rutrum convallis. Donec volutpat nulla magna, maximus tincidunt urna consequat in.</p>
+			<p>Sed sit amet est quis augue hendrerit bibendum sed et diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur nec eros id sapien facilisis dictum. Donec id leo et metus finibus laoreet eget sit amet sapien. Etiam rutrum mauris ac est semper, non semper magna placerat. Aliquam erat volutpat. Quisque sodales mi at lectus faucibus, eget laoreet arcu molestie. Integer ac augue sit amet augue pretium euismod. Morbi vulputate justo vitae velit tempor feugiat. Aenean ut ante vel lacus fringilla egestas. Maecenas vitae magna massa.</p>
+			<p>Aenean vestibulum lorem non nulla consequat tincidunt. Phasellus elementum euismod ullamcorper. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent consectetur iaculis mattis. Suspendisse potenti. Vivamus magna ligula, tincidunt vel felis sit amet, convallis commodo magna. Suspendisse sed sem at est suscipit condimentum.</p>
+			<p>Nam efficitur quam sem, pharetra condimentum libero pulvinar in. Curabitur viverra suscipit nibh a sodales. Nunc sollicitudin quis nulla at elementum. Mauris in orci dui. Integer eget tortor ut nisi fermentum volutpat. Vivamus non erat porta, pharetra justo finibus, consequat lacus. In sit amet nibh non ipsum tempor volutpat. Nunc posuere leo eu justo suscipit, vitae mattis est venenatis. Donec maximus non urna ut pharetra. Nulla in rhoncus libero. Nunc fringilla neque nec pretium ornare. Fusce ullamcorper nisi sit amet scelerisque imperdiet. Maecenas tristique quam odio, ut ultrices nisi lacinia quis.</p>
 		</div>
 		<div class="styleguide-annotation">
 			<h1>Confirmations</h1>
@@ -579,7 +604,7 @@
 	<div class="styleguide-row">
 		<div class="styleguide-content">
 			<div class="column-6">
-				<div class="styleguide-label">Standard Upload</div>
+				<div class="styleguide-label"><%= __("Standard Upload") %></div>
 				<%= form_for @bean do |f| %>
 					<%= f.label :first_name %>
 					<%= f.text_field :first_name, class: "input input-primary" %>
@@ -612,26 +637,28 @@
 	</div>
 	-->
 
+	<% if @bean.id %>
 	<div class="styleguide-row">
 		<div class="styleguide-content">
 			<div class="column-6">
-				<div class="styleguide-label">Standard Crop</div>
-				<button class="button button-small button-primary" data-crop="<%= crop_beans_path %>" data-type="avatar" data-id="<%= @bean.id %>">Crop Avatar</button>
+				<div class="styleguide-label"><%= __("Standard Crop") %></div>
+				<button class="button button-small button-primary" data-crop="<%= crop_bean_path(@bean) %>" data-type="avatar">Crop Avatar</button>
 			</div>
 			<div class="column-6">
-				<div class="styleguide-label">Standard Crop (AJAX)</div>
-				<img src="<%= @bean.avatar.thumb.url %>" data-crop="<%= crop_beans_path %>" data-type="avatar" data-id="<%= @bean.id %>" data-remote="true" />
+				<div class="styleguide-label"><%= __("Standard Crop (AJAX)") %></div>
+				<img src="<%= @bean.avatar.thumb.url %>" data-crop="<%= crop_bean_path(@bean) %>" data-type="avatar" data-remote="true" />
 			</div>
 		</div>
 		<div class="styleguide-annotation">
 			<h1>Cropping</h1>
 		</div>
 	</div>
+	<% end %>
 
 	<div class="styleguide-row">
 		<div class="styleguide-content">
 			<div class="column-6">
-				<div class="styleguide-label">Inline Validation</div>
+				<div class="styleguide-label"><%= __("Inline Validation") %></div>
 				<%= form_for @bean do |f| %>
 					<%= f.label :first_name %>
 					<%= f.text_field :first_name, class: "input input-primary validate-not-empty validate-required" %>
@@ -651,6 +678,43 @@
 		</div>
 		<div class="styleguide-annotation">
 			<h1>Validation</h1>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
+			<div class="column-6">
+				<div class="styleguide-label"><%= __("Oscillating Dot Loader") %></div>
+				<div class="loading">
+					<span class="loader loader-dot">
+						<span class="bounce1"></span>
+						<span class="bounce2"></span>
+						<span class="bounce3"></span>
+					</span>
+				</div>
+			</div>
+			<div class="column-6">
+				<div class="styleguide-label"><%= __("Circle Loader") %></div>
+				<div class="loading">
+					<span class="loader loader-circle"></span>
+				</div>
+			</div>
+			<div class="column-6">
+				<div class="styleguide-label"><%= __("Stream In/Out Loader") %></div>
+				<div class="loading">
+					<span class="loader loader-stream">
+						<span class="dot1"></span>
+						<span class="dot2"></span>
+						<span class="dot3"></span>
+						<span class="dot4"></span>
+						<span class="dot5"></span>
+						<span class="dot6"></span>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Loaders</h1>
 		</div>
 	</div>
 </div>

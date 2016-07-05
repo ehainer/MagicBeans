@@ -1,9 +1,6 @@
 module MagicBeans
 	class Assets
 
-		def initialize
-		end
-
 		def find(file)
 			files(file)[file]
 		end

@@ -17,7 +17,6 @@ Listeners.Loadable = {
 
 	utility: {
 		toggle: function(onoff){
-			console.log(onoff);
 			if(onoff === undefined) onoff = true;
 
 			if(onoff){

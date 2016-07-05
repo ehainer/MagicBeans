@@ -1,0 +1,7 @@
+.scrollbar {
+	@each $type, $scrollbar in $scrollbars {
+		&.scrollbar-#{$type} {
+			@include scrollbar($type);
+		}
+	}
+}

@@ -1,19 +1,22 @@
 #!/usr/bin/env rake
 begin
- require 'bundler/setup'
+	require "bundler/setup"
 rescue LoadError
- puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+	puts "You must `gem install bundler` and `bundle install` to run rake tasks"
 end
 
+require File.expand_path("../config/application", __FILE__)
+MagicBeans::Application.load_tasks
+
 APP_RAKEFILE = File.expand_path("../spec/Rakefile", __FILE__)
-load 'rails/tasks/engine.rake'
+load "rails/tasks/engine.rake"
 
 Bundler::GemHelper.install_tasks
 
-Dir[File.join(File.dirname(__FILE__), 'tasks/**/*.rake')].each {|f| load f }
+Dir[File.join(File.dirname(__FILE__), "tasks/**/*.rake")].each {|f| load f }
 
-require 'rspec/core'
-require 'rspec/core/rake_task'
+require "rspec/core"
+require "rspec/core/rake_task"
 
 desc "Run all specs in spec directory (excluding plugin specs)"
 RSpec::Core::RakeTask.new(:spec => 'app:db:test:prepare')

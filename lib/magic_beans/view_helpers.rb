@@ -1,14 +1,8 @@
 module MagicBeans
 	module ViewHelpers
 
-		extend ActiveSupport::Autoload
-
-		autoload :SVG
-
-		autoload :FormBuilder
-
 		def svg_tag(source, image = nil, **options)
-			svg = SVG.new(source, image, options)
+			svg = MagicBeans::SVG.new(source, image, options.merge(asset_lookup: true))
 			svg.html_tag
 		end
 	end

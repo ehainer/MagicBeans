@@ -1,0 +1,13 @@
+.radio {
+	&:not(#foo) {
+		visibility: hidden;
+		display: none;
+		width: 0;
+		float: left;
+	}
+	@each $type, $radio in $radios {
+		&.radio-#{$type} {
+			@include radio($type);
+		}
+	}
+}

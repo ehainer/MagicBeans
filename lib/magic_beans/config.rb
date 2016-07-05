@@ -4,16 +4,18 @@ require "magic_beans/config/upload"
 require "magic_beans/config/svg"
 require "magic_beans/config/locale"
 require "magic_beans/config/twilio"
+require "magic_beans/config/secrets"
+require "magic_beans/config/crypt"
 
 module MagicBeans
 	class Config
 
-		attr_accessor :logger, :packages, :debug, :js, :upload, :svg, :locale, :twilio
+		attr_accessor :logger, :packages, :debug, :js, :upload, :svg, :locale, :twilio, :secrets, :crypt
 
 		attr_accessor :base_url
 
 		def initialize
-			@logger ||= Logger.new("magic_beans.log")
+			@logger = Logger.new(Rails.root.join("log", "magic_beans.log"))
 			@debug ||= false
 			@packages ||= []
 
@@ -22,6 +24,8 @@ module MagicBeans
 			@svg = Svg.new
 			@locale = Locale.new
 			@twilio = Twilio.new
+			@secrets = Secrets.new
+			@crypt = Crypt.new
 		end
 
 		def to_json

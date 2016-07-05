@@ -212,6 +212,14 @@ module MagicBeans
 			end
 		end
 
+		def email_instance
+			@email ||= Email.new(notification: self)
+		end
+
+		def sms_instance
+			@sms ||= SMS.new(notification: self)
+		end
+
 		private
 
 			def deliver
@@ -237,14 +245,6 @@ module MagicBeans
 
 				# Return false if there are any errors, stopping the save process
 				return !self.errors.messages.any?
-			end
-
-			def email_instance
-				@email ||= Email.new(notification: self)
-			end
-
-			def sms_instance
-				@sms ||= SMS.new(notification: self)
 			end
 
 			def setup

@@ -1,0 +1,7 @@
+.upload {
+	@each $type, $upload in $uploads {
+		&.upload-#{$type} {
+			@include upload($type);
+		}
+	}
+}
