@@ -1,6 +1,7 @@
 .loading {
 	@include rem(padding, 1rem);
 	position: relative;
+	height: 100%;
 }
 
 .loader {

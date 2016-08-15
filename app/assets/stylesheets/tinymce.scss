@@ -1,3 +1,6 @@
+// TinyMCE only stylesheet, loaded into the iframe window of each TinyMCE box
+// Should always remain separate from all other stylesheets since this is TinyMCE specific
+
 @import "magic_beans/variables";
 
 @import "bourbon";

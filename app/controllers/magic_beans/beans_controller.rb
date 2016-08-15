@@ -1,5 +1,7 @@
 class MagicBeans::BeansController < ApplicationController
 
+	layout "magic_beans/application"
+
 	before_action :init_objects
 
 	uploadable MagicBeans::Bean

@@ -31,12 +31,12 @@ Listeners.Calendar = {
 			if(Bean.Abstract.isMobile() && Bean.Support.hasInputType('date')){
 				$(this).attr('type', 'date').attr('min', moment().format('YYYY-MM-DD'));
 			}else{
-				var calendar = $('#calendar-' + id);
 				$(startCalendar, endCalendar).prop('readonly', true);
 
 				// Don't calendarize end date inputs, that is handled by the start date input logic
 				if(startCalendar.data('date') != 'end'){
 					self.after($('<div id="calendar-' + id + '" class="calendar-container"></div>').css('position', 'relative'));
+					var calendar = $('#calendar-' + id);
 
 					calendar.dateable({
 						startCalendar: startCalendar,

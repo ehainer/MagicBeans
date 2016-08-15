@@ -196,7 +196,7 @@
   margin-top: 6px;
   &:before {
     content: ' ';
-    @include triangle(12px, #333, up);
+    @include triangle(12px, #000000, up);
     position: absolute;
     top: -6px;
     left: 15px;
@@ -216,6 +216,7 @@
 
 .daterangepicker td {
   cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .daterangepicker th.incdec {
@@ -226,14 +227,11 @@
   line-height: 16px;
 }
 
+/*
 .daterangepicker td.start-date {
-  border: 1px solid #F0502C;
-  padding: 0;
 }
 
 .daterangepicker td.end-date {
-  border: 1px solid #CCCCCC;
-  padding: 0;
 }
 
 .daterangepicker td.start-date.end-date {
@@ -262,6 +260,7 @@
     border-left-color: transparent;
   }
 }
+*/
 
 .daterangepicker td.off {
   color: #999;
@@ -338,7 +337,15 @@
   margin-top: -30px;
   border: 1px solid #D5D5D5;
   cursor: pointer;
-  @include icon(arrow-left3, $width: 15px, $height: 15px);
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include icon(arrow-left, $width: 15px, $height: 15px, $color: #000000);
+  }
   &.available {
     opacity: 1;
   }
@@ -356,7 +363,15 @@
   margin-top: -30px;
   border: 1px solid #D5D5D5;
   cursor: pointer;
-  @include icon(arrow-right3, $width: 15px, $height: 15px);
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include icon(arrow-right, $width: 15px, $height: 15px, $color: #000000);
+  }
   &.available {
     opacity: 1;
   }

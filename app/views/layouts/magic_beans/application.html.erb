@@ -1,14 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MagicBeans</title>
-  <%= stylesheet_link_tag    "magic_beans/application", media: "all" %>
-  <%= javascript_include_tag "magic_beans/application" %>
+  <title>Magic Beans</title>
+
+  <%= stylesheet_link_tag :bean %>
+  <%= javascript_include_tag :bean %>
+
+  <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBQJv1-yddGVbSLu5ZtbMQQCK6qWOjKql4"></script>
+
   <%= csrf_meta_tags %>
 </head>
-<body>
+
+<body id="<%= "#{controller_name}-#{action_name}" %>" class="<%= controller_name %>-page">
 
 <%= yield %>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	Bean.start(<%= MagicBeans.config.to_json %>);
+});
+</script>
 </body>
 </html>

@@ -53,9 +53,10 @@ $.fn.blank = function(){
 }
 
 $.fn.wait = function(time){
+	var self = this;
 	var dfr = $.Deferred();
 	setTimeout(function(){
-		dfr.resolve();
+		dfr.resolveWith(self);
 	}, time);
 	return dfr.promise();
 }

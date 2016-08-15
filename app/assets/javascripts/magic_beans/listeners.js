@@ -87,15 +87,16 @@ var Listeners = {
 
 	beansIndex: {
 		once: function(observer){
-			$('.beans-form').on('dialog:open', function(){
+			$('.beans-form').on('dialog:show', function(){
 				$('body').trigger('bean:reboot');
 			});
 
 			$('.beans-form').on('dialog:click', function(event, dialog, btn){
+				console.log(dialog, btn);
 				///event.stopImmediatePropagation();
 				if($(btn).hasClass('prompt')){
 					var error1 = dialog.addError('Oh snap you\'re not done doing whatever weird thing we asked you to do', true);
-					dialog.getHtml().one('mousedown', function(){
+					dialog.getBody().one('mousedown', function(){
 						dialog.removeError(error1);
 						var error2 = dialog.addError('But wait, theres more...');
 						console.log(error2);
@@ -112,15 +113,15 @@ var Listeners = {
 				alert('Crop failed! ' + response.responseText);
 			});
 
-			$('#loading-image-dialog').on('dialog:open', function(event, dialog){
-				dialog.setBody('<div class="loading"><span class="loader loader-circle"></span></div>');
-				setTimeout(function(){
+			$('#loading-image-dialog').on('dialog:show', function(event, dialog){
+				dialog.getBody().html('<div class="loading"><span class="loader loader-circle"></span></div>');
+				$(dialog).wait(2000).then(function(){
 					var loader = new Bean.Loader();
 					loader.load('https://images.unsplash.com/photo-1467634764965-325ecb804113?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=3cee706463b4b03a2a4614fa582e439c').done(function(image){
-						dialog.setBody(image).center();
-						console.log('done');
+						dialog.getBody().html(image);
+						dialog.center();
 					});
-				}, 3000);
+				});
 			});
 		},
 

@@ -34,8 +34,19 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html, body {
+	height: 100%;
+	width: auto !important;
+	overflow-x: hidden;
+}
+html {
+	height: 100%;
+}
 body {
 	line-height: $base-line-height;
+	& > div:not(.overlay) {
+		will-change: transform;
+	}
 }
 ol, ul {
 	list-style: none;
@@ -50,9 +61,6 @@ blockquote:before, blockquote:after, q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
-}
-html {
-	height: 100%;
 }
 button::-moz-focus-inner {
 	border: 0;

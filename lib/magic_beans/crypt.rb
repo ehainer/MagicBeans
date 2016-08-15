@@ -29,10 +29,43 @@ module MagicBeans
 			out - MagicBeans.config.crypt.offset.to_i # Decrease the number by the same offset amount
 		end
 
+		def blacklisted?(input)
+			encoded = encode(input)
+
+			pattern = ["\\b([_\\-])*"]
+			encoded.split("").each do |c|
+				subs = translations[c.downcase] || []
+				c = "\\#{c}" if c == "-"
+				pattern << "[#{c}#{subs.join}]([_\\-])*"
+			end
+			pattern << "\\b"
+
+			regex = Regexp.new(pattern.join, Regexp::IGNORECASE)
+			!blacklist(encoded.length).match(regex).nil?
+		end
+
 		private
 
+			def blacklist(len = 6)
+				File.readlines(MagicBeans.config.crypt.blacklist).map(&:strip).reject { |line| line.length > len }.join(" ")
+			end
+
+			def translations
+				{
+					"a" => ["4"],
+					"e" => ["3"],
+					"i" => ["1", "l"],
+					"o" => ["0"],
+					"s" => ["5"],
+					"t" => ["7"],
+					"b" => ["8"],
+					"z" => ["2"],
+					"g" => ["9"]
+				}
+			end
+
 			def digits
-				rnd = Random.new(MagicBeans.config.secrets.secret_key_base.to_i(24))
+				rnd = Random.new(MagicBeans.config.crypt.seed.to_s.to_i(24))
 				"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split("").shuffle(random: rnd)
 			end
 	end

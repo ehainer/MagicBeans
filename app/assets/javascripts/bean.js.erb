@@ -1,3 +1,5 @@
+//= require jquery2.min
+//= require jquery_ujs
 //= require magic_beans/moment
 //= require magic_beans/abstract
 //= require magic_beans/plugins
@@ -111,6 +113,27 @@ var Bean = (function($){
 			}
 		},
 
+		Dispatcher: function(){
+			var callbacks = {};
+
+			this.add = function(event, callback){
+				if(!callbacks[event]){
+					callbacks[event] = [];
+				}
+				callbacks[event].push(callback);
+			}
+
+			this.dispatch = function(event, context, args){
+				if(callbacks[event]){
+					$.each(callbacks[event], function(index, callback){
+						callback.apply(context, args);
+					});
+					return true;
+				}
+				return false;
+			}
+		},
+
 		Observer: function(page){
 			var obs = this;
 			obs.started = false;
@@ -133,83 +156,6 @@ var Bean = (function($){
 					if(Listeners[page]['always']) Listeners[page]['always'](obs);
 				}
 			}
-		},
-
-		Form: function(form_name, action, method, callback){
-			var self = this;
-			var _fields = [];
-			var _built = false;
-
-			this.addField = function(type, name, value, container, class_names, placeholder){
-				if(container !== false) container = true;
-				if(class_names == undefined) class_names = '';
-				if(placeholder == undefined) placeholder = '';
-				switch(type){
-					case 'hidden' :
-						_fields.push({ html: '<input type="hidden" name="' + name + '" id="' + self.getId(name) + '" value="' + value + '" class="' + class_names + '" />', container: container });
-						break;
-					case 'text' :
-						_fields.push({ html: '<input type="text" name="' + name + '" id="' + self.getId(name) + '" value="' + value + '" class="' + class_names + '" placeholder="' + placeholder + '" />', container: container });
-						break;
-					case 'textarea' :
-						_fields.push({ html: '<textarea name="' + name + '" id="' + self.getId(name) + '" class="' + class_names + '" placeholder="' + placeholder + '">' + value + '</textarea>', container: container });
-						break;
-					case 'select' :
-						var select = '<select name="' + name + '" id="' + self.getId(name) + '" class="' + class_names + '">';
-						for(var i=0; i<select.length; i++){
-							select += '<option value="' + select[i].value + '"' + (select[i].selected ? ' selected="selected"' : '') + '>' + select[i].label + '</option>';
-						}
-						select += '</select>';
-						_fields.push({ html: select, container: container });
-						break;
-				}
-				return this;
-			};
-
-			this.addHtml = function(html){
-				_fields.push({ html: html, container: false });
-				return this;
-			};
-
-			this.getId = function(name){
-				var id = name.replace(/[^A-Z0-9]/gi, ' ');
-				id = id.replace(/[ ]{1,}/, ' ');
-				return $.trim(id).replace(' ', '_');
-			};
-
-			this.getFormId = function(){
-				return form_name;
-			};
-
-			this.getClassName = function(){
-				return form_name.replace(/_[0-9]+$/, '').replace('_', '-');
-			};
-
-			this.getForm = function(no_btn){
-				if(!_built) self.buildForm(no_btn);
-				return _html;
-			};
-
-			this.buildForm = function(no_btn){
-				_html.append('<input name="utf8" type="hidden" value="✓">');
-				if(['patch', 'put'].indexOf(method) != -1) _html.append('<input type="hidden" name="_method" value="' + method + '">');
-				_html.append('<input type="hidden" name="authenticity_token" value="' + AUTH_TOKEN + '">');
-				for(var i=0; i<_fields.length; i++){
-					var field = _fields[i];
-					if(field.container){
-						_html.append($('<div class="input"></div>').append(field.html));
-					}else{
-						_html.append(field.html);
-					}
-				}
-				if(!no_btn) _html.append('<input type="submit" name="commit" value="Save" class="button btn-small with-top-gap f-right" />');
-				_built = true;
-				return this;
-			};
-
-			var _html = $('<form class="' + self.getClassName() + '" id="' + self.getFormId() + '" action="' + action + '" accept-charset="UTF-8" method="' + (['patch', 'put'].indexOf(method) != -1 ? 'post' : method) + '" data-remote="true" data-callback="' + (callback != undefined ? callback : '') + '"></form>');
-
-			return this;
 		},
 
 		Toast: function(message, exposure, undo){
@@ -287,248 +233,6 @@ var Bean = (function($){
 			};
 		},
 
-		Dialog: function(title, body, footer){
-			var self = this;
-			this._theme = null;
-			this._dialog = null;
-			this._overlay = null;
-			this._openCallback = [];
-			this._closeCallback = [];
-			this._beforeCloseCallback = [];
-			this._resizeTimer = null;
-
-			this.setBody = function(html){
-				this._dialog.find('.dialog-body').html(html);
-				return this;
-			};
-
-			this.setFooter = function(html){
-				this._dialog.find('.dialog-footer').html(html);
-				return this;
-			};
-
-			this.show = function(overlay_close, button_close, header, width, height){
-				if(header !== false) header = true;
-
-				// Render and display the dialog, centered, and remove any existing errors
-				self.render(overlay_close, button_close, header, width, height).center().clearErrors();
-				var loader = new Bean.Loader();
-				var dfr = $.Deferred();
-
-				// Make the background blurry, purely visual
-				$('body').children(':visible').not(self._overlay).addClass('blurry');
-
-				$(window).on('resize', function(){
-					// Wait until resize is finished, aka 200 ms after last resize event dispatched
-					clearTimeout(self._resizeTimer);
-					self._resizeTimer = setTimeout(function(){
-						self.center(true);
-					}, 200);
-				});
-
-				// Preloads any images in the dialog, and upon loading everything, re-center the dialog as it's size may have changed
-				loader.loadAll(self._dialog.find('img'), function(){
-					self.center(true);
-					dfr.resolve();
-				});
-				return dfr.promise();
-			};
-
-			this.render = function(overlay_close, button_close, header, width, height){
-				$('body').css('overflow', 'hidden');
-				self.overlay().build(button_close, header);
-				if(width != undefined) self._dialog.width(width);
-				if(height != undefined) self._dialog.height(height);
-				this._dialog.data('dialog', self);
-				this._dialog.fadeIn(200);
-				this._overlay.fadeIn(200);
-				this.center();
-
-				// Dispatch any callback events when opened
-				$.each(self._openCallback, function(index, callback){
-					callback(self);
-				});
-
-				self._dialog.find('button.close').click(self.hide);
-
-				if(overlay_close || header === false){
-					this._overlay.addClass('clickable').click(function(event){
-						if($(event.target).attr('id') == 'overlay') self.hide();
-					});
-				}else{
-					this._overlay.removeClass('clickable').unbind('click');
-				}
-				return this;
-			};
-
-			this.hide = function(event){
-				// If there is an error, and it's not set to ignore, don't close the dialog and exit immediately
-				if(self._dialog.find('.dialog-error:not(.ignore)').length){
-					self._dialog.removeClass('shake');
-					self._dialog.get(0).offsetWidth = self._dialog.get(0).offsetWidth;
-					self._dialog.addClass('shake');
-					return;
-				}
-
-				// Remove the overflow hidden style on the body tag
-				$('body').attr('style', function(i, style){
-					return style.replace(/overflow[^;]+;?/g, '');
-				});
-
-				// Dispatch any callbacks attached to the before close event
-				$.each(self._beforeCloseCallback, function(index, callback){
-					callback(self);
-				});
-
-				// Hide the dialog and overlay
-				self._overlay.fadeOut(200);
-
-				// Dispatch any callbacks attached to the close event
-				$.each(self._closeCallback, function(index, callback){
-					callback(self);
-				});
-
-				$('body').children(':visible').not(self._overlay).removeClass('blurry');
-			};
-
-			this.build = function(button_close, header){
-				// If any other dialogs are visible, remove them
-				if($('#dialog').length) $('#dialog').remove();
-
-				if(title instanceof jQuery){
-					self._dialog = title;
-				}else{
-					var html = '<div id="dialog" class="dialog' + (self._theme ? ' dialog-' + self._theme : '') + '">';
-
-					if(header){
-						html += '<header class="dialog-header"><h4 class="heading">' + title + '</h4>';
-
-						// If close button is not disabled, add it
-						if(button_close !== false) html += '<button class="close icon-close"></button>';
-						html += '</header>';
-					}
-
-					// Add the dialog body content
-					html += '<div class="dialog-body">' + body + '</div>';
-
-					// If footer content was provided and is not blank, add the footer
-					if(typeof footer == 'string' && $.trim(footer) != '') html += '<div class="dialog-footer">' + footer + '</div>';
-					html += '</div>';
-
-					// Add the dialog content to the overlay container
-					self._overlay.html(html);
-					self._dialog = $('#dialog');
-				}
-				self._dialog.data('dialog', this);
-				return this;
-			};
-
-			this.center = function(animate){
-				var windowW = $(window).width();
-				var windowH = $(window).height();
-				var dialogW = self._dialog.outerWidth(true);
-				var dialogH = self._dialog.outerHeight(true);
-
-				var top = (windowH/2)-(dialogH/2);
-				var left = (windowW/2)-(dialogW/2);
-
-				if(top < 0) top = 0;
-
-				if(animate){
-					self._dialog.animate({ top: top, left: left, marginLeft: 0 }, 200);
-				}else{
-					self._dialog.css({ top: top, left: left, marginLeft: 0 });
-				}
-				return this;
-			};
-
-			this.resize = function(){
-				var paddingH = self._dialog.find('.dialog-body').innerWidth() - self._dialog.find('.dialog-body').width();
-				var paddingV = self._dialog.find('.dialog-body').innerHeight() - self._dialog.find('.dialog-body').height();
-				self._dialog.width(self._dialog.find('.dialog-body').outerWidth(true) + paddingH);
-				self._dialog.height(self._dialog.find('.dialog-body').outerWidth(true) + paddingV);
-			};
-
-			this.overlay = function(){
-				if(!$('#overlay').length) $('body').append('<div id="overlay"></div>');
-				self._overlay = $('#overlay');
-				return this;
-			};
-
-			this.setTheme = function(theme){
-				self._theme = theme;
-				return this;
-			};
-
-			this.onBeforeClose = function(callback){
-				self._beforeCloseCallback.push(callback);
-				return this;
-			};
-
-			this.onClose = function(callback){
-				self._closeCallback.push(callback);
-				return this;
-			};
-
-			this.onOpen = function(callback){
-				self._openCallback.push(callback);
-				return this;
-			};
-
-			this.addClassName = function(class_name){
-				self._dialog.addClass(class_name);
-				return this;
-			};
-
-			this.addError = function(message, ignore){
-				var errorId = Bean.Abstract.getId();
-				self._dialog.addClass('dialog-important');
-				if(!self._dialog.find('.dialog-errors').length) self._dialog.find('.dialog-body').prepend('<div class="dialog-errors"></div>');
-
-				// Get contents of current errors
-				var currentErrors = $.map(self._dialog.find('.dialog-error'), function(error){
-					return $(error).html();
-				});
-
-				// If error message provided does not already exist, add it
-				if(currentErrors.indexOf(message) == -1){
-					self._dialog.find('.dialog-errors').append('<div id="error-' + errorId + '" class="dialog-error ' + (ignore ? 'ignore' : '') + '">' + message + '</div>');
-					self._dialog.find('.dialog-error').last().hide().slideDown(200, function(){
-						self.center(true);
-					});
-				}
-				return errorId;
-			};
-
-			this.removeError = function(id){
-				if(self._dialog.find('#error-' + id).length){
-					self._dialog.find('#error-' + id).slideUp(200, function(){
-						// Remove the error container
-						$(this).remove();
-
-						// If no more errors, remove the important class from the dialog
-						if(self._dialog.find('.dialog-error').length == 0) self._dialog.removeClass('dialog-important');
-
-						// Re-center the dialog as it's height changed
-						self.center(true);
-					});
-				}
-				return this;
-			};
-
-			this.clearErrors = function(){
-				self._dialog.removeClass('dialog-important');
-				self._dialog.find('.dialog-error').slideUp(200, function(){
-					$(this).remove();
-				});
-				return this;
-			};
-
-			this.getHtml = function(){
-				return self._dialog;
-			};
-		},
-
 		Upload: {
 			close: function(link){
 				$(link).closest('.dz-preview').remove();
@@ -548,21 +252,28 @@ var Bean = (function($){
 
 			this.show = function(image, type){
 				var self = this;
-				this.getDialog().show(false, 'auto').done(function(){
+
+				this.getDialog().onAfterShow(function(){
 					self.initCrop(image);
 					self.initListeners();
 				});
+
+				this.getDialog().show();
 				return this;
 			};
 
-			this.setType = function(type){
-				this._type = type;
-				return this;
+			this.getDialog = function(){
+				if(this._dialog === null){
+					this._dialog = $(this.getHtml()).dialog({
+						width: 500
+					});
+				}
+				return this._dialog;
 			};
 
 			this.initCrop = function(image){
 				var self = this;
-				var $cropper = this.getDialog().getHtml().find('#image-cropper').cropit({
+				var $cropper = this.getDialog().getBody().find('#image-cropper').cropit({
 					imageState: { src: image },
 					imageBackground: true,
 					imageBackgroundBorderWidth: 100,
@@ -586,35 +297,28 @@ var Bean = (function($){
 
 			this.initListeners = function(){
 				var self = this;
-				this.getDialog().getHtml().find('.crop-save').on('click', function(){
+				this.getDialog().getBody().find('.crop-save').on('click', function(){
 					self.crop();
 				});
-				this.getDialog().getHtml().find('.zoom-container .zoom-out').on('click', function(){
-					var ratio = self.getDialog().getHtml().find('.slider-container .dragger').position().left/self.getDialog().getHtml().find('.slider-container .slider').width();
+				this.getDialog().getBody().find('.zoom-container .zoom-out').on('click', function(){
+					var ratio = self.getDialog().getBody().find('.slider-container .dragger').position().left/self.getDialog().getBody().find('.slider-container .slider').width();
 					var newRatio = Math.max(0, ratio - 0.02);
-					self.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', newRatio);
+					self.getDialog().getBody().find('.cropit-slider').simpleSlider('setRatio', newRatio);
 				});
-				this.getDialog().getHtml().find('.zoom-container .zoom-in').on('click', function(){
-					var ratio = self.getDialog().getHtml().find('.slider-container .dragger').position().left/self.getDialog().getHtml().find('.slider-container .slider').width();
+				this.getDialog().getBody().find('.zoom-container .zoom-in').on('click', function(){
+					var ratio = self.getDialog().getBody().find('.slider-container .dragger').position().left/self.getDialog().getBody().find('.slider-container .slider').width();
 					var newRatio = Math.min(2, ratio + 0.02);
-					self.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', newRatio);
+					self.getDialog().getBody().find('.cropit-slider').simpleSlider('setRatio', newRatio);
 				});
 			};
 
 			this.setZoom = function(zoom){
-				this.getDialog().getHtml().find('.cropit-slider').simpleSlider('setRatio', zoom);
+				this.getDialog().getBody().find('.cropit-slider').simpleSlider('setRatio', zoom);
 			};
 
 			this.onCrop = function(callback){
 				this._cropCallbacks.push(callback);
 				return this;
-			};
-
-			this.getDialog = function(){
-				if(this._dialog === null){
-					this._dialog = new Bean.Dialog('', this.getHtml(), '');
-				}
-				return this._dialog;
 			};
 
 			this.getHtml = function(){
@@ -626,11 +330,6 @@ var Bean = (function($){
 				cropHtml += '<div class="slider-container"><input type="text" class="cropit-slider" /></div>';
 				cropHtml += '<button class="zoom-icon zoom-in"><i class="icon-zoom-in"></i></button>';
 				cropHtml += '</div>';
-				//cropHtml += '<div class="crop-upload-container">';
-				//cropHtml += '<form class="crop-upload-form" method="post">';
-				//cropHtml += '<input type="file" name="' + this._type + '" />';
-				//cropHtml += '</form>';
-				//cropHtml += '</div>';
 				cropHtml += '<div class="crop-actions-container"><button type="button" class="button button-small button-primary crop-save">Save</button></div>';
 				return cropHtml;
 			};
@@ -822,6 +521,17 @@ var Bean = (function($){
 		},
 
 		Abstract: {
+			getContent: function(input){
+				try
+				{
+					var el = $(input);
+					if(el.length) return el;
+					throw 'Element does not exist';
+				}catch(e){
+					return input;
+				}
+			},
+
 			/**
 			 * Javascript object with credit card types
 			 * 0 - regexp for card number

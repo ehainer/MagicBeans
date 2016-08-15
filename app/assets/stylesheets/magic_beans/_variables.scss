@@ -7,11 +7,14 @@ $content-columns: 24;
 
 // COLORS
 $black: #000000;
+$gray: #DDDDDD;
+$light-gray: #EAEAEA;
 $white: #FFFFFF;
 $dark-blue: #323A45;
 $blood-orange: #F6595B;
 $sky-blue: #62CFF0;
 $sun-yellow: #FEC544;
+$alert-red: #F0502C;
 
 
 // DIALOG
@@ -37,8 +40,17 @@ $toast-color: $white;
 $toast-undo-color: teal;
 
 
-// DIALOGS
 $dialogs: (
+	default: (
+		container: (),
+		important: (
+			background: $alert-red,
+			color: $white
+		),
+		overlay: (
+			background: rgba($black, 0.7)
+		)
+	),
 	primary: (
 		header: (
 			background: $blood-orange,
@@ -94,39 +106,104 @@ $dialogs: (
 
 // INPUTS
 $inputs: (
+	default: (
+		container: (
+			transition: border-color 500ms,
+			line-height: $base-line-height,
+			font-size: 1rem,
+			font-family: ('Open Sans',Helvetica,sans-serif),
+			padding: 0.3rem 0.5rem,
+			border: 1px solid $gray,
+			width: 100%,
+			color: $black,
+			focus: (),
+			hover: (),
+			disabled: ()
+		),
+		placeholder: (
+			color: darkgrey
+		),
+		select: (
+			search: (
+				// Search box
+				container: (
+					padding: 0 0.5rem,
+					margin: 0.3rem 0
+				),
+				// Search input
+				input: (
+					border-bottom: 1px dotted $gray,
+					padding: 0.3rem 0
+				)
+			),
+			results: (), // Results drop down box
+			option: (
+				container: (), // Default option styles
+				hover: (), // Hover state for options
+				selected: (), // Selected option styles
+				disabled: () // Disabled option styles
+			)
+		),
+		multiselect: (
+			container: (
+				padding: 0.3rem 0.3rem 0 0
+			),
+			search: (
+				margin: 0 0 0.3rem 0.5rem
+			),
+			results: (), // Results drop down box
+			option: (
+				container: (), // Default option styles
+				hover: (), // Hover state for options
+				selected: (), // Selected option styles
+				disabled: () // Disabled option styles
+			),
+			choice: (
+				container: (
+					background: $sky-blue,
+					font-weight: bold,
+					color: $white,
+					margin: 0 0 0.3rem 0.3rem,
+					padding: 0 0.4rem
+				),
+				delete: (
+					icon: cross,
+					width: 10px,
+					height: 10px,
+					color: $white
+				)
+			)
+		)
+	),
 	primary: (
-		transition: border-color 500ms,
-		font-family: ('Open Sans',Helvetica,sans-serif),
-		font-size: 1rem,
-		border: 1px solid #CCCCCC,
-		padding: 0.3rem 0.5rem,
-		border-radius: 0,
-		color: #234051,
-		focus: (
-			border: 1px solid #62CFF0
+		container: (
+			focus: (
+				border: 1px solid $sky-blue
+			)
 		),
-		active: (
-			border: 1px solid #62CFF0
+		select: (
+			option: (
+				hover: (
+					background: $sky-blue,
+					color: $white
+				)
+			)
 		),
-		choice: (
-			background-color: $sky-blue,
-			color: $white
+		multiselect: (
+			option: (
+				hover: (
+					background: $sky-blue,
+					color: $white
+				)
+			)
 		)
 	),
 	secondary: (
-		transition: border-color 500ms,
-		font-family: ('Open Sans',Helvetica,sans-serif),
-		font-size: 1rem,
-		border: 1px solid #CCCCCC,
-		background: $white,
-		padding: 0.3rem 0.5rem,
-		border-radius: 0,
-		font-weight: bold,
-		focus: (
-			border: 1px solid #F6595B
-		),
-		active: (
-			border: 1px solid #F6595B
+		container: (
+			font-weight: bold,
+			focus: (
+				border: 1px solid $blood-orange
+			)
 		)
 	)
 );
@@ -189,16 +266,16 @@ $buttons: (
 	primary: (
 		transitions: all 500ms,
 		color: $white,
-		background: #F6595B,
-		border: 3px solid #F6595B,
+		background: $blood-orange,
+		border: 3px solid $blood-orange,
 		font-family: ('Open Sans',Helvetica,sans-serif),
 		font-weight: bold,
 		font-size: 1rem,
 		border-radius: 0,
 		text-transform: uppercase,
 		hover: (
-			border-color: darken($blood-orange, 15%),
-			background: darken($blood-orange, 15%)
+			background: $white,
+			color: $blood-orange
 		),
 		loader: (
 			dot-color: $white
@@ -207,15 +284,15 @@ $buttons: (
 	secondary: (
 		transitions: all 500ms,
 		color: $white,
-		background: #62CFF0,
-		border: 3px solid #62CFF0,
+		background: $sky-blue,
+		border: 3px solid $sky-blue,
 		font-family: ('Open Sans',Helvetica,sans-serif),
 		font-weight: bold,
 		font-size: 1rem,
 		text-transform: uppercase,
 		hover: (
 			background: $white,
-			color: #62CFF0
+			color: $sky-blue
 		),
 		loader: (
 			dot-color: $white
@@ -223,19 +300,19 @@ $buttons: (
 	),
 	tertiary: (
 		transitions: all 500ms,
-		color: #FEE262,
-		background: $white,
-		border: 3px solid #FEE262,
+		color: $white,
+		background: $sun-yellow,
+		border: 3px solid $sun-yellow,
 		font-family: ('Open Sans',Helvetica,sans-serif),
 		font-weight: bold,
 		font-size: 1rem,
 		text-transform: uppercase,
 		hover: (
-			background: #FEE262,
-			color: $white
+			background: $white,
+			color: $sun-yellow
 		),
 		loader: (
-			dot-color: #FEE262
+			dot-color: $white
 		)
 	)
 	// If you are adding more than 3 buttons, check yo self, cause it's probably overkill
@@ -278,58 +355,145 @@ $scrollbars: (
 
 // CALENDAR
 $calendars: (
+	default: (
+		container: (
+			background: #FFFFFF,
+			border: 1px solid $gray,
+			padding: 1rem
+		),
+		month: (
+			color: $black,
+			font-weight: bold
+		),
+		dow: (),
+		date: (
+			width: 40px,
+			height: 38px,
+			line-height: 38px,
+			color: $black,
+			background: $white,
+			hover: (
+				color: #333,
+				border: 1px solid $gray,
+			),
+			disabled: (
+				border: none,
+				padding: 2px 0,
+				cursor: default,
+				color: #999
+			),
+			off: (
+			),
+			start: (
+				border: 1px solid $sky-blue
+			),
+			end: (
+				border: 1px solid $blood-orange
+			),
+			range: (
+				background: $light-gray
+			),
+			tooltip: ()
+		),
+		next: (
+			arrow: (
+				icon: arrow-right3,
+				color: $black,
+				width: 15px,
+				height: 15px
+			)
+		),
+		prev: (
+			arrow: (
+				icon: arrow-left3,
+				color: $black,
+				width: 15px,
+				height: 15px
+			)
+		),
+		time: (
+			input: (
+				border-bottom: 1px solid $gray,
+				color: $black,
+				padding: 0,
+				line-height: 1.5
+			),
+			list: (
+				option: (
+					disabled: ()
+				)
+			)
+		)
+	),
 	primary: (
 		container: (
-			background: #323A45,
-			border: none,
-			padding: 1rem
+			background: $dark-blue,
+			border: none
+		),
+		month: (
+			color: $white,
+			font-weight: bold
 		),
 		dow: (
 			color: $sky-blue
 		),
-		nav: (
-			background-color: $sky-blue,
-			border: none
-		),
 		date: (
 			width: 40px,
-			height: 40px,
+			height: 38px,
 			line-height: 38px,
 			color: $white,
+			background: none,
 			border-radius: 40px,
 			hover: (
-				color: #333,
-				border: 1px solid #CCCCCC,
-				padding: 0
+				color: $white,
+				border: 1px solid $gray,
 			),
 			disabled: (
 				color: #999
 			),
-			off: (
-				color: #999 !important
-			),
-			start-date: (
+			start: (
+				border-radius: 40px,
 				border: 1px solid $sky-blue
 			),
-			end-date: (
+			end: (
+				border-radius: 40px,
 				border: 1px solid $blood-orange
 			),
-			in-range: (
-				background: none,
-				color: $white
+			range: (
+				background: none
 			),
-			mini: (
+			tooltip: (
 				background: $sky-blue,
 				color: $white
 			)
 		),
-		month: (
-			color: $white
+		next: (
+			border: none,
+			background-color: $sky-blue,
+			arrow: (
+				width: 10px,
+				color: $white
+			)
+		),
+		prev: (
+			border: none,
+			background-color: $sky-blue,
+			arrow: (
+				width: 10px,
+				color: $white
+			)
 		),
 		time: (
-			background: none,
-			color: $white,
-			border-bottom: 1px dotted $sky-blue
+			input: (
+				border-bottom-color: $sky-blue,
+				color: $white,
+				background: none
+			),
+			list: (
+				option: (
+					disabled: ()
+				)
+			)
 		)
 	)
 );

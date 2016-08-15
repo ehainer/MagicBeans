@@ -1,7 +1,5 @@
 .calendar {
 	@each $type, $calendar in $calendars {
-		&.calendar-#{$type} {
-			@include calendar($type);
-		}
+		@include calendar($type);
 	}
 }

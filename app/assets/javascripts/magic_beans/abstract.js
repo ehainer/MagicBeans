@@ -6,6 +6,18 @@ function isDecimal(value){
 	return !isNaN(parseFloat(value));
 };
 
+String.prototype.trim = function(){
+	return $.trim(this);
+};
+
+String.prototype.blank = function(){
+	return this.trim() == '';
+};
+
+Boolean.prototype.blank = function(){
+	return this === false;
+};
+
 Array.prototype.compact = function(){
 	for(var i=0; i<this.length; i++){
 		if(this[i] == undefined || this[i].toString().replace(/^\s+|\s+$/gm, '') == ''){
@@ -48,4 +60,12 @@ Array.prototype.flatten = function(){
 	};
 
 	return b;
+};
+
+Array.prototype.blank = function(){
+	return this.compact().length == 0;
+};
+
+Number.prototype.blank = function(){
+	return this <= 0;
 };

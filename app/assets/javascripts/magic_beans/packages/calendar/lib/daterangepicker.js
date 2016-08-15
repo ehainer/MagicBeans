@@ -958,6 +958,7 @@
                     if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate && !this.isPicking('start'))
                         classes.push('in-range');
 
+                    classes.push('date');
                     classes.push('date-' + calendar[row][col].format('YYYYMMDD'));
 
                     var cname = '', disabled = false;

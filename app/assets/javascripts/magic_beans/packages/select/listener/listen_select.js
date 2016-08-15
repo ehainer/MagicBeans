@@ -1,6 +1,6 @@
 Listeners.Select = {
 	run: function(){
-		$('select').each(function(){
+		$('select:visible').each(function(){
 			var placeholder = $(this).attr('placeholder') || $(this).data('placeholder');
 			if($(this).data('behavior') == 'input') $(this).addClass('select-input').attr('tabindex', -1);
 			if(!$(this).find('option[selected]').length) $(this).prepend('<option value selected></option>');
@@ -14,9 +14,11 @@ Listeners.Select = {
 				include_group_label_in_selected: true
 			});
 
-			$(this).trigger("chosen:updated");
+			$(this).trigger('chosen:updated');
 
-			if(placeholder && $(this).data('behavior') == 'input') $(this).next('.chosen-container').find('input').attr('placeholder', placeholder);
+			if(placeholder && $(this).data('behavior') == 'input'){
+				$(this).next('.chosen-container').find('input').attr('placeholder', placeholder);
+			}
 		});
 		$('select').trigger('chosen:updated');
 	}

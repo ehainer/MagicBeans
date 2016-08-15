@@ -45,39 +45,39 @@
 			<div class="space-bottom">
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Standard Select") %></div>
-					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary" %>
+					<%= select_tag :select_1, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary" %>
 				</div>
 
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Select With Search") %></div>
-					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { search: true, search_placeholder: "Search For Something" } %>
+					<%= select_tag :select_2, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { search: true, search_placeholder: "Search For Something" } %>
 				</div>
 
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Select Input") %></div>
-					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { behavior: :input } %>
+					<%= select_tag :select_3, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", data: { behavior: :input } %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Multi Select") %></div>
-					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", multiple: true %>
+					<%= select_tag :select_4, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary", multiple: true %>
 				</div>
 
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Select With Custom Scrollbar (webkit only)") %></div>
-					<%= select_tag :select, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary scrollbar scrollbar-primary" %>
+					<%= select_tag :select_5, options_for_select(@options), placeholder: "Choose Something", class: "input input-primary scrollbar scrollbar-primary" %>
 				</div>
 			</div>
 			<div class="space-bottom">
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Default Date Input") %></div>
-					<%= text_field_tag :date, "Thursday, Mar 24th 2016", class: "input input-primary", data: { date: true } %>
+					<%= text_field_tag :date, "Thursday, Mar 24th 2016", class: "input input-primary calendar", data: { date: true } %>
 				</div>
 				<div class="column-6">
 					<div class="styleguide-label"><%= __("Default Date Range") %></div>
 					<div class="column-3">
-						<%= text_field_tag :start, "", class: "input input-primary", data: { date: :start, end: "#end" } %>
+						<%= text_field_tag :start, "", class: "input input-primary calendar", data: { date: :start, end: "#end" } %>
 					</div>
 					<div class="column-3">
 						<%= text_field_tag :end, "", class: "input input-primary", data: { date: :end } %>
@@ -503,7 +503,7 @@
 				<div class="column-4">
 					<div class="styleguide-label"><%= __("Confirm With Custom Title / Width") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="primary" data-buttons="continue cancel" data-title="Make A Decision" data-width="700" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="Are you sure?" data-theme="primary" data-buttons="continue cancel" data-header="Make A Decision" data-width="700" value="Submit" />
 					</form>
 				</div>
 				<div class="column-4">
@@ -515,7 +515,7 @@
 				<div class="column-4">
 					<div class="styleguide-label"><%= __("Confirm With Custom Content") %></div>
 					<form action="/" method="get" class="beans-form">
-						<input type="submit" class="button button-small button-primary" data-dialog="#confirmation-content" data-theme="secondary" data-outside="true" value="Submit" />
+						<input type="submit" class="button button-small button-primary" data-dialog="#confirmation-content" data-theme="secondary" data-outside="true" data-animation="shake" value="Submit" />
 					</form>
 				</div>
 			</div>
@@ -548,7 +548,7 @@
 			<div>
 				<div class="column-4">
 					<div class="styleguide-label"><%= __("Loading Image Dialog") %></div>
-					<button type="button" id="loading-image-dialog" class="button button-small button-primary" data-dialog="" data-theme="secondary" data-width="70%" data-header="false">Submit</button>
+					<button type="button" id="loading-image-dialog" class="button button-small button-primary" data-dialog="" data-theme="secondary" data-width="70%" data-height="500" data-header="false">Submit</button>
 				</div>
 			</div>
 		</div>
