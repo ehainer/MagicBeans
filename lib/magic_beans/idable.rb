@@ -64,29 +64,26 @@ module MagicBeans
 				crypt.encode(idable.id)
 			end
 
-			private
+			def find_id
+				amount = MagicBeans::Id.count.to_f
+				factor = 256.to_f
+				min = (((amount/factor).floor*factor) + 1).to_i
+				max = (((amount+1)/factor).ceil*factor).to_i
+				used = MagicBeans::Id.where(id: min..max).pluck(:id)
+				ids = ((min..max).to_a - used).shuffle
+				candidate = ids.first
 
-				def find_id
-					amount = MagicBeans::Id.count.to_f
-					factor = 64.to_f
-					min = (((amount/factor).floor*factor) + 1).to_i
-					max = (((amount+1)/factor).ceil*factor).to_i
-					used = MagicBeans::Id.where(id: min..max).pluck(:id)
-
-					candidate = rand(min..max)
-					while used.include? candidate
-						candidate = rand(min..max)
-					end
-
-					if crypt.blacklisted?(candidate)
-						# If id chosen is a blacklisted word, insert it as a placeholder record and try again
-						MagicBeans::Id.create(id: candidate, resource_id: 0, resource_type: :blacklist)
-						find_id
-					else
-						# The id chosen is good, not a blacklisted word. Use it
-						candidate
-					end
+				if crypt.blacklisted?(candidate)
+					# If id chosen is a blacklisted word, insert it as a placeholder record and try again
+					MagicBeans::Id.create(id: candidate, resource_id: 0, resource_type: :blacklist)
+					find_id
+				else
+					# The id chosen is good, not a blacklisted word. Use it
+					candidate
 				end
+			end
+
+			private
 
 				def crypt
 					@crypt ||= MagicBeans::Crypt.new

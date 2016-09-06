@@ -40,6 +40,14 @@ $toast-color: $white;
 $toast-undo-color: teal;
 
 
+// INPUTS
+$input-padding: 0.3rem 0.5rem;
+$input-color: $dark-blue;
+$input-placeholder-color: darkgrey;
+$input-line-height: $base-line-height;
+$input-font-size: 1rem;
+
+
 $dialogs: (
 	default: (
 		container: (),
@@ -109,7 +117,6 @@ $inputs: (
 	default: (
 		container: (
 			transition: border-color 500ms,
-			line-height: $base-line-height,
 			font-size: 1rem,
 			font-family: ('Open Sans',Helvetica,sans-serif),
 			padding: 0.3rem 0.5rem,
@@ -121,9 +128,13 @@ $inputs: (
 			disabled: ()
 		),
 		placeholder: (
-			color: darkgrey
+			color: darkgrey,
+			opacity: 1
 		),
 		select: (
+			container: (
+				padding: 0.3rem 0.3rem 0 0
+			),
 			search: (
 				// Search box
 				container: (
@@ -136,26 +147,17 @@ $inputs: (
 					padding: 0.3rem 0
 				)
 			),
-			results: (), // Results drop down box
+			dropdown: (
+				// Results drop down box
+				border: 1px solid $sky-blue,
+				border-top: 0
+			),
 			option: (
 				container: (), // Default option styles
 				hover: (), // Hover state for options
-				selected: (), // Selected option styles
-				disabled: () // Disabled option styles
-			)
-		),
-		multiselect: (
-			container: (
-				padding: 0.3rem 0.3rem 0 0
-			),
-			search: (
-				margin: 0 0 0.3rem 0.5rem
-			),
-			results: (), // Results drop down box
-			option: (
-				container: (), // Default option styles
-				hover: (), // Hover state for options
-				selected: (), // Selected option styles
+				selected: (
+					color: darkgrey
+				), // Selected option styles
 				disabled: () // Disabled option styles
 			),
 			choice: (
@@ -163,8 +165,9 @@ $inputs: (
 					background: $sky-blue,
 					font-weight: bold,
 					color: $white,
-					margin: 0 0 0.3rem 0.3rem,
-					padding: 0 0.4rem
+					margin: 0 0.3rem 0 0,
+					padding: 0 0.4rem,
+					font-size: 0.9rem
 				),
 				delete: (
 					icon: cross,

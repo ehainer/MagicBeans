@@ -18,19 +18,20 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   s.require_paths = ["lib"]
 
-  s.add_dependency "rails", "~> 4.2.5.1"
+  s.add_dependency "rails"
   s.add_dependency "pg"
-  s.add_dependency "sass-rails", "~> 5.0"
+  s.add_dependency "sass-rails"
   s.add_dependency "sidekiq"
   s.add_dependency "sinatra"
   s.add_dependency "mini_magick"
-  s.add_dependency "twilio-ruby", "~> 4.11.1"
-  s.add_dependency "multi_json", "1.7.8"
+  s.add_dependency "twilio-ruby"
+  s.add_dependency "multi_json"
   s.add_dependency "colorize"
   s.add_dependency "google_hash"
   s.add_dependency "bourbon"
   s.add_dependency "neat"
   s.add_dependency "jquery-rails"
+  s.add_dependency "non-stupid-digest-assets"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"

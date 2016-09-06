@@ -24,8 +24,6 @@ Listeners.Editable = {
 					init_instance_callback: function(editor){
 						$(editor.editorContainer).addClass($this.attr('class'));
 						var position = $this.data('position') || 'top';
-						console.log(position);
-						console.log($(editor.editorContainer));
 						if(position.toString().toLowerCase() == 'bottom'){
 							var toolbar = $(editor.editorContainer).find('.mce-toolbar-grp');
 							var editArea = $(editor.editorContainer).find('.mce-edit-area');

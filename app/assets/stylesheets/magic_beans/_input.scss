@@ -11,3 +11,51 @@
 		height: 100%;
 	}
 }
+
+/*
+.input {
+	@include rem(padding, 0.3rem 0.5rem);
+	transition: border-color 500ms;
+	line-height: $base-line-height;
+	font-size: 1rem;
+	font-family: 'Open Sans',Helvetica,sans-serif;
+	border: 1px solid $gray;
+	width: 100%;
+	color: $black;
+
+	&:hover {
+	}
+
+	&:focus {
+	}
+
+	&:disabled {
+	}
+
+	&.icon-left {
+		@include rem(background-size, 1.2em);
+		@include rem(background-position, left 0.5rem center);
+		padding-left: 2em;
+	}
+
+	&.icon-right {
+		@include rem(background-size, 1.2em);
+		@include rem(background-position, right 0.5rem center);
+		padding-right: 2em;
+	}
+}
+
+.input-primary {
+
+
+	&:hover {
+	}
+
+	&:focus {
+		border-color: $sky-blue;
+	}
+
+	&:disabled {
+	}
+}
+*/

@@ -683,6 +683,48 @@
 
 	<div class="styleguide-row">
 		<div class="styleguide-content">
+			<div class="space-bottom">
+				<div class="column-9">
+					<div class="styleguide-label"><%= __("Default Carousel") %></div>
+					<div data-carousel="true">
+						<div><%= image_tag("1.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("2.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("3.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("4.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("5.jpg", width: 160, height: 100) %></div>
+					</div>
+				</div>
+				<div class="column-9">
+					<div class="styleguide-label"><%= __("Carousel With 3 Slides") %></div>
+					<div data-carousel="true" data-slides="3">
+						<div><%= image_tag("1.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("2.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("3.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("4.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("5.jpg", width: 160, height: 100) %></div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="column-9">
+					<div class="styleguide-label"><%= __("Carousel With Dot Nav") %></div>
+					<div data-carousel="true" data-dots="true" data-slides="3">
+						<div><%= image_tag("1.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("2.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("3.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("4.jpg", width: 160, height: 100) %></div>
+						<div><%= image_tag("5.jpg", width: 160, height: 100) %></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="styleguide-annotation">
+			<h1>Carousels</h1>
+		</div>
+	</div>
+
+	<div class="styleguide-row">
+		<div class="styleguide-content">
 			<div class="column-6">
 				<div class="styleguide-label"><%= __("Oscillating Dot Loader") %></div>
 				<div class="loading">

@@ -81,6 +81,11 @@
 	@each $property, $value in $map {
 		@if is-map($value) {
 			@if contains((hover focus active disabled), $property) {
+				&:#{$property}, &.pseudo-#{$property} {
+					@include map-css($map, $property);
+				}
+			}
+			@if contains((before, after), $property) {
 				&:#{$property} {
 					@include map-css($map, $property);
 				}
@@ -98,41 +103,46 @@
 	$select: mapped($input, select);
 	$option: mapped($select, option);
 	$search: mapped($select, search);
+	$choice: mapped($select, choice);
+	$padding: extract-padding($input, container);
 
-	// Select placeholder <span> tag
-	.chosen-single > span.placeholder {
-		@include map-css($input, placeholder);
-	}
-	input.chosen-single {
-		@include placeholder($input, placeholder);
-	}
-	&.chosen-with-drop {
-		@include map-css($container, focus);
-		.chosen-drop {
-			@include map-css($container, focus);
-			border-top: none;
+	&.select2-container--multiple {
+		padding-bottom: 0;
+		.select2-search {
+			@include rem(margin-bottom, map-get($padding, bottom));
 		}
-		.chosen-search {
-			@include map-css($search, container);
-			input {
-				@include map-css($search, input);
-				@include placeholder($input, placeholder);
-			}
+	}
+
+	&.select2-container--single {
+		.select2-search { @include map-css($search, container); }
+		.select2-search__field { @include map-css($search, input); }
+	}
+
+	&.select2-container--focus { @include map-css($container, focus); }
+
+	.select2-selection__choice {
+		@include map-css($choice, container);
+		@include rem(line-height, $base-line-height);
+		@include rem(margin-bottom, map-get($padding, bottom));
+	}
+
+	.select2-results__option { @include map-css($select, option); }
+
+	.select2-dropdown { @include map-css($select, dropdown); }
+
+	.select2-results__option {
+		@include map-css($option, container);
+
+		&.select2-results__option--highlighted {
+			@include map-css($option, hover);
 		}
-		.chosen-results {
-			@include map-css($select, results);
-			li {
-				@include map-css($option, container);
-				&.highlighted {
-					@include map-css($option, hover);
-				}
-				&.result-selected {
-					@include map-css($option, selected);
-				}
-				&.result-disabled {
-					@include map-css($option, disabled);
-				}
-			}
+
+		&.select2-results__option[aria-selected="true"] {
+			@include map-css($option, selected);
+		}
+
+		&.select2-results__option[aria-disabled="true"] {
+			@include map-css($option, disabled);
 		}
 	}
 }
@@ -414,8 +424,14 @@
 	*zoom: 1;
 }
 
-@function extract-padding($map, $key) {
-	$css: mapped($map, $key);
+@function extract-padding($map, $key: null) {
+	$css: ();
+
+	@if $key == null {
+		$css: ( padding: $map );
+	} @else {
+		$css: mapped($map, $key);
+	}
 
 	$top: 0;
 	$right: 0;
@@ -450,13 +466,18 @@
 			$left: nth($value, 4);
 			@return ( top: $top, right: $right, bottom: $bottom, left: $left );
 		}
-	} @else if map-has-key($css, padding-top) {
+	}
+
+	@if map-has-key($css, padding-top) {
 		$top: map-get($css, padding-top);
-	} @else if map-has-key($css, padding-right) {
+	}
+	@if map-has-key($css, padding-right) {
 		$right: map-get($css, padding-right);
-	} @else if map-has-key($css, padding-bottom) {
+	}
+	@if map-has-key($css, padding-bottom) {
 		$bottom: map-get($css, padding-bottom);
-	} @else if map-has-key($css, padding-left) {
+	}
+	@if map-has-key($css, padding-left) {
 		$left: map-get($css, padding-left);
 	}
 
@@ -485,9 +506,14 @@
 			$px-values: join($px-values, auto);
 			$rem-values: join($rem-values, auto);
 		} @else {
-			$value: $value / ($value * 0 + 1);
-			$px-values: join($px-values, round($value * $font-size));
-			$rem-values: join($rem-values, unquote("#{$value}rem"));
+			@if type-of($value) == number {
+				$value: $value / ($value * 0 + 1);
+				$px-values: join($px-values, round($value * $font-size));
+				$rem-values: join($rem-values, unquote("#{$value}rem"));
+			} @else {
+				$px-values: join($px-values, $value);
+				$rem-values: join($rem-values, $value);
+			}
 		}
 	}
 
@@ -507,7 +533,7 @@
 }
 
 @mixin placeholder($map, $key) {
-	&.placeholding {
+	&.placeholder {
 		@include map-css($map, $key);
 	}
 	&::-webkit-input-placeholder {
@@ -571,8 +597,7 @@
 		@include map-css($input, container);
 		@include placeholder($input, placeholder);
 
-		&.chosen-container-single { @include select-css($input); }
-		&.chosen-container-multi { @include multiselect-css($input); }
+		&.select2 { @include select-css($input); }
 
 	} @else {
 
@@ -581,8 +606,7 @@
 			@include map-css($input, container);
 			@include placeholder($input, placeholder);
 
-			&.chosen-container-single { @include select-css($input); }
-			&.chosen-container-multi { @include multiselect-css($input); }
+			&.select2 { @include select-css($input); }
 
 			&.icon-left {
 				$size: map-value(mapped($input, container), line-height, $base-line-height);
@@ -931,4 +955,10 @@
 	}
 
 	@content;
+}
+
+@mixin input2($type) {
+	&.input-#{$type}, .input-#{$type} {
+		@content;
+	}
 }
