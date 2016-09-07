@@ -60,6 +60,7 @@ module MagicBeans
 		initializer "magic_beans.assets", after: :load_config_initializers do
 			config.assets.paths << MagicBeans.config.svg.icon_directory
 			config.assets.paths << MagicBeans.config.svg.fallback_directory
+			config.assets.paths << Rails.root.join("app", "assets", "fonts")
 		end
 
 		config.generators do |g|

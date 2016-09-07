@@ -2,9 +2,12 @@ class MagicBeans::InstallGenerator < Rails::Generators::Base
 	source_root File.expand_path('../../../../', __FILE__)
 
 	def copy_assets
+		directory "app/assets/fonts", Rails.root.join("app", "assets", "fonts")
 		directory "app/assets/javascripts", Rails.root.join("app", "assets", "javascripts")
 		directory "app/assets/stylesheets", Rails.root.join("app", "assets", "stylesheets")
 		directory "app/assets/images/icon", Rails.root.join("app", "assets", "images", "icon")
+
+		copy_file "app/assets/images/ajax-loader.gif", Rails.root.join("app", "assets", "images", "ajax-loader.gif")
 	end
 
 	def copy_config
