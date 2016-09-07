@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-	resources :magicbeans do
+	resources :magic_beans do
 		uploadable :beans
 		croppable :beans
 	end
