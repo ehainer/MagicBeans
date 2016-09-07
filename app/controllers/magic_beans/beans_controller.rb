@@ -1,4 +1,4 @@
-class MagicBeansController < ApplicationController
+class BeansController < ApplicationController
 
 	layout "magic_beans/application"
 
