@@ -605,7 +605,7 @@
 		<div class="styleguide-content">
 			<div class="column-6">
 				<div class="styleguide-label"><%= __("Standard Upload") %></div>
-				<%= form_for [:magic_beans, @bean] do |f| %>
+				<%= form_for @bean do |f| %>
 					<%= f.label :first_name %>
 					<%= f.text_field :first_name, class: "input input-primary" %>
 					<%= f.label :last_name %>
@@ -659,7 +659,7 @@
 		<div class="styleguide-content">
 			<div class="column-6">
 				<div class="styleguide-label"><%= __("Inline Validation") %></div>
-				<%= form_for [:magic_beans, @bean] do |f| %>
+				<%= form_for @bean do |f| %>
 					<%= f.label :first_name %>
 					<%= f.text_field :first_name, class: "input input-primary validate-not-empty validate-required" %>
 					<%= f.label :last_name %>

@@ -1,6 +1,8 @@
-Rails.application.routes.draw do
+MagicBeans::Engine.routes.draw do
 
-	resources :magic_beans, only: [:index, :update, :create, :show] do
+	resources :beans
+
+	scope :beans do
 		uploadable :beans
 		croppable :beans
 	end
