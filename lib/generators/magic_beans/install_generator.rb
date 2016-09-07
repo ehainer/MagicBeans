@@ -13,7 +13,7 @@ class MagicBeans::InstallGenerator < Rails::Generators::Base
 	end
 
 	def copy_controllers
-		copy_file "app/controllers/magic_beans/beans_controller.rb", Rails.root.join("app", "controllers", "magic_beans", "beans_controller.rb")
+		copy_file "app/controllers/magicbeans_controller.rb", Rails.root.join("app", "controllers", "magicbeans_controller.rb")
 	end
 
 	def copy_views
