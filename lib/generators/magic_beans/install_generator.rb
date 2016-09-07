@@ -6,6 +6,7 @@ class MagicBeans::InstallGenerator < Rails::Generators::Base
 		directory "app/assets/javascripts", Rails.root.join("app", "assets", "javascripts")
 		directory "app/assets/stylesheets", Rails.root.join("app", "assets", "stylesheets")
 		directory "app/assets/images/icon", Rails.root.join("app", "assets", "images", "icon")
+		directory "app/assets/tinymce", Rails.root.join("app", "assets", "tinymce")
 
 		copy_file "app/assets/images/ajax-loader.gif", Rails.root.join("app", "assets", "images", "ajax-loader.gif")
 	end
