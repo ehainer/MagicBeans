@@ -9,7 +9,7 @@ MagicBeans.setup do |config|
 	config.svg.icon_directory = Rails.root.join("app", "assets", "images", "icon", "svg")
 
 	# The directory where generated fallback images for SVG's should reside
-	config.svg.fallback_directory = Rails.root.join("app", "assets", "images", "icon", "image")
+	config.svg.fallback_directory = Rails.root.join("app", "assets", "images")
 
 	# The environment(s) that svg -> png generation can occur in. Defaults to "development"
 	# Can specify either a single environment or an array of environments. NOT recommended for production
@@ -33,7 +33,7 @@ MagicBeans.setup do |config|
 
 	# Anything set on the js config is inserted into a JSON object that is fed directly
 	# into the Bean JS class's config, making it available via `Bean.Config.get('some_random_config_field')`
-	config.js.some_random_config_field = "nonsense"
+	# config.js.some_random_config_field = "nonsense"
 
 	# The directory where dropzone uploads will be temporarily stored.
 	# Files will be distributed throughout this directory as needed
