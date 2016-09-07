@@ -23,9 +23,7 @@ class MagicBeans::InstallGenerator < Rails::Generators::Base
 
 	def copy_models
 		copy_file "app/models/magic_beans/bean.rb", Rails.root.join("app", "models", "magic_beans", "bean.rb")
-	end
-
-	def copy_migrations
-		directory "db/migrate", Rails.root.join("db", "migrate")
+		copy_file "app/uploaders/magic_beans/attachment_uploader.rb", Rails.root.join("app", "uploaders", "magic_beans", "attachment_uploader.rb")
+		copy_file "app/uploaders/magic_beans/avatar_uploader.rb", Rails.root.join("app", "uploaders", "magic_beans", "avatar_uploader.rb")
 	end
 end

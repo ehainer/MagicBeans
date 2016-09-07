@@ -32,7 +32,7 @@ module MagicBeans
 					to = Tempfile.new(["#{cropper.resource.id}_#{type}", File.extname(from)])
 
 					# Crop the image, scale up if it's smaller than the required crop size
-					img = MiniMagick::Image.new(from)
+					img = ::MiniMagick::Image.new(from)
 					img.crop("#{crop_params[:width]}x#{crop_params[:height]}+#{crop_params[:x]}+#{crop_params[:y]}")
 					img.resize "300x300" if img.width < 300 || img.height < 300
 					img.write to.path
