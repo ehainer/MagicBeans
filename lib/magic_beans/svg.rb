@@ -94,7 +94,7 @@ module MagicBeans
 		def create
 			begin
 				prepare
-				MiniMagick::Tool::Convert.new do |convert|
+				::MiniMagick::Tool::Convert.new do |convert|
 					convert.merge! ["-background", "none"]
 					convert.merge! ["-gravity", "center"]
 					if size

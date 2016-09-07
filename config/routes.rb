@@ -1,4 +1,4 @@
-MagicBeans::Engine.routes.draw do
+Rails.application.routes.draw do
 	root "beans#index"
 
 	resources :beans, only: [:show, :create, :update]
