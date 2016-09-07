@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
 
-	namespace :magic_beans do
-		resources :beans, only: [:show, :create, :update]
-
-		scope "beans" do
-			uploadable :beans
-			croppable :beans
-		end
+	resources :magic_beans do
+		uploadable :beans
+		croppable :beans
 	end
+
+	#namespace :magic_beans do
+	#	resources :beans, only: [:show, :create, :update]
+#
+#	#	scope "beans" do
+#	#	end
+	#end
 end
