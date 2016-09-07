@@ -60,7 +60,7 @@ class MagicBeans::BeansController < ApplicationController
 		end
 
 		def init_objects
-			@options = 20.times.map { |i| [Faker::Name.name, i] }
+			@options = 20.times.map { |i| [::Faker::Name.name, i] }
 		end
 
 end
