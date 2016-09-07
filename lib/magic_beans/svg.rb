@@ -109,7 +109,7 @@ module MagicBeans
 				MagicBeans.log("SVG", "Created #{image_path} from #{svg_path}")
 				true
 			rescue => e
-				MagicBeans.log("SVG", e.message, true)
+				MagicBeans.log("SVG", e.message.to_s + "11111", true)
 				false
 			end
 		end
