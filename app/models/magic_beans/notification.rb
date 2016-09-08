@@ -173,7 +173,7 @@ module MagicBeans
 					request << { to: to, from: from, subject: subject }.compact.merge(vars: vars).merge(attachments: attachments)
 					mail = mailer.to_s.classify.constantize.send method, { to: to, from: from, subject: subject }.compact, vars, attachments
 				else
-					request << *@mailer_arguments.compact
+					request << @mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
 				mail.deliver_later(wait: 5.seconds)
