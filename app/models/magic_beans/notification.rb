@@ -244,6 +244,8 @@ module MagicBeans
 					self.request[:email] = email_instance.request.to_json
 					self.response[:email] = email_instance.response.to_json
 				end
+				self.request_will_change!
+				self.response_will_change!
 				puts self.request.to_json
 			end
 
