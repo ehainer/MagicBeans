@@ -168,9 +168,15 @@ module MagicBeans
 
 			def deliver
 				notification.to_email = @to
+				puts to
+				puts from
+				puts vars
+				puts subject
+				puts mailer.to_s.classify
+				puts method
 				request << { to: to, from: from, subject: subject }.compact.merge(vars: vars).merge(attachments: attachments)
 				mail = mailer.to_s.classify.constantize.send method, { to: to, from: from, subject: subject }.compact, vars, attachments
-				mail.deliver_later!
+				mail.deliver_later(wait: 5.seconds)
 			end
 
 			def attach(file, name = nil)
