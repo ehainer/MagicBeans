@@ -176,7 +176,6 @@ module MagicBeans
 					request << @mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
-				puts request.to_json
 				mail.deliver_later(wait: 5.seconds)
 			end
 
@@ -262,6 +261,7 @@ module MagicBeans
 			def setup
 				# Set the request and response data to a blank hash, more info will be populated in each
 				# when the `deliver` method is called on SMS or Email instance
+				puts "RAN SETUP"
 				self.request = {}
 				self.response = {}
 			end
