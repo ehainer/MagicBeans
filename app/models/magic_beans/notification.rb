@@ -244,8 +244,6 @@ module MagicBeans
 					self.request[:email] = email_instance.request.to_json
 					self.response[:email] = email_instance.response.to_json
 				end
-				self.request_will_change!
-				self.response_will_change!
 				puts self.request.to_json
 			end
 
@@ -264,8 +262,10 @@ module MagicBeans
 				# Set the request and response data to a blank hash, more info will be populated in each
 				# when the `deliver` method is called on SMS or Email instance
 				puts "RAN SETUP"
-				self.request = {}
-				self.response = {}
+				if new_record?
+					self.request = {}
+					self.response = {}
+				end
 			end
 
 	end
