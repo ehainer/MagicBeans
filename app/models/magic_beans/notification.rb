@@ -235,14 +235,14 @@ module MagicBeans
 			def deliver
 				if sms_instance.deliverable?
 					sms_instance.deliver
-					self.request[:sms] = sms_instance.request
-					self.response[:sms] = sms_instance.response
+					self.request[:sms] = sms_instance.request.to_json
+					self.response[:sms] = sms_instance.response.to_json
 				end
 
 				if email_instance.deliverable?
 					email_instance.deliver
-					self.request[:email] = email_instance.request
-					self.response[:email] = email_instance.response
+					self.request[:email] = email_instance.request.to_json
+					self.response[:email] = email_instance.response.to_json
 				end
 				puts self.request.to_json
 			end
