@@ -176,7 +176,7 @@ module MagicBeans
 					request << @mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
-				mail.deliver_later(wait: 5.seconds)
+				puts mail.deliver_later(wait: 5.seconds)
 			end
 
 			def attach(file, name = nil)
@@ -244,7 +244,6 @@ module MagicBeans
 					self.request[:email] = email_instance.request.to_json
 					self.response[:email] = email_instance.response.to_json
 				end
-				puts self.request.to_json
 			end
 
 			def validate
@@ -261,7 +260,6 @@ module MagicBeans
 			def setup
 				# Set the request and response data to a blank hash, more info will be populated in each
 				# when the `deliver` method is called on SMS or Email instance
-				puts "RAN SETUP"
 				if new_record?
 					self.request = {}
 					self.response = {}
