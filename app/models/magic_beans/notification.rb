@@ -176,7 +176,7 @@ module MagicBeans
 					request << @mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
-				puts mail.deliver_later(wait: 5.seconds)
+				puts mail.deliver_later(wait: 5.seconds).to_yaml
 			end
 
 			def attach(file, name = nil)
