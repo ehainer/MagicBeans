@@ -176,7 +176,7 @@ module MagicBeans
 					request << @mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
-				puts request.to_yaml
+				puts request.to_json
 				mail.deliver_later(wait: 5.seconds)
 			end
 
