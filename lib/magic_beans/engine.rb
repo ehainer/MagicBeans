@@ -63,6 +63,12 @@ module MagicBeans
 			config.assets.paths << Rails.root.join("app", "assets", "fonts")
 		end
 
+		initializer "magic_beans.global_id" do
+			::GlobalID::Locator.use Rails.application.railtie_name.remove("_application").dasherize do |gid|
+				gid.model_class.find_by_id gid.model_id
+			end
+		end
+
 		config.generators do |g|
 			g.test_framework :rspec, fixture: false
 			g.fixture_replacement :factory_girl, dir: 'spec/factories'
