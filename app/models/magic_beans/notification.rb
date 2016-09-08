@@ -154,6 +154,7 @@ module MagicBeans
 				@attachments ||= {}
 				@mailer_class = "MagicBeans::NotificationMailer"
 				@mailer_method = "notify"
+				@mailer_arguments = nil
 				@permitted = false
 				@result = {}
 			end
@@ -168,14 +169,10 @@ module MagicBeans
 
 			def deliver
 				notification.to_email = @to
-				puts to
-				puts from
-				puts vars
-				puts subject
-				puts mailer.to_s.classify
-				puts method
 				request << { to: to, from: from, subject: subject }.compact.merge(vars: vars).merge(attachments: attachments)
-				mail = mailer.to_s.classify.constantize.send method, { to: to, from: from, subject: subject }.compact, vars, attachments
+				args = *@mailer_arguments || { to: to, from: from, subject: subject }.compact
+				puts args.to_yaml
+				mail = mailer.to_s.classify.constantize.send method, args, vars, attachments
 				mail.deliver_later(wait: 5.seconds)
 			end
 
@@ -199,6 +196,10 @@ module MagicBeans
 
 			def method(meth = nil)
 				@mailer_method = meth || @mailer_method
+			end
+
+			def arguments(*args)
+				@mailer_arguments = *args
 			end
 
 			def deliverable?
