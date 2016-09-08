@@ -64,6 +64,10 @@ module MagicBeans
 				crypt.encode(idable.id)
 			end
 
+			def id
+				to_param
+			end
+
 			def find_id
 				amount = MagicBeans::Id.count.to_f
 				factor = 256.to_f
