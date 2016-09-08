@@ -245,6 +245,7 @@ module MagicBeans
 					self.request[:email] = email_instance.request
 					self.response[:email] = email_instance.response
 				end
+				puts self.request.to_json
 			end
 
 			def validate
