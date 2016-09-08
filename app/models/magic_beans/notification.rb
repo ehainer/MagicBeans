@@ -173,7 +173,6 @@ module MagicBeans
 				if @mailer_arguments.nil?
 					mail = mailer.to_s.classify.constantize.send method, { to: to, from: from, subject: subject }.compact, vars, attachments
 				else
-					puts *@mailer_arguments.compact
 					mail = mailer.to_s.classify.constantize.send method, *@mailer_arguments.compact
 				end
 				mail.deliver_later(wait: 5.seconds)
@@ -202,7 +201,6 @@ module MagicBeans
 			end
 
 			def arguments(*args)
-				puts *args
 				@mailer_arguments = *args
 			end
 
