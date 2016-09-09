@@ -29,6 +29,7 @@ module MagicBeans
 			attrs = { data: {} }
 			attrs[:size] = size unless size.blank?
 			attrs[:data] = { svg: true, image: image_asset_path, size: size }.reject { |k,v| v.blank? }
+			attrs[:class] = options[:class] if options.has_key?(:class)
 			attrs
 		end
 
