@@ -83,7 +83,7 @@ module MagicBeans
 
 			def image
 				type = params[:type].to_s.underscore.to_sym
-				render json: { url: cropper.resource.try(type).try(:url) }
+				render json: { url: cropper.resource.try(type).try(:url) + "?#{Time.now.to_i}" }
 			end
 
 			def cropper
