@@ -28,6 +28,8 @@ module MagicBeans
 
 					raise MagicBeans::Crop::InvalidMount.new("Unknown image path for uploader mount with name '#{type}'") if from.blank?
 
+					MagicBeans.log "Crop", from
+
 					# Create a temp file to store the newly cropped image
 					to = Tempfile.new(["#{cropper.resource.id}_#{type}", File.extname(from)])
 
