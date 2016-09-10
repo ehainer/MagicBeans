@@ -88,9 +88,6 @@ module MagicBeans
 					uploaders.keys.reject { |name| resource.send(name).blank? }.each do |name|
 						uploads = resource_uploads[name].reject { |_| file_ids.include?(_.keys.first) }.flat_map { |_| _.values }
 
-						MagicBeans.log "Upload", name
-						MagicBeans.log "Upload", uploads
-
 						if uploads.blank? # If uploads is blank, remove everything, only possible scenario for single file uploads if removed
 							resource.send "remove_#{name}!"
 						elsif resource.respond_to?("#{name}_urls") # If multiple uploads, update with the remaining uploads
