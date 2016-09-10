@@ -121,7 +121,8 @@ module MagicBeans
 			def uploads
 				upload_params.map do |name, files|
 					[files].flatten.map do |file|
-						MagicBeans::UploadTemp.create(upload: file, name: name, resource: resource_name).to_param
+						up = MagicBeans::UploadTemp.create(upload: file, name: name, resource: resource_name)
+						{ id: up.to_param, url: up.upload.url }
 					end
 				end.flatten
 			end
