@@ -24,6 +24,10 @@ module MagicBeans
 				begin
 					type = crop_params[:type].to_s.underscore.to_sym
 
+					if crop_image?
+						cropper.resource.update(crop_image)
+					end
+
 					from = cropper.resource.try(type).try(:path)
 
 					raise MagicBeans::Crop::InvalidMount.new("Unknown image path for uploader mount with name '#{type}'") if from.blank?
@@ -95,15 +99,28 @@ module MagicBeans
 			end
 
 			private
+
+				def crop_image?
+					crop_params[:image] && crop_params[:type]
+				end
+
+				def crop_image
+					if MagicBeans::UploadTemp.exists?(crop_params[:image])
+						upload = MagicBeans::UploadTemp.find(crop_params[:image])
+						{ crop_params[:type] => upload.upload.path }
+					else
+						{}
+					end
+				end
 	
 				def crop_params
-					data = params.require(:crop).permit(:x, :y, :width, :height, :ajax, :id, :type)
+					data = params.require(:crop).permit(:x, :y, :width, :height, :ajax, :id, :type, :image)
 	
 					# Sanitize values that can only be numeric values, since they get passed directly to a MiniMagick command
 					[:x, :y, :width, :height].each do |arg|
 						raise MagicBeans::Crop::ArgumentError.new("Value passed for crop '#{arg}' is not numeric") unless (true if Float(data[arg]) rescue false)
 					end
-	
+
 					# If all was well, return the param data
 					data
 				end
