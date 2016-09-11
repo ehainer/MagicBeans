@@ -107,7 +107,7 @@ module MagicBeans
 				def crop_image
 					if MagicBeans::UploadTemp.exists?(crop_params[:image])
 						upload = MagicBeans::UploadTemp.find(crop_params[:image])
-						{ crop_params[:type] => upload.upload.path }
+						{ crop_params[:type] => File.open(upload.upload.path) }
 					else
 						{}
 					end
