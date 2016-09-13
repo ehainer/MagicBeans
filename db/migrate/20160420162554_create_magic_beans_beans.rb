@@ -6,7 +6,7 @@ class CreateMagicBeansBeans < ActiveRecord::Migration
 			t.string :email
 			t.string :phone
 			t.string :avatar
-			t.json :attachments
+			t.column :attachments, :json
 
 			t.timestamps null: false
 		end
