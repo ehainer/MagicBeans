@@ -24,8 +24,6 @@ module MagicBeans
 				begin
 					type = crop_params[:type].to_s.underscore.to_sym
 
-					debugger
-
 					if crop_image?
 						cropper.resource.update(crop_image)
 					end
@@ -195,6 +193,7 @@ module MagicBeans
 				elsif controller.instance_variable_defined?("@#{resource_class.to_s.classify.demodulize.underscore}")
 					controller.instance_variable_get "@#{resource_class.to_s.classify.demodulize.underscore}"
 				elsif !params[:id].blank?
+					debugger
 					resource_class.to_s.classify.safe_constantize.find(params[:id])
 				else
 					resource_class.to_s.classify.safe_constantize.new
