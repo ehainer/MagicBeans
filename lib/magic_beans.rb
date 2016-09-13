@@ -36,7 +36,7 @@ module MagicBeans
 
 	def self.log(tag, message, error = false)
 		@logger ||= ActiveSupport::TaggedLogging.new(config.logger)
-		if config.debug
+		if config.debug && !Rails.env.test?
 			if error
 				puts "[MagicBeans] [#{tag}] #{message}".light_red
 			else
