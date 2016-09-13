@@ -24,12 +24,7 @@ module MagicBeans
 				begin
 					type = crop_params[:type].to_s.underscore.to_sym
 
-					puts "========================="
-					puts type.to_s
-					puts cropper.resource.try(type).try(:path)
-					puts cropper.resource.to_yaml
-					puts cropper.resource.to_param
-					puts "========================="
+					debugger
 
 					if crop_image?
 						cropper.resource.update(crop_image)
