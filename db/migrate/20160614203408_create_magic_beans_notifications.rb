@@ -5,8 +5,8 @@ class CreateMagicBeansNotifications < ActiveRecord::Migration
 			t.integer :notifyable_id
 			t.string :to_phone
 			t.string :to_email
-			t.json :request
-			t.json :response
+			t.column :request, :json
+			t.column :response, :json
 
 			t.timestamps null: false
 		end
