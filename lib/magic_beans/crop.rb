@@ -27,6 +27,8 @@ module MagicBeans
 					puts "========================="
 					puts type.to_s
 					puts cropper.resource.try(type).try(:path)
+					puts cropper.resource.to_yaml
+					puts cropper.resource.to_param
 					puts "========================="
 
 					if crop_image?
