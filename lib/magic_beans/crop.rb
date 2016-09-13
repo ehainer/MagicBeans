@@ -24,6 +24,11 @@ module MagicBeans
 				begin
 					type = crop_params[:type].to_s.underscore.to_sym
 
+					puts "========================="
+					puts type.to_s
+					puts cropper.resource.try(type).try(:path)
+					puts "========================="
+
 					if crop_image?
 						cropper.resource.update(crop_image)
 					end
