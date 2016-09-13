@@ -186,6 +186,7 @@ module MagicBeans
 			end
 
 			def resource
+				debugger
 				if options[:resource].respond_to? :call
 					options[:resource].call controller
 				elsif !options[:resource].blank? && controller.respond_to?(options[:resource])
@@ -193,7 +194,6 @@ module MagicBeans
 				elsif controller.instance_variable_defined?("@#{resource_class.to_s.classify.demodulize.underscore}")
 					controller.instance_variable_get "@#{resource_class.to_s.classify.demodulize.underscore}"
 				elsif !params[:id].blank?
-					debugger
 					resource_class.to_s.classify.safe_constantize.find(params[:id])
 				else
 					resource_class.to_s.classify.safe_constantize.new
