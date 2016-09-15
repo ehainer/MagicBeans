@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "rails"
-  s.add_dependency "pg"
   s.add_dependency "sass-rails"
   s.add_dependency "sidekiq"
   s.add_dependency "sinatra"
