@@ -56,7 +56,11 @@ module MagicBeans
 			if options[:asset_lookup]
 				ActionController::Base.helpers.asset_path(image)
 			else
-				Rails.application.assets.find_asset(image).try(:digest_path) || false
+				begin
+					Rails.application.assets.find_asset(image).try(:digest_path) || false
+				rescue => e
+					false
+				end
 			end
 		end
 
