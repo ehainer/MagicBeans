@@ -115,7 +115,7 @@ module MagicBeans
 						convert.merge! ["-resize", size] unless size.blank?
 						convert.merge! ["-extent", size] unless size.blank?
 					end
-					convert << svg_output_path
+					convert << (File.exists?(svg_output_path) ? svg_output_path : svg_path)
 					convert << image_path
 					convert
 				end
