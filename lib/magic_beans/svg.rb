@@ -34,7 +34,7 @@ module MagicBeans
 		end
 
 		def exists?
-			File.exists?(image_path) && File.exists?(svg_path)
+			File.exists?(image_path) && File.exists?(svg_output_path)
 		end
 
 
