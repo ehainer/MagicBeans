@@ -74,6 +74,10 @@ module MagicBeans
 			File.join MagicBeans.config.svg.icon_directory, svg
 		end
 
+		def svg_output_path
+			File.join MagicBeans.config.svg.fallback_directory, svg
+		end
+
 		def svg_asset_path
 			if options[:asset_lookup]
 				ActionController::Base.helpers.asset_path(svg)
@@ -137,7 +141,7 @@ module MagicBeans
 				content.gsub! /stroke=\"[^\"]+\"/, "stroke=\"#{options[:color]}\""
 
 				# Write the new svg file
-				File.open(svg_path, "w") { |f| f.puts content }
+				File.open(svg_output_path, "w") { |f| f.puts content }
 
 				MagicBeans.log("SVG", "Created #{svg_path} from #{source_path}")
 			end
