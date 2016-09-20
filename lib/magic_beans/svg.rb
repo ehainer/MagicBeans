@@ -115,11 +115,11 @@ module MagicBeans
 						convert.merge! ["-resize", size] unless size.blank?
 						convert.merge! ["-extent", size] unless size.blank?
 					end
-					convert << svg_path
+					convert << svg_output_path
 					convert << image_path
 					convert
 				end
-				MagicBeans.log("SVG", "Created #{image_path} from #{svg_path}")
+				MagicBeans.log("SVG", "Created #{image_path} from #{svg_output_path}")
 				true
 			rescue => e
 				MagicBeans.log("SVG", e.message, true)
@@ -143,7 +143,7 @@ module MagicBeans
 				# Write the new svg file
 				File.open(svg_output_path, "w") { |f| f.puts content }
 
-				MagicBeans.log("SVG", "Created #{svg_path} from #{source_path}")
+				MagicBeans.log("SVG", "Created #{svg_output_path} from #{source_path}")
 			end
 		end
 
