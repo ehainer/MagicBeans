@@ -37,6 +37,7 @@ module MagicBeans
 		initializer "magic_beans.locale" do
 			ActionController::Base.send :include, ::MagicBeans::Locale
 			ActiveRecord::Base.send :include, ::MagicBeans::Locale
+			ActiveRecord::Base.send :extend, ::MagicBeans::Locale
 			ActionView::Base.send :include, ::MagicBeans::Locale
 		end
 
