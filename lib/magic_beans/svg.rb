@@ -129,7 +129,7 @@ module MagicBeans
 
 
 		def prepare
-			if !color.blank? && !File.exists?(svg_path)
+			if !color.blank? && !File.exists?(svg_output_path)
 				# Get the svg source directory path
 				filedir = File.dirname(source_path)
 
