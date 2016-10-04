@@ -26,27 +26,27 @@ module MagicBeans
 		end
 
 		initializer "magic_beans.view_helpers" do
-			ActionView::Base.send :include, ::MagicBeans::ViewHelpers
+			#ActionView::Base.send :include, ::MagicBeans::ViewHelpers
 			ActionView::Helpers::FormBuilder.send :prepend, ::MagicBeans::FormBuilder
 		end
 
 		initializer "magic_beans.sass_helpers" do
-			Sass::Script::Functions.send :include, ::MagicBeans::SassHelpers
+			#Sass::Script::Functions.send :include, ::MagicBeans::SassHelpers
 		end
 
 		initializer "magic_beans.locale" do
-			ActionController::Base.send :include, ::MagicBeans::Locale
-			ActiveRecord::Base.send :include, ::MagicBeans::Locale
-			ActiveRecord::Base.send :extend, ::MagicBeans::Locale
-			ActionView::Base.send :include, ::MagicBeans::Locale
+			#ActionController::Base.send :include, ::MagicBeans::Locale
+			#ActiveRecord::Base.send :include, ::MagicBeans::Locale
+			#ActiveRecord::Base.send :extend, ::MagicBeans::Locale
+			#ActionView::Base.send :include, ::MagicBeans::Locale
 		end
 
 		initializer "magic_beans.id" do
-			ActiveRecord::Base.send :extend, ::MagicBeans::Idable
+			#ActiveRecord::Base.send :extend, ::MagicBeans::Idable
 		end
 
 		initializer "magic_beans.notifications" do
-			ActiveRecord::Base.send :extend, ::MagicBeans::Notifyable
+			#ActiveRecord::Base.send :extend, ::MagicBeans::Notifyable
 		end
 
 		initializer "magic_beans.controllers" do
@@ -59,9 +59,9 @@ module MagicBeans
 		end
 
 		initializer "magic_beans.assets", after: :load_config_initializers do
-			config.assets.paths << MagicBeans.config.svg.icon_directory
-			config.assets.paths << MagicBeans.config.svg.fallback_directory
-			config.assets.paths << Rails.root.join("app", "assets", "fonts")
+			#config.assets.paths << MagicBeans.config.svg.icon_directory
+			#config.assets.paths << MagicBeans.config.svg.fallback_directory
+			#config.assets.paths << Rails.root.join("app", "assets", "fonts")
 		end
 
 		initializer "magic_beans.global_id" do
